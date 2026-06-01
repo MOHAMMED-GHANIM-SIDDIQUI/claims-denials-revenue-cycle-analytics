@@ -1,0 +1,2940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provider Network Performance &amp; Value-Based Care Analytics Platform</title>
+<style>
+
+:root {
+  --accent: #2563EB;
+  --secondary: #0F766E;
+  --ink: #172033;
+  --muted: #5D687A;
+  --soft: #F5F8FB;
+  --line: #D8E0EA;
+  --code-bg: #0F172A;
+  --code-ink: #E5EEF8;
+}
+
+@page {
+  size: A4;
+  margin: 17mm 14mm 18mm 14mm;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-size: 9.8pt;
+  line-height: 1.48;
+  background: white;
+}
+
+.screen-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: none;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #E5E7EB;
+  backdrop-filter: blur(12px);
+}
+
+.screen-toolbar a,
+.screen-toolbar button {
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+  color: #172033;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.screen-toolbar a:hover,
+.screen-toolbar button:hover {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.print-header,
+.print-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  color: #6B7280;
+  font-size: 7.8pt;
+  z-index: 20;
+}
+
+.print-header {
+  top: -10mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.4pt solid #E5E7EB;
+}
+
+.print-footer {
+  bottom: -11mm;
+  padding-top: 2mm;
+  border-top: 0.4pt solid #E5E7EB;
+}
+
+.cover {
+  min-height: 260mm;
+  break-after: page;
+  position: relative;
+  overflow: hidden;
+  padding: 22mm 16mm;
+  border: 1px solid #E5EAF0;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(245,248,251,0.98)),
+    radial-gradient(circle at 10% 18%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 31%),
+    radial-gradient(circle at 88% 82%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 28%);
+}
+
+.cover-band {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9mm;
+  background: linear-gradient(180deg, var(--accent), var(--secondary));
+}
+
+.cover-grid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  gap: 12mm;
+  align-items: center;
+}
+
+.eyebrow,
+.section-kicker {
+  color: var(--accent);
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.cover h1 {
+  margin: 5mm 0 6mm;
+  max-width: 136mm;
+  color: #0B1220;
+  font-size: 30pt;
+  line-height: 1.02;
+  font-weight: 850;
+}
+
+.subtitle {
+  max-width: 128mm;
+  margin: 0 0 8mm;
+  color: #39465B;
+  font-size: 12.5pt;
+  line-height: 1.5;
+}
+
+.audience {
+  display: inline-block;
+  max-width: 128mm;
+  padding: 3.5mm 5mm;
+  border-left: 2.5mm solid var(--accent);
+  background: rgba(255,255,255,0.78);
+  color: #263244;
+  font-size: 9.2pt;
+  font-weight: 700;
+}
+
+.cover-actions {
+  display: flex;
+  gap: 3mm;
+  flex-wrap: wrap;
+  margin-top: 9mm;
+}
+
+.cover-actions a,
+.button-stack a,
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9mm;
+  padding: 2.6mm 4.2mm;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+  font-size: 8.5pt;
+  font-weight: 850;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.nav-chip.compact {
+  min-height: auto;
+  padding: 6px 10px;
+  color: #172033;
+  background: #F8FAFC;
+  box-shadow: none;
+}
+
+.cover-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8mm;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255,255,255,0.86);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+}
+
+.card-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 8pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cover-card ul {
+  margin: 0;
+  padding-left: 4.5mm;
+}
+
+.cover-card li {
+  margin: 2.5mm 0;
+  color: #2D3748;
+  font-weight: 650;
+}
+
+.toc-page {
+  break-after: page;
+  padding-top: 8mm;
+}
+
+.experience-page {
+  break-after: page;
+  padding-top: 6mm;
+}
+
+.experience-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.lede {
+  max-width: 170mm;
+  color: #475569;
+  font-size: 10.4pt;
+}
+
+.quick-link-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+  margin: 7mm 0;
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: linear-gradient(135deg, #FFFFFF, #F8FAFC);
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 5mm;
+}
+
+.visual-card {
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: #FFFFFF;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  break-inside: avoid;
+}
+
+.visual-card.wide {
+  grid-column: 1 / -1;
+}
+
+.visual-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 7.8pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2.5mm;
+}
+
+.timeline-step {
+  min-height: 36mm;
+  padding: 4mm;
+  color: #172033;
+  text-decoration: none;
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+}
+
+.timeline-step span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8mm;
+  height: 8mm;
+  margin-bottom: 4mm;
+  color: white;
+  background: var(--accent);
+  border-radius: 50%;
+  font-size: 7.5pt;
+  font-weight: 850;
+}
+
+.timeline-step strong,
+.timeline-step em {
+  display: block;
+}
+
+.timeline-step strong {
+  margin-bottom: 2mm;
+  color: #0F172A;
+  font-size: 9pt;
+}
+
+.timeline-step em {
+  color: #64748B;
+  font-size: 7.5pt;
+  font-style: normal;
+}
+
+.bar-chart {
+  display: grid;
+  gap: 3mm;
+}
+
+.bar-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 12mm;
+  gap: 3mm;
+  padding: 3mm 0 5mm;
+  color: #172033;
+  text-decoration: none;
+}
+
+.bar-row i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2mm;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+}
+
+.bar-row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2mm;
+  background: #E5EAF0;
+  border-radius: 999px;
+  z-index: -1;
+}
+
+.button-stack {
+  display: grid;
+  gap: 3mm;
+}
+
+.button-stack a {
+  border-radius: 6px;
+}
+
+.toc-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm 5mm;
+  margin-top: 8mm;
+}
+
+.toc-item {
+  display: grid;
+  grid-template-columns: 12mm 1fr;
+  gap: 3mm;
+  align-items: start;
+  min-height: 11mm;
+  padding: 3mm;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid #E4EAF1;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.toc-number {
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.content > h1:first-child {
+  display: none;
+}
+
+.section-module {
+  margin: 0 0 5mm;
+  border: 1px solid transparent;
+}
+
+.section-module summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.section-module summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-module summary h2 {
+  display: block;
+}
+
+.collapse-indicator {
+  display: none;
+  float: right;
+  margin-top: 13mm;
+  padding: 1.5mm 2.5mm;
+  color: var(--accent);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  font-size: 7.2pt;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.section-body {
+  padding-bottom: 2mm;
+}
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: -1mm 0 3mm;
+  padding: 2.5mm;
+  border: 1px solid #E5EAF0;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.section-nav a,
+.related-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 7mm;
+  padding: 1.6mm 2.6mm;
+  color: var(--secondary);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  background: white;
+  font-size: 7.6pt;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.smart-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2mm;
+  margin: 0 0 4mm;
+  padding: 3mm 4mm;
+  border-left: 1.6mm solid var(--accent);
+  background: #F8FAFC;
+  break-inside: avoid;
+}
+
+.smart-links span {
+  color: #64748B;
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+h1, h2, h3, h4 {
+  color: #101828;
+  line-height: 1.18;
+  break-after: avoid;
+}
+
+h2 {
+  margin: 12mm 0 4mm;
+  padding: 0 0 2.5mm;
+  border-bottom: 1.2pt solid var(--line);
+  font-size: 17pt;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 3.2mm;
+  height: 3.2mm;
+  margin-right: 2.4mm;
+  background: var(--accent);
+  vertical-align: 0.6mm;
+}
+
+h3 {
+  margin: 7mm 0 2.5mm;
+  color: var(--secondary);
+  font-size: 12.5pt;
+}
+
+h4 {
+  margin: 4.5mm 0 1.5mm;
+  color: #334155;
+  font-size: 10.5pt;
+}
+
+p {
+  margin: 0 0 3.5mm;
+}
+
+a {
+  color: var(--secondary);
+  font-weight: 650;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 6mm;
+}
+
+li {
+  margin: 1.3mm 0;
+}
+
+strong {
+  color: #111827;
+  font-weight: 800;
+}
+
+blockquote {
+  margin: 5mm 0;
+  padding: 4mm 5mm;
+  color: #2B3A4F;
+  border-left: 2mm solid var(--accent);
+  background: #F7FAFC;
+}
+
+table {
+  width: 100%;
+  margin: 5mm 0 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 7.6pt;
+  break-inside: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  break-inside: avoid;
+}
+
+th {
+  color: white;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  font-weight: 800;
+  text-align: left;
+}
+
+th, td {
+  padding: 2mm 2.2mm;
+  border: 0.45pt solid #D8E0EA;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+tbody tr:nth-child(even) td {
+  background: #F8FAFC;
+}
+
+code {
+  padding: 0.3mm 1mm;
+  color: #0F3B57;
+  background: #EAF5F7;
+  border-radius: 3px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8.1pt;
+}
+
+pre {
+  margin: 4.5mm 0 6mm;
+  padding: 4mm;
+  overflow: hidden;
+  color: var(--code-ink);
+  background: var(--code-bg);
+  border-radius: 6px;
+  border: 1px solid #1E293B;
+  white-space: pre-wrap;
+  word-break: break-word;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: none;
+  font-size: 7.1pt;
+  line-height: 1.42;
+}
+
+.diagram-shell {
+  margin: 6mm 0;
+  padding: 4mm;
+  border: 1px solid #D8E0EA;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.diagram-label {
+  margin-bottom: 2mm;
+  color: var(--accent);
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.diagram-shell .mermaid {
+  margin: 0;
+  padding: 3mm;
+  text-align: center;
+  color: #1F2937;
+  background: white;
+  border: 1px solid #E4EAF1;
+  white-space: pre-wrap;
+}
+
+.diagram-shell svg {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  height: 1px;
+  margin: 9mm 0;
+  border: 0;
+  background: var(--line);
+}
+
+@media print {
+  .screen-toolbar {
+    display: none !important;
+  }
+
+  .section-module {
+    display: block;
+  }
+
+  .section-module:not([open]) .section-body {
+    display: block;
+  }
+
+  .collapse-indicator {
+    display: none !important;
+  }
+
+  .content h2 {
+    break-before: auto;
+  }
+}
+
+@media screen {
+  body {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #EEF3F8;
+    font-size: 15px;
+  }
+
+  .screen-toolbar {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .cover,
+  .experience-page,
+  .toc-page,
+  .content {
+    background: white;
+  }
+
+  .cover {
+    min-height: 760px;
+    margin-top: 16px;
+  }
+
+  .content {
+    padding: 20px 44px 60px;
+  }
+
+  .section-module {
+    margin: 18px 0;
+    padding: 0 18px 16px;
+    border-color: #E5EAF0;
+    background: white;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  }
+
+  .collapse-indicator {
+    display: inline-flex;
+  }
+
+  .section-module:not([open]) {
+    padding-bottom: 0;
+  }
+
+  .section-module:not([open]) summary h2 {
+    margin-bottom: 12px;
+  }
+
+  .toc-page,
+  .experience-page {
+    padding: 42px 44px;
+    margin: 16px 0;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body {
+    font-size: 14px;
+  }
+
+  .cover {
+    min-height: auto;
+    padding: 34px 24px;
+  }
+
+  .cover-grid,
+  .visual-grid,
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cover h1 {
+    font-size: 34px;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .content,
+  .toc-page,
+  .experience-page {
+    padding: 24px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="screen-toolbar">
+    <a href="#top">Cover</a>
+    <a href="#table-of-contents">Contents</a>
+    <a class="nav-chip compact" href="#table-of-contents">Contents</a><a class="nav-chip compact" href="#2-source-reference-register">Sources</a><a class="nav-chip compact" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip compact" href="#8-sql-build-plan">SQL</a><a class="nav-chip compact" href="#9-python-analytics-plan">Python</a><a class="nav-chip compact" href="#table-of-contents">ML</a><a class="nav-chip compact" href="#11-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip compact" href="#12-kpi-dictionary">KPIs</a><a class="nav-chip compact" href="#15-implementation-roadmap">Roadmap</a>
+    <button type="button" data-action="expand">Expand All</button>
+    <button type="button" data-action="collapse">Collapse All</button>
+  </div>
+  <div class="print-header">
+    <span>Provider network and ACO performance blueprint</span>
+    <span>Provider Network Performance &amp; Value-Based Care Analytics Platform</span>
+  </div>
+  <div class="print-footer">
+    <span>Enterprise Healthcare Analytics Portfolio Blueprint</span>
+    <span>May 15, 2026</span>
+  </div>
+
+  <section class="cover" id="top">
+    <div class="cover-band"></div>
+    <div class="cover-grid">
+      <div>
+        <div class="eyebrow">Provider network and ACO performance blueprint</div>
+        <h1>Provider Network Performance &amp; Value-Based Care Analytics Platform</h1>
+        <p class="subtitle">Provider peer benchmarking, ACO performance, hospital quality, geographic variation, outlier scoring, and contracting strategy.</p>
+        <div class="audience">Provider Network Analyst | Value-Based Care Analyst | Population Health Analyst | BI Analyst</div>
+        <div class="cover-actions">
+          <a href="#interactive-control-center">Open Navigation Hub</a>
+          <a href="#table-of-contents">Jump To Contents</a>
+        </div>
+      </div>
+      <aside class="cover-card">
+        <div class="card-label">Blueprint Scope</div>
+        <ul>
+          <li>Dataset source register</li>
+          <li>Enterprise warehouse architecture</li>
+          <li>SQL mart plan</li>
+          <li>Python and ML pipeline</li>
+          <li>Power BI dashboard system</li>
+          <li>KPI and portfolio strategy</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  
+  <section class="experience-page">
+    <div class="section-kicker">Interactive Control Center</div>
+    <h2 id="interactive-control-center">Executive Navigation Hub</h2>
+    <p class="lede">Use the controls below to jump through the PDF. The HTML version also supports collapsible sections, hover states, and quick expand/collapse controls.</p>
+    <div class="quick-link-panel"><a class="nav-chip" href="#table-of-contents">Contents</a><a class="nav-chip" href="#2-source-reference-register">Sources</a><a class="nav-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip" href="#8-sql-build-plan">SQL</a><a class="nav-chip" href="#9-python-analytics-plan">Python</a><a class="nav-chip" href="#table-of-contents">ML</a><a class="nav-chip" href="#11-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip" href="#12-kpi-dictionary">KPIs</a><a class="nav-chip" href="#15-implementation-roadmap">Roadmap</a></div>
+
+    <div class="visual-grid">
+      <article class="visual-card wide">
+        <div class="visual-label">Clickable Build Timeline</div>
+        <div class="timeline">
+          
+              <a class="timeline-step" href="#2-source-reference-register">
+                <span>01</span>
+                <strong>Sources</strong>
+                <em>Public reference data and curated source register</em>
+              </a>
+              <a class="timeline-step" href="#5-end-to-end-pipeline">
+                <span>02</span>
+                <strong>Warehouse</strong>
+                <em>Bronze, silver, gold, mart, and scoring layers</em>
+              </a>
+              <a class="timeline-step" href="#8-sql-build-plan">
+                <span>03</span>
+                <strong>SQL Marts</strong>
+                <em>Governed metrics, scorecards, work queues</em>
+              </a>
+              <a class="timeline-step" href="#10-ml-and-statistical-scoring-design">
+                <span>04</span>
+                <strong>ML/Scoring</strong>
+                <em>Predictive and prioritization workflows</em>
+              </a>
+              <a class="timeline-step" href="#11-power-bi-dashboard-specification">
+                <span>05</span>
+                <strong>Dashboards</strong>
+                <em>Executive and operational BI</em>
+              </a>
+              <a class="timeline-step" href="#15-implementation-roadmap">
+                <span>06</span>
+                <strong>Roadmap</strong>
+                <em>Build order and acceptance criteria</em>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Portfolio Evidence Stack</div>
+        <div class="bar-chart">
+          
+              <a class="bar-row" href="#8-sql-build-plan">
+                <span>SQL Architecture</span>
+                <strong>96%</strong>
+                <i style="width:96%"></i>
+              </a>
+              <a class="bar-row" href="#2-source-reference-register">
+                <span>Healthcare Domain</span>
+                <strong>94%</strong>
+                <i style="width:94%"></i>
+              </a>
+              <a class="bar-row" href="#11-power-bi-dashboard-specification">
+                <span>BI Storytelling</span>
+                <strong>90%</strong>
+                <i style="width:90%"></i>
+              </a>
+              <a class="bar-row" href="#10-ml-and-statistical-scoring-design">
+                <span>ML Readiness</span>
+                <strong>82%</strong>
+                <i style="width:82%"></i>
+              </a>
+              <a class="bar-row" href="#15-implementation-roadmap">
+                <span>Portfolio Evidence</span>
+                <strong>88%</strong>
+                <i style="width:88%"></i>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Navigation Buttons</div>
+        <div class="button-stack">
+          <a href="#table-of-contents">Open Table of Contents</a>
+          <a href="#2-source-reference-register">Open Reference Links</a>
+          <a href="#5-end-to-end-pipeline">Open Architecture</a>
+          <a href="#11-power-bi-dashboard-specification">Open Dashboard Spec</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="toc-page" id="table-of-contents">
+    <div class="section-kicker">Navigation</div>
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#1-executive-project-charter"><span class="toc-number">01</span><span>1. Executive Project Charter</span></a>
+<a class="toc-item" href="#2-source-reference-register"><span class="toc-number">02</span><span>2. Source Reference Register</span></a>
+<a class="toc-item" href="#3-final-dataset-stack"><span class="toc-number">03</span><span>3. Final Dataset Stack</span></a>
+<a class="toc-item" href="#4-business-workflows-simulated"><span class="toc-number">04</span><span>4. Business Workflows Simulated</span></a>
+<a class="toc-item" href="#5-end-to-end-pipeline"><span class="toc-number">05</span><span>5. End-to-End Pipeline</span></a>
+<a class="toc-item" href="#6-repository-structure"><span class="toc-number">06</span><span>6. Repository Structure</span></a>
+<a class="toc-item" href="#7-data-architecture"><span class="toc-number">07</span><span>7. Data Architecture</span></a>
+<a class="toc-item" href="#8-sql-build-plan"><span class="toc-number">08</span><span>8. SQL Build Plan</span></a>
+<a class="toc-item" href="#9-python-analytics-plan"><span class="toc-number">09</span><span>9. Python Analytics Plan</span></a>
+<a class="toc-item" href="#10-ml-and-statistical-scoring-design"><span class="toc-number">10</span><span>10. ML and Statistical Scoring Design</span></a>
+<a class="toc-item" href="#11-power-bi-dashboard-specification"><span class="toc-number">11</span><span>11. Power BI Dashboard Specification</span></a>
+<a class="toc-item" href="#12-kpi-dictionary"><span class="toc-number">12</span><span>12. KPI Dictionary</span></a>
+<a class="toc-item" href="#13-data-quality-rules"><span class="toc-number">13</span><span>13. Data Quality Rules</span></a>
+<a class="toc-item" href="#14-business-insights-to-generate"><span class="toc-number">14</span><span>14. Business Insights To Generate</span></a>
+<a class="toc-item" href="#15-implementation-roadmap"><span class="toc-number">15</span><span>15. Implementation Roadmap</span></a>
+<a class="toc-item" href="#16-readme-outline"><span class="toc-number">16</span><span>16. README Outline</span></a>
+<a class="toc-item" href="#17-interview-talking-points"><span class="toc-number">17</span><span>17. Interview Talking Points</span></a>
+<a class="toc-item" href="#18-final-acceptance-checklist"><span class="toc-number">18</span><span>18. Final Acceptance Checklist</span></a>
+    </div>
+  </section>
+
+  <main class="content">
+    <h1>Provider Network Performance &amp; Value-Based Care Analytics Platform</h1>
+<p>Single source of truth for building an enterprise-grade provider network, ACO, and value-based care analytics portfolio project.</p>
+<p>This project is designed to look like work done by payer provider-network analytics teams, ACO performance teams, population health teams, contracting teams, and value-based care operations groups. It should not look like a generic hospital dashboard. The project must show that you understand provider attribution, cost and quality benchmarking, peer comparison, risk adjustment, geographic variation, network leakage, and shared savings performance.</p>
+<p>Target roles:</p>
+<ul>
+<li>Healthcare Data Analyst</li>
+<li>Healthcare Business Analyst</li>
+<li>Provider Network Analyst</li>
+<li>Healthcare BI Analyst</li>
+<li>Population Health Analyst</li>
+<li>Value-Based Care Analyst</li>
+<li>ACO Analytics Analyst</li>
+<li>Payer Contracting Analyst</li>
+</ul>
+<p>Project title:</p>
+<p><strong>Provider Network Performance &amp; Value-Based Care Analytics Platform</strong></p>
+<p>Core business question:</p>
+<p><strong>Which providers and ACO-like networks deliver better cost, quality, utilization, and patient outcome performance after accounting for patient risk and regional variation?</strong></p>
+<hr>
+
+<details class="section-module" open data-section-id="1-executive-project-charter">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="1-executive-project-charter">1. Executive Project Charter</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#table-of-contents">Previous</a>
+      <a href="#2-source-reference-register">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="1-1-business-problem">1.1 Business problem</h3>
+<p>Healthcare payers, Medicare Advantage organizations, ACOs, and integrated delivery systems need to manage provider networks under cost and quality pressure. Leadership needs to know which providers are high-performing, which providers create avoidable cost, which regions show inefficient utilization, and which provider groups are strong candidates for value-based contracts.</p>
+<p>In real enterprise environments, this requires joining provider identity, claims/utilization, quality measures, readmission measures, geographic benchmarks, and ACO financial performance. This project simulates that environment using public CMS data and builds a decision platform for provider performance, contracting strategy, and value-based care operations.</p>
+<h3 id="1-2-business-goals">1.2 Business goals</h3>
+<p>The platform should answer:</p>
+<ul>
+<li>Which providers have high cost per beneficiary compared with peers?</li>
+<li>Which specialties, hospitals, or regions show the largest utilization variation?</li>
+<li>Which hospitals have poor readmission, quality, or patient experience performance?</li>
+<li>Which ACOs generated savings, losses, or quality improvement?</li>
+<li>Which providers are candidates for value-based contracts?</li>
+<li>Which providers require education, network review, or performance intervention?</li>
+<li>Which markets show network adequacy risk or provider saturation?</li>
+<li>Which providers have high procedure intensity, high payment, or unusual service mix?</li>
+</ul>
+<h3 id="1-3-primary-enterprise-users">1.3 Primary enterprise users</h3>
+<ul>
+<li>VP Provider Network: network strategy, provider performance, contracting priorities</li>
+<li>Value-Based Care Director: shared savings, quality, cost trend, ACO outcomes</li>
+<li>Contracting Analyst: provider rate and utilization comparison</li>
+<li>Population Health Team: high-risk panel and quality opportunity tracking</li>
+<li>Medical Director: readmission, safety, quality, and care variation</li>
+<li>Finance Analytics: cost per beneficiary, avoidable cost, benchmark variance</li>
+<li>BI Team: governed dashboarding and metric definitions</li>
+</ul>
+<h3 id="1-4-what-makes-this-project-professional">1.4 What makes this project professional</h3>
+<p>The project must include:</p>
+<ul>
+<li>Provider master data model using NPI, facility IDs, specialty, taxonomy, and geography</li>
+<li>Provider peer groups and risk-adjusted benchmarking</li>
+<li>ACO financial and quality performance analysis</li>
+<li>Hospital quality and readmission integration</li>
+<li>Geographic variation and market-level benchmarking</li>
+<li>SQL marts for provider scorecards and contract opportunity ranking</li>
+<li>Python analytics for provider clustering and opportunity segmentation</li>
+<li>ML or statistical model for provider outlier detection</li>
+<li>Power BI dashboards for executive, network, ACO, and provider drill-through use cases</li>
+<li>Clear KPI dictionary and data dictionary</li>
+<li>Documented limitations of public aggregate data</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="2-source-reference-register">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="2-source-reference-register">2. Source Reference Register</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#1-executive-project-charter">Previous</a>
+      <a href="#3-final-dataset-stack">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#13-data-quality-rules">Validate In DQ</a><a class="related-chip" href="#15-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<p>Use these links in the README and documentation.</p>
+<h3 id="2-1-provider-identity-and-network-data">2.1 Provider identity and network data</h3>
+<ol>
+<li><p><strong>CMS NPPES NPI Files</strong></p>
+<ul>
+<li>Link: <a href="https://download.cms.gov/nppes/NPI_Files.html">https://download.cms.gov/nppes/NPI_Files.html</a></li>
+<li>Use: National Provider Identifier, provider names, entity type, taxonomy, practice location.</li>
+<li>Notes: CMS states that issuance of an NPI does not ensure or validate licensure or credentialing. Treat NPI data as provider identity/reference data, not credential verification.</li>
+</ul>
+</li>
+<li><p><strong>Provider of Services File - Hospital and Non-Hospital Facilities</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/provider-of-services-file-hospital-non-hospital-facilities">https://catalog.data.gov/dataset/provider-of-services-file-hospital-non-hospital-facilities</a></li>
+<li>Use: Facility characteristics, provider certification details, facility type, Medicare participation.</li>
+</ul>
+</li>
+<li><p><strong>CMS Provider Data Catalog</strong></p>
+<ul>
+<li>Link: <a href="https://developer.cms.gov/provider-data/">https://developer.cms.gov/provider-data/</a></li>
+<li>Use: Care Compare provider quality datasets for hospitals, clinicians, nursing homes, home health, hospice, and other provider types.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-2-provider-utilization-and-payment">2.2 Provider utilization and payment</h3>
+<ol start="4">
+<li><p><strong>CMS Medicare Physician and Other Practitioners by Provider and Service</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/medicare-physician-other-practitioners-by-provider-and-service">https://catalog.data.gov/dataset/medicare-physician-other-practitioners-by-provider-and-service</a></li>
+<li>Use: NPI, HCPCS, place of service, beneficiary count, service count, submitted charge, allowed amount, Medicare payment.</li>
+</ul>
+</li>
+<li><p><strong>CMS Medicare Fee-for-Service Parts A and B Reports</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-fee-for-service-parts-a-b">https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-fee-for-service-parts-a-b</a></li>
+<li>Use: Medicare FFS utilization and payment summaries across care settings.</li>
+</ul>
+</li>
+<li><p><strong>CMS Medicare Geographic Variation Public Use File</strong></p>
+<ul>
+<li>Methods paper: <a href="https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/medicare-geographic-variation/downloads/geo_var_puf_methods_paper.pdf">https://www.cms.gov/research-statistics-data-and-systems/statistics-trends-and-reports/medicare-geographic-variation/downloads/geo_var_puf_methods_paper.pdf</a></li>
+<li>Use: State/county/regional variation in Medicare spending, utilization, and risk-adjusted metrics.</li>
+</ul>
+</li>
+<li><p><strong>Medicare Advantage Geographic Variation PUF</strong></p>
+<ul>
+<li>Methods paper: <a href="https://data.cms.gov/sites/default/files/2022-10/32b7aed5-6ab7-49a4-bbbc-4c668a1bb7f3/MA_GV_PUF_Methods_Final.pdf">https://data.cms.gov/sites/default/files/2022-10/32b7aed5-6ab7-49a4-bbbc-4c668a1bb7f3/MA_GV_PUF_Methods_Final.pdf</a></li>
+<li>Use: Optional MA geographic variation context.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-3-quality-and-readmission-data">2.3 Quality and readmission data</h3>
+<ol start="8">
+<li><p><strong>CMS Hospital Quality Initiative / Care Compare</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/quality/initiatives/hospital-quality-initiative/hospital-compare">https://www.cms.gov/medicare/quality/initiatives/hospital-quality-initiative/hospital-compare</a></li>
+<li>Use: Hospital quality measures, patient experience, outcomes, safety, care coordination, ED throughput, star ratings.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Readmissions Reduction Program</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp">https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp</a></li>
+<li>Use: 30-day readmission measure context for AMI, COPD, HF, pneumonia, CABG, and THA/TKA.</li>
+</ul>
+</li>
+<li><p><strong>CMS Quality Payment Program Public Use Files</strong></p>
+<ul>
+<li>Link: <a href="https://data.cms.gov/">https://data.cms.gov/</a></li>
+<li>Search term: Quality Payment Program Public Use File</li>
+<li>Use: Optional clinician-level MIPS and quality performance context.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-4-aco-and-value-based-care-data">2.4 ACO and value-based care data</h3>
+<ol start="11">
+<li><p><strong>Medicare Shared Savings Program Data</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/medicare-fee-for-service-payment/sharedsavingsprogram/acos-in-your-state.html">https://www.cms.gov/medicare/medicare-fee-for-service-payment/sharedsavingsprogram/acos-in-your-state.html</a></li>
+<li>Use: ACO participation, performance, assigned beneficiaries, financial and quality results.</li>
+</ul>
+</li>
+<li><p><strong>Shared Savings Program Provider Guidance</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/medicare-fee-for-service-payment/sharedsavingsprogram/for-providers">https://www.cms.gov/medicare/medicare-fee-for-service-payment/sharedsavingsprogram/for-providers</a></li>
+<li>Use: ACO program context; CMS describes ACOs as groups of doctors, hospitals, and other providers collaborating to provide coordinated care and share savings if they deliver quality and cost performance.</li>
+</ul>
+</li>
+<li><p><strong>ACO Financial and Quality Results PUF Methodology</strong></p>
+<ul>
+<li>Link: <a href="https://data.cms.gov/sites/default/files/2022-08/Performance_Year_Financial_and_Quality_Results_PUF_Methodology.pdf">https://data.cms.gov/sites/default/files/2022-08/Performance_Year_Financial_and_Quality_Results_PUF_Methodology.pdf</a></li>
+<li>Use: Variables and methodology for ACO financial reconciliation and quality performance.</li>
+</ul>
+</li>
+<li><p><strong>Publicly Available ACO Data Sources PDF</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/files/document/medicare-shared-savings-program-publicly-available-aco-data-and-aco-performance-data-sources.pdf">https://www.cms.gov/files/document/medicare-shared-savings-program-publicly-available-aco-data-and-aco-performance-data-sources.pdf</a></li>
+<li>Use: Source map for ACO public files.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-5-optional-socioeconomic-and-market-context">2.5 Optional socioeconomic and market context</h3>
+<ol start="15">
+<li><p><strong>U.S. Census American Community Survey</strong></p>
+<ul>
+<li>Link: <a href="https://www.census.gov/programs-surveys/acs">https://www.census.gov/programs-surveys/acs</a></li>
+<li>Use: Market demographics, poverty, age, insurance coverage, social risk.</li>
+</ul>
+</li>
+<li><p><strong>AHRQ Social Determinants of Health Database</strong></p>
+<ul>
+<li>Link: <a href="https://www.ahrq.gov/sdoh/data-analytics/sdoh-data.html">https://www.ahrq.gov/sdoh/data-analytics/sdoh-data.html</a></li>
+<li>Use: County-level social determinants and risk context.</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="3-final-dataset-stack">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="3-final-dataset-stack">3. Final Dataset Stack</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#2-source-reference-register">Previous</a>
+      <a href="#4-business-workflows-simulated">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#13-data-quality-rules">Validate In DQ</a><a class="related-chip" href="#15-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<h3 id="3-1-required-core-datasets">3.1 Required core datasets</h3>
+<p>Use these as the minimum project backbone:</p>
+<ul>
+<li>CMS Physician and Other Practitioners by Provider and Service</li>
+<li>NPPES NPI downloadable file</li>
+<li>CMS Hospital Quality / Care Compare</li>
+<li>CMS Hospital Readmissions Reduction Program data</li>
+<li>CMS Medicare Geographic Variation PUF</li>
+<li>Medicare Shared Savings Program ACO Performance and Participation files</li>
+</ul>
+<h3 id="3-2-optional-enrichment-datasets">3.2 Optional enrichment datasets</h3>
+<p>Use if you want a more advanced project:</p>
+<ul>
+<li>Provider of Services File for facility certification and facility type</li>
+<li>QPP Public Use File for clinician quality/MIPS context</li>
+<li>ACS or AHRQ SDOH for regional risk context</li>
+<li>CMS SynPUF claims from the claims intelligence project if you want member-level simulated provider attribution</li>
+</ul>
+<h3 id="3-3-dataset-use-matrix">3.3 Dataset use matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Business need</th>
+<th>Dataset</th>
+<th>Project use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provider identity</td>
+<td>NPPES NPI</td>
+<td>Provider master, specialty, taxonomy, address</td>
+</tr>
+<tr>
+<td>Provider utilization</td>
+<td>CMS Physician Provider Service</td>
+<td>Service volume, payment, submitted charge, HCPCS mix</td>
+</tr>
+<tr>
+<td>Hospital quality</td>
+<td>Care Compare</td>
+<td>Star ratings, quality, patient experience, safety</td>
+</tr>
+<tr>
+<td>Readmissions</td>
+<td>HRRP / Care Compare</td>
+<td>Hospital readmission performance</td>
+</tr>
+<tr>
+<td>Regional benchmarks</td>
+<td>Geographic Variation PUF</td>
+<td>State/county cost and utilization benchmarks</td>
+</tr>
+<tr>
+<td>Value-based care</td>
+<td>MSSP ACO PUFs</td>
+<td>ACO savings, losses, quality, assigned beneficiaries</td>
+</tr>
+<tr>
+<td>Facility attributes</td>
+<td>Provider of Services</td>
+<td>Hospital/facility type, certification, ownership</td>
+</tr>
+<tr>
+<td>Social context</td>
+<td>ACS/AHRQ SDOH</td>
+<td>Market risk and social determinants</td>
+</tr>
+</tbody></table>
+<h3 id="3-4-datasets-to-avoid-as-primary-source">3.4 Datasets to avoid as primary source</h3>
+<p>Do not build this project around:</p>
+<ul>
+<li>Random hospital appointment no-show datasets</li>
+<li>Single hospital admission CSVs with no provider identity</li>
+<li>Toy generated provider tables</li>
+<li>Chart-only hospital rating datasets without cost/utilization</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="4-business-workflows-simulated">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="4-business-workflows-simulated">4. Business Workflows Simulated</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#3-final-dataset-stack">Previous</a>
+      <a href="#5-end-to-end-pipeline">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="4-1-provider-network-management">4.1 Provider network management</h3>
+<p>Workflow:</p>
+<ol>
+<li>Build provider master from NPPES and CMS provider files.</li>
+<li>Group providers into specialty and peer groups.</li>
+<li>Join utilization and payment metrics by NPI, specialty, HCPCS, and geography.</li>
+<li>Compare providers to local, state, and national benchmarks.</li>
+<li>Identify outliers and network opportunity.</li>
+</ol>
+<p>Business output:</p>
+<ul>
+<li>Provider performance scorecard</li>
+<li>Provider contracting opportunity list</li>
+<li>High-cost provider outlier list</li>
+<li>Specialty utilization benchmark dashboard</li>
+</ul>
+<h3 id="4-2-value-based-care-and-aco-performance">4.2 Value-based care and ACO performance</h3>
+<p>Workflow:</p>
+<ol>
+<li>Load ACO participation and performance files.</li>
+<li>Track assigned beneficiary population.</li>
+<li>Compare benchmark expenditure, actual expenditure, savings/losses, quality score, and earned shared savings.</li>
+<li>Identify ACOs with high quality but poor cost, low quality but savings, and balanced performers.</li>
+<li>Create ACO performance segmentation.</li>
+</ol>
+<p>Business output:</p>
+<ul>
+<li>ACO performance dashboard</li>
+<li>Shared savings/loss opportunity analysis</li>
+<li>ACO quality-cost quadrant</li>
+<li>Market expansion recommendation</li>
+</ul>
+<h3 id="4-3-hospital-quality-and-readmission-performance">4.3 Hospital quality and readmission performance</h3>
+<p>Workflow:</p>
+<ol>
+<li>Load Care Compare and HRRP measures.</li>
+<li>Build hospital master using CMS certification number and facility attributes.</li>
+<li>Join readmission, star rating, patient experience, safety, and mortality measures.</li>
+<li>Compare hospitals by geography and peer group.</li>
+<li>Identify low-quality or high-readmission facilities for network intervention.</li>
+</ol>
+<p>Business output:</p>
+<ul>
+<li>Hospital performance scorecard</li>
+<li>Readmission outlier list</li>
+<li>Facility network quality tiering</li>
+<li>Contracting and steering recommendations</li>
+</ul>
+<h3 id="4-4-geographic-variation-and-market-analytics">4.4 Geographic variation and market analytics</h3>
+<p>Workflow:</p>
+<ol>
+<li>Load Medicare Geographic Variation PUF.</li>
+<li>Compare spending and utilization by state/county/hospital referral region.</li>
+<li>Join provider density and quality performance where feasible.</li>
+<li>Identify high-cost markets and low-value markets.</li>
+</ol>
+<p>Business output:</p>
+<ul>
+<li>Market opportunity map</li>
+<li>Regional utilization variation report</li>
+<li>Provider saturation and network adequacy screen</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="5-end-to-end-pipeline">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="5-end-to-end-pipeline">5. End-to-End Pipeline</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#4-business-workflows-simulated">Previous</a>
+      <a href="#6-repository-structure">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#8-sql-build-plan">SQL Build</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<section class="diagram-shell">
+<div class="diagram-label">Architecture Diagram</div>
+<pre class="mermaid">flowchart LR
+    A[&quot;Raw CMS Provider, ACO, Quality, Geo Files&quot;] --&gt; B[&quot;Bronze Source Tables&quot;]
+    B --&gt; C[&quot;Silver Normalized Provider and Measure Tables&quot;]
+    C --&gt; D[&quot;Gold Provider Network Star Schema&quot;]
+    D --&gt; E[&quot;Provider Scorecard Marts&quot;]
+    D --&gt; F[&quot;ACO Performance Marts&quot;]
+    D --&gt; G[&quot;Hospital Quality Marts&quot;]
+    E --&gt; H[&quot;Python Provider Segmentation&quot;]
+    F --&gt; H
+    G --&gt; H
+    H --&gt; I[&quot;Outlier and Contract Opportunity Scores&quot;]
+    E --&gt; J[&quot;Power BI Semantic Model&quot;]
+    F --&gt; J
+    G --&gt; J
+    I --&gt; J
+    J --&gt; K[&quot;Executive Provider Network Dashboards&quot;]</pre>
+</section>
+
+
+<h3 id="5-1-layer-definitions">5.1 Layer definitions</h3>
+<p>Raw:</p>
+<ul>
+<li>Original downloaded CSV, ZIP, or API extracts.</li>
+<li>No column renaming.</li>
+</ul>
+<p>Bronze:</p>
+<ul>
+<li>Source-shaped tables.</li>
+<li>Basic data types.</li>
+<li>Add <code>source_file</code>, <code>source_year</code>, <code>ingested_at</code>, <code>row_hash</code>.</li>
+</ul>
+<p>Silver:</p>
+<ul>
+<li>Standardized provider identifiers.</li>
+<li>Standardized geography.</li>
+<li>Standardized measure names.</li>
+<li>Cleaned numeric fields.</li>
+<li>Provider taxonomy and specialty rollups.</li>
+</ul>
+<p>Gold:</p>
+<ul>
+<li>Conformed dimensions and fact tables.</li>
+<li>Provider, facility, geography, date, measure, ACO, and service dimensions.</li>
+</ul>
+<p>Marts:</p>
+<ul>
+<li>Provider scorecard</li>
+<li>Hospital quality scorecard</li>
+<li>ACO performance scorecard</li>
+<li>Market opportunity</li>
+<li>Contracting opportunity</li>
+<li>Provider outlier queue</li>
+</ul>
+<p>ML/scoring:</p>
+<ul>
+<li>Provider clustering</li>
+<li>Outlier detection</li>
+<li>Contract opportunity scoring</li>
+<li>ACO performance segmentation</li>
+</ul>
+<p>Power BI:</p>
+<ul>
+<li>Executive dashboards and drill-through scorecards.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="6-repository-structure">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="6-repository-structure">6. Repository Structure</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#5-end-to-end-pipeline">Previous</a>
+      <a href="#7-data-architecture">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<pre><code class="language-text">provider-network-value-based-care-analytics/
+  README.md
+  requirements.txt
+  .gitignore
+
+  docs/
+    Provider_Network_Value_Based_Care_Analytics_Blueprint.md
+    business_problem.md
+    data_sources.md
+    architecture.md
+    data_dictionary.md
+    kpi_dictionary.md
+    provider_scorecard_methodology.md
+    aco_performance_methodology.md
+    dashboard_spec.md
+    executive_summary.md
+    portfolio_case_study.md
+    interview_talking_points.md
+
+  data/
+    raw/
+      nppes/
+      provider_utilization/
+      care_compare/
+      hrrp/
+      geographic_variation/
+      mssp_aco/
+      provider_of_services/
+      sdoh_optional/
+    interim/
+    processed/
+
+  sql/
+    00_admin/
+    01_bronze_ddl/
+    02_silver_transforms/
+    03_gold_star_schema/
+    04_marts/
+    05_quality_tests/
+    06_analytics_queries/
+
+  src/
+    etl/
+    features/
+    scoring/
+    reporting/
+
+  notebooks/
+    01_provider_source_profile.ipynb
+    02_provider_utilization_eda.ipynb
+    03_hospital_quality_eda.ipynb
+    04_aco_performance_eda.ipynb
+    05_provider_outlier_detection.ipynb
+    06_market_opportunity_analysis.ipynb
+
+  powerbi/
+    provider_network_vbc_platform.pbip/
+    exports/
+
+  reports/
+    figures/
+    executive_summary.pdf
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="7-data-architecture">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="7-data-architecture">7. Data Architecture</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#6-repository-structure">Previous</a>
+      <a href="#8-sql-build-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#8-sql-build-plan">SQL Build</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<h3 id="7-1-schemas">7.1 Schemas</h3>
+<p>Use:</p>
+<ul>
+<li><code>raw</code></li>
+<li><code>bronze</code></li>
+<li><code>silver</code></li>
+<li><code>gold</code></li>
+<li><code>mart</code></li>
+<li><code>score</code></li>
+<li><code>dq</code></li>
+</ul>
+<h3 id="7-2-gold-dimensions">7.2 Gold dimensions</h3>
+<h4>dim_provider</h4>
+<p>Grain: one row per NPI or provider identifier.</p>
+<p>Columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>npi</code></li>
+<li><code>entity_type</code></li>
+<li><code>provider_name</code></li>
+<li><code>organization_name</code></li>
+<li><code>first_name</code></li>
+<li><code>last_name</code></li>
+<li><code>primary_taxonomy_code</code></li>
+<li><code>primary_taxonomy_description</code></li>
+<li><code>specialty_group</code></li>
+<li><code>provider_type</code></li>
+<li><code>practice_address_line_1</code></li>
+<li><code>practice_city</code></li>
+<li><code>practice_state</code></li>
+<li><code>practice_zip</code></li>
+<li><code>county_fips</code></li>
+<li><code>is_individual</code></li>
+<li><code>is_organization</code></li>
+<li><code>npi_deactivation_date</code></li>
+<li><code>source_system</code></li>
+</ul>
+<p>Specialty group examples:</p>
+<ul>
+<li>Primary care</li>
+<li>Cardiology</li>
+<li>Orthopedics</li>
+<li>Emergency medicine</li>
+<li>Radiology</li>
+<li>Oncology</li>
+<li>Behavioral health</li>
+<li>Surgery</li>
+<li>Facility</li>
+<li>DME/supplier</li>
+<li>Other</li>
+</ul>
+<h4>dim_facility</h4>
+<p>Grain: one row per hospital/facility certification number.</p>
+<p>Columns:</p>
+<ul>
+<li><code>facility_key</code></li>
+<li><code>ccn</code></li>
+<li><code>facility_name</code></li>
+<li><code>facility_type</code></li>
+<li><code>ownership_type</code></li>
+<li><code>address</code></li>
+<li><code>city</code></li>
+<li><code>state</code></li>
+<li><code>zip</code></li>
+<li><code>county_name</code></li>
+<li><code>county_fips</code></li>
+<li><code>hospital_referral_region</code></li>
+<li><code>urban_rural_flag</code></li>
+<li><code>beds</code></li>
+<li><code>emergency_services_flag</code></li>
+<li><code>medicare_certification_date</code></li>
+</ul>
+<h4>dim_geography</h4>
+<p>Grain: one row per geography level and code.</p>
+<p>Columns:</p>
+<ul>
+<li><code>geo_key</code></li>
+<li><code>geo_level</code></li>
+<li><code>state_code</code></li>
+<li><code>state_name</code></li>
+<li><code>county_fips</code></li>
+<li><code>county_name</code></li>
+<li><code>cbsa</code></li>
+<li><code>hrr</code></li>
+<li><code>region</code></li>
+<li><code>poverty_rate</code></li>
+<li><code>median_income</code></li>
+<li><code>dual_eligible_proxy</code></li>
+<li><code>sdoh_risk_index</code></li>
+</ul>
+<h4>dim_service</h4>
+<p>Grain: one row per HCPCS/service code.</p>
+<p>Columns:</p>
+<ul>
+<li><code>service_key</code></li>
+<li><code>hcpcs_code</code></li>
+<li><code>hcpcs_description</code></li>
+<li><code>service_category</code></li>
+<li><code>place_of_service</code></li>
+<li><code>clinical_category</code></li>
+<li><code>is_evaluation_management</code></li>
+<li><code>is_imaging</code></li>
+<li><code>is_procedure</code></li>
+<li><code>is_dme</code></li>
+</ul>
+<h4>dim_aco</h4>
+<p>Grain: one row per ACO per performance year if ACO IDs change over time.</p>
+<p>Columns:</p>
+<ul>
+<li><code>aco_key</code></li>
+<li><code>aco_id</code></li>
+<li><code>aco_name</code></li>
+<li><code>performance_year</code></li>
+<li><code>agreement_period</code></li>
+<li><code>track</code></li>
+<li><code>risk_model</code></li>
+<li><code>start_date</code></li>
+<li><code>state</code></li>
+<li><code>assigned_beneficiaries</code></li>
+<li><code>low_revenue_flag</code></li>
+<li><code>advance_investment_payment_flag</code></li>
+</ul>
+<h4>dim_measure</h4>
+<p>Grain: one row per quality or performance measure.</p>
+<p>Columns:</p>
+<ul>
+<li><code>measure_key</code></li>
+<li><code>measure_id</code></li>
+<li><code>measure_name</code></li>
+<li><code>measure_domain</code></li>
+<li><code>measure_type</code></li>
+<li><code>higher_is_better_flag</code></li>
+<li><code>unit</code></li>
+<li><code>source_program</code></li>
+</ul>
+<p>Measure domains:</p>
+<ul>
+<li>Cost</li>
+<li>Quality</li>
+<li>Readmission</li>
+<li>Mortality</li>
+<li>Patient experience</li>
+<li>Safety</li>
+<li>Utilization</li>
+<li>Access</li>
+<li>ACO financial</li>
+</ul>
+<h3 id="7-3-gold-facts">7.3 Gold facts</h3>
+<h4>fact_provider_service_utilization</h4>
+<p>Grain: provider, service, place of service, year.</p>
+<p>Columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>service_key</code></li>
+<li><code>geo_key</code></li>
+<li><code>year</code></li>
+<li><code>place_of_service</code></li>
+<li><code>beneficiary_count</code></li>
+<li><code>service_count</code></li>
+<li><code>submitted_charge_amount</code></li>
+<li><code>allowed_amount</code></li>
+<li><code>medicare_payment_amount</code></li>
+<li><code>payment_per_service</code></li>
+<li><code>payment_per_beneficiary</code></li>
+</ul>
+<h4>fact_provider_year</h4>
+<p>Grain: provider-year.</p>
+<p>Columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>year</code></li>
+<li><code>specialty_group</code></li>
+<li><code>beneficiary_count</code></li>
+<li><code>service_count</code></li>
+<li><code>total_payment</code></li>
+<li><code>total_allowed</code></li>
+<li><code>total_submitted</code></li>
+<li><code>payment_per_beneficiary</code></li>
+<li><code>services_per_beneficiary</code></li>
+<li><code>procedure_mix_index</code></li>
+<li><code>service_concentration_index</code></li>
+<li><code>peer_cost_percentile</code></li>
+<li><code>peer_utilization_percentile</code></li>
+</ul>
+<h4>fact_hospital_quality</h4>
+<p>Grain: facility, measure, reporting period.</p>
+<p>Columns:</p>
+<ul>
+<li><code>facility_key</code></li>
+<li><code>measure_key</code></li>
+<li><code>reporting_period</code></li>
+<li><code>score</code></li>
+<li><code>national_benchmark</code></li>
+<li><code>state_benchmark</code></li>
+<li><code>better_than_national_flag</code></li>
+<li><code>worse_than_national_flag</code></li>
+</ul>
+<h4>fact_aco_performance</h4>
+<p>Grain: ACO performance year.</p>
+<p>Columns:</p>
+<ul>
+<li><code>aco_key</code></li>
+<li><code>performance_year</code></li>
+<li><code>assigned_beneficiaries</code></li>
+<li><code>benchmark_expenditure</code></li>
+<li><code>actual_expenditure</code></li>
+<li><code>gross_savings_losses</code></li>
+<li><code>earned_shared_savings</code></li>
+<li><code>quality_score</code></li>
+<li><code>minimum_savings_rate</code></li>
+<li><code>savings_rate</code></li>
+<li><code>loss_rate</code></li>
+<li><code>shared_savings_flag</code></li>
+<li><code>shared_losses_flag</code></li>
+</ul>
+<h4>fact_geo_variation</h4>
+<p>Grain: geography, year, measure.</p>
+<p>Columns:</p>
+<ul>
+<li><code>geo_key</code></li>
+<li><code>year</code></li>
+<li><code>measure_key</code></li>
+<li><code>beneficiary_count</code></li>
+<li><code>per_capita_cost</code></li>
+<li><code>risk_score</code></li>
+<li><code>admissions_per_1000</code></li>
+<li><code>ed_visits_per_1000</code></li>
+<li><code>readmissions_per_1000</code></li>
+<li><code>standardized_payment</code></li>
+</ul>
+<h4>fact_provider_score</h4>
+<p>Grain: provider-year-score version.</p>
+<p>Columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>year</code></li>
+<li><code>cost_score</code></li>
+<li><code>utilization_score</code></li>
+<li><code>quality_proxy_score</code></li>
+<li><code>risk_context_score</code></li>
+<li><code>network_value_score</code></li>
+<li><code>outlier_flag</code></li>
+<li><code>contracting_opportunity_tier</code></li>
+<li><code>recommended_action</code></li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="8-sql-build-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="8-sql-build-plan">8. SQL Build Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#7-data-architecture">Previous</a>
+      <a href="#9-python-analytics-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#7-data-architecture">Data Architecture</a><a class="related-chip" href="#12-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Power BI</a>
+    </div>
+    
+<h3 id="8-1-sql-files-to-create">8.1 SQL files to create</h3>
+<pre><code class="language-text">sql/
+  00_admin/
+    create_schemas.sql
+  01_bronze_ddl/
+    bronze_nppes.sql
+    bronze_provider_utilization.sql
+    bronze_care_compare.sql
+    bronze_hrrp.sql
+    bronze_geo_variation.sql
+    bronze_aco_performance.sql
+  02_silver_transforms/
+    silver_provider_master.sql
+    silver_facility_master.sql
+    silver_provider_services.sql
+    silver_hospital_measures.sql
+    silver_aco_performance.sql
+    silver_geo_benchmarks.sql
+  03_gold_star_schema/
+    dim_provider.sql
+    dim_facility.sql
+    dim_geography.sql
+    dim_service.sql
+    dim_aco.sql
+    dim_measure.sql
+    fact_provider_service_utilization.sql
+    fact_provider_year.sql
+    fact_hospital_quality.sql
+    fact_aco_performance.sql
+    fact_geo_variation.sql
+  04_marts/
+    mart_provider_scorecard.sql
+    mart_provider_peer_benchmark.sql
+    mart_hospital_quality_scorecard.sql
+    mart_aco_performance.sql
+    mart_market_opportunity.sql
+    mart_contracting_opportunity.sql
+    mart_provider_outlier_queue.sql
+</code></pre>
+<h3 id="8-2-provider-peer-benchmark-mart">8.2 Provider peer benchmark mart</h3>
+<p>Output: <code>mart.mart_provider_peer_benchmark</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>npi</code></li>
+<li><code>provider_name</code></li>
+<li><code>specialty_group</code></li>
+<li><code>state</code></li>
+<li><code>year</code></li>
+<li><code>beneficiary_count</code></li>
+<li><code>service_count</code></li>
+<li><code>total_payment</code></li>
+<li><code>payment_per_beneficiary</code></li>
+<li><code>services_per_beneficiary</code></li>
+<li><code>peer_median_payment_per_beneficiary</code></li>
+<li><code>peer_median_services_per_beneficiary</code></li>
+<li><code>cost_percentile</code></li>
+<li><code>utilization_percentile</code></li>
+<li><code>provider_tier</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">WITH provider_year AS (
+    SELECT
+        p.provider_key,
+        p.npi,
+        p.provider_name,
+        p.specialty_group,
+        g.state_code,
+        f.year,
+        SUM(f.beneficiary_count) AS beneficiary_count,
+        SUM(f.service_count) AS service_count,
+        SUM(f.medicare_payment_amount) AS total_payment,
+        SUM(f.medicare_payment_amount) * 1.0 / NULLIF(SUM(f.beneficiary_count), 0) AS payment_per_beneficiary,
+        SUM(f.service_count) * 1.0 / NULLIF(SUM(f.beneficiary_count), 0) AS services_per_beneficiary
+    FROM gold.fact_provider_service_utilization f
+    JOIN gold.dim_provider p
+        ON f.provider_key = p.provider_key
+    JOIN gold.dim_geography g
+        ON f.geo_key = g.geo_key
+    GROUP BY
+        p.provider_key, p.npi, p.provider_name, p.specialty_group, g.state_code, f.year
+),
+benchmarks AS (
+    SELECT
+        *,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY payment_per_beneficiary)
+            OVER (PARTITION BY specialty_group, state_code, year) AS peer_median_payment_per_beneficiary,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY services_per_beneficiary)
+            OVER (PARTITION BY specialty_group, state_code, year) AS peer_median_services_per_beneficiary,
+        PERCENT_RANK() OVER (
+            PARTITION BY specialty_group, state_code, year
+            ORDER BY payment_per_beneficiary
+        ) AS cost_percentile,
+        PERCENT_RANK() OVER (
+            PARTITION BY specialty_group, state_code, year
+            ORDER BY services_per_beneficiary
+        ) AS utilization_percentile
+    FROM provider_year
+)
+SELECT
+    *,
+    CASE
+        WHEN cost_percentile &gt;= 0.90 AND utilization_percentile &gt;= 0.90 THEN &#39;High-cost high-utilization outlier&#39;
+        WHEN cost_percentile &gt;= 0.90 THEN &#39;High-cost outlier&#39;
+        WHEN utilization_percentile &gt;= 0.90 THEN &#39;High-utilization outlier&#39;
+        WHEN cost_percentile &lt;= 0.50 AND utilization_percentile &lt;= 0.50 THEN &#39;Efficient peer performer&#39;
+        ELSE &#39;Expected range&#39;
+    END AS provider_tier
+FROM benchmarks;
+</code></pre>
+<p>If your database does not support <code>PERCENTILE_CONT</code>, replace with approximate percentiles or precomputed Python benchmarks.</p>
+<h3 id="8-3-aco-performance-mart">8.3 ACO performance mart</h3>
+<p>Output: <code>mart.mart_aco_performance</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>aco_key</code></li>
+<li><code>aco_name</code></li>
+<li><code>performance_year</code></li>
+<li><code>assigned_beneficiaries</code></li>
+<li><code>benchmark_expenditure</code></li>
+<li><code>actual_expenditure</code></li>
+<li><code>gross_savings_losses</code></li>
+<li><code>earned_shared_savings</code></li>
+<li><code>savings_rate</code></li>
+<li><code>quality_score</code></li>
+<li><code>quality_cost_quadrant</code></li>
+<li><code>aco_performance_tier</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">SELECT
+    a.aco_key,
+    a.aco_name,
+    f.performance_year,
+    f.assigned_beneficiaries,
+    f.benchmark_expenditure,
+    f.actual_expenditure,
+    f.gross_savings_losses,
+    f.earned_shared_savings,
+    f.gross_savings_losses * 1.0 / NULLIF(f.benchmark_expenditure, 0) AS savings_rate,
+    f.quality_score,
+    CASE
+        WHEN f.gross_savings_losses &gt; 0 AND f.quality_score &gt;= 90 THEN &#39;High quality savings&#39;
+        WHEN f.gross_savings_losses &gt; 0 AND f.quality_score &lt; 90 THEN &#39;Savings but quality risk&#39;
+        WHEN f.gross_savings_losses &lt;= 0 AND f.quality_score &gt;= 90 THEN &#39;High quality cost opportunity&#39;
+        ELSE &#39;Underperforming&#39;
+    END AS quality_cost_quadrant,
+    CASE
+        WHEN f.earned_shared_savings &gt; 0 AND f.quality_score &gt;= 90 THEN &#39;Preferred VBC partner&#39;
+        WHEN f.gross_savings_losses &gt; 0 THEN &#39;Savings candidate&#39;
+        WHEN f.quality_score &gt;= 90 THEN &#39;Quality partner needing cost support&#39;
+        ELSE &#39;Performance improvement required&#39;
+    END AS aco_performance_tier
+FROM gold.fact_aco_performance f
+JOIN gold.dim_aco a
+    ON f.aco_key = a.aco_key;
+</code></pre>
+<h3 id="8-4-hospital-quality-scorecard-mart">8.4 Hospital quality scorecard mart</h3>
+<p>Output: <code>mart.mart_hospital_quality_scorecard</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>facility_key</code></li>
+<li><code>facility_name</code></li>
+<li><code>state</code></li>
+<li><code>overall_star_rating</code></li>
+<li><code>readmission_score</code></li>
+<li><code>mortality_score</code></li>
+<li><code>patient_experience_score</code></li>
+<li><code>safety_score</code></li>
+<li><code>quality_composite_score</code></li>
+<li><code>quality_tier</code></li>
+<li><code>network_action</code></li>
+</ul>
+<p>SQL pattern:</p>
+<pre><code class="language-sql">WITH measure_pivot AS (
+    SELECT
+        facility_key,
+        MAX(CASE WHEN measure_domain = &#39;Star Rating&#39; THEN score END) AS overall_star_rating,
+        AVG(CASE WHEN measure_domain = &#39;Readmission&#39; THEN score END) AS readmission_score,
+        AVG(CASE WHEN measure_domain = &#39;Mortality&#39; THEN score END) AS mortality_score,
+        AVG(CASE WHEN measure_domain = &#39;Patient Experience&#39; THEN score END) AS patient_experience_score,
+        AVG(CASE WHEN measure_domain = &#39;Safety&#39; THEN score END) AS safety_score
+    FROM gold.fact_hospital_quality f
+    JOIN gold.dim_measure m
+        ON f.measure_key = m.measure_key
+    GROUP BY facility_key
+),
+scored AS (
+    SELECT
+        facility_key,
+        overall_star_rating,
+        readmission_score,
+        mortality_score,
+        patient_experience_score,
+        safety_score,
+        (
+            0.30 * COALESCE(overall_star_rating, 0)
+            + 0.25 * COALESCE(readmission_score, 0)
+            + 0.20 * COALESCE(mortality_score, 0)
+            + 0.15 * COALESCE(patient_experience_score, 0)
+            + 0.10 * COALESCE(safety_score, 0)
+        ) AS quality_composite_score
+    FROM measure_pivot
+)
+SELECT
+    f.facility_key,
+    f.facility_name,
+    f.state,
+    s.*,
+    CASE
+        WHEN quality_composite_score &gt;= 4 THEN &#39;Preferred facility&#39;
+        WHEN quality_composite_score &gt;= 3 THEN &#39;Standard facility&#39;
+        WHEN quality_composite_score &gt;= 2 THEN &#39;Watchlist&#39;
+        ELSE &#39;Network quality intervention&#39;
+    END AS quality_tier,
+    CASE
+        WHEN quality_composite_score &lt; 2 THEN &#39;Review contract and quality improvement plan&#39;
+        WHEN quality_composite_score &lt; 3 THEN &#39;Monitor with provider relations&#39;
+        ELSE &#39;Maintain&#39;
+    END AS network_action
+FROM scored s
+JOIN gold.dim_facility f
+    ON s.facility_key = f.facility_key;
+</code></pre>
+<h3 id="8-5-contracting-opportunity-mart">8.5 Contracting opportunity mart</h3>
+<p>Output: <code>mart.mart_contracting_opportunity</code></p>
+<p>Logic:</p>
+<ul>
+<li>Efficient provider: low cost percentile and acceptable quality.</li>
+<li>Strategic provider: high volume and acceptable quality.</li>
+<li>Improvement target: high cost and high utilization.</li>
+<li>Contract risk: poor quality and high cost.</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>provider_or_facility_key</code></li>
+<li><code>entity_type</code></li>
+<li><code>name</code></li>
+<li><code>market</code></li>
+<li><code>volume_score</code></li>
+<li><code>cost_score</code></li>
+<li><code>quality_score</code></li>
+<li><code>network_value_score</code></li>
+<li><code>opportunity_tier</code></li>
+<li><code>recommended_contract_action</code></li>
+</ul>
+<p>Recommended action values:</p>
+<ul>
+<li>Preferred value-based contract candidate</li>
+<li>Negotiate performance guarantee</li>
+<li>Provider education and utilization review</li>
+<li>Quality improvement plan</li>
+<li>Monitor only</li>
+<li>Do not prioritize</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="9-python-analytics-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="9-python-analytics-plan">9. Python Analytics Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#8-sql-build-plan">Previous</a>
+      <a href="#10-ml-and-statistical-scoring-design">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#13-data-quality-rules">Model Governance</a>
+    </div>
+    
+<h3 id="9-1-eda-notebooks">9.1 EDA notebooks</h3>
+<h4><code>01_provider_source_profile.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Row counts by source</li>
+<li>NPI completeness</li>
+<li>Specialty distribution</li>
+<li>State distribution</li>
+<li>Missing payment metrics</li>
+<li>Provider utilization date coverage</li>
+<li>Duplicates and malformed identifiers</li>
+</ul>
+<h4><code>02_provider_utilization_eda.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Payment distribution by specialty</li>
+<li>Services per beneficiary by specialty</li>
+<li>Top HCPCS by payment</li>
+<li>Provider concentration by market</li>
+<li>High-cost provider outliers</li>
+<li>Specialty-level peer benchmarks</li>
+</ul>
+<h4><code>03_hospital_quality_eda.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Star rating distribution</li>
+<li>Readmission measure variation</li>
+<li>Patient experience variation</li>
+<li>Quality by ownership/facility type</li>
+<li>High-cost/high-quality and high-cost/low-quality quadrant</li>
+</ul>
+<h4><code>04_aco_performance_eda.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>ACO savings/loss distribution</li>
+<li>Quality score distribution</li>
+<li>Shared savings by assigned beneficiaries</li>
+<li>ACO performance quadrant</li>
+<li>Risk model or track comparison</li>
+</ul>
+<h4><code>05_provider_outlier_detection.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Provider outlier feature table</li>
+<li>Isolation Forest or robust z-score outliers</li>
+<li>Cluster profiles</li>
+<li>Provider action tiers</li>
+</ul>
+<h4><code>06_market_opportunity_analysis.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Market cost variation</li>
+<li>Provider density</li>
+<li>High-cost regions</li>
+<li>Quality gaps by region</li>
+<li>Network expansion/contracting opportunities</li>
+</ul>
+<h3 id="9-2-feature-engineering">9.2 Feature engineering</h3>
+<p>Provider features:</p>
+<ul>
+<li><code>payment_per_beneficiary</code></li>
+<li><code>services_per_beneficiary</code></li>
+<li><code>payment_per_service</code></li>
+<li><code>service_mix_entropy</code></li>
+<li><code>top_hcpcs_payment_share</code></li>
+<li><code>evaluation_management_share</code></li>
+<li><code>imaging_share</code></li>
+<li><code>procedure_share</code></li>
+<li><code>dme_share</code></li>
+<li><code>peer_cost_percentile</code></li>
+<li><code>peer_utilization_percentile</code></li>
+<li><code>state_cost_index</code></li>
+<li><code>provider_volume_tier</code></li>
+</ul>
+<p>Facility features:</p>
+<ul>
+<li><code>overall_star_rating</code></li>
+<li><code>readmission_score</code></li>
+<li><code>mortality_score</code></li>
+<li><code>patient_experience_score</code></li>
+<li><code>safety_score</code></li>
+<li><code>quality_composite_score</code></li>
+<li><code>facility_volume_proxy</code></li>
+<li><code>market_quality_percentile</code></li>
+</ul>
+<p>ACO features:</p>
+<ul>
+<li><code>assigned_beneficiaries</code></li>
+<li><code>benchmark_expenditure</code></li>
+<li><code>actual_expenditure</code></li>
+<li><code>gross_savings_losses</code></li>
+<li><code>savings_rate</code></li>
+<li><code>earned_shared_savings</code></li>
+<li><code>quality_score</code></li>
+<li><code>beneficiaries_per_participant</code></li>
+<li><code>performance_tier</code></li>
+</ul>
+<p>Market features:</p>
+<ul>
+<li><code>per_capita_cost</code></li>
+<li><code>risk_score</code></li>
+<li><code>admissions_per_1000</code></li>
+<li><code>ed_visits_per_1000</code></li>
+<li><code>provider_density</code></li>
+<li><code>quality_gap_index</code></li>
+<li><code>sdoh_risk_index</code></li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="10-ml-and-statistical-scoring-design">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="10-ml-and-statistical-scoring-design">10. ML and Statistical Scoring Design</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#9-python-analytics-plan">Previous</a>
+      <a href="#11-power-bi-dashboard-specification">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#13-data-quality-rules">Model Governance</a>
+    </div>
+    
+<h3 id="10-1-provider-outlier-detection">10.1 Provider outlier detection</h3>
+<p>Purpose:</p>
+<ul>
+<li>Identify providers whose utilization or payment patterns deviate from peers.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>Provider-year.</li>
+</ul>
+<p>Input table:</p>
+<ul>
+<li><code>score.feature_provider_year</code></li>
+</ul>
+<p>Methods:</p>
+<ul>
+<li>Robust z-score by specialty and state</li>
+<li>Isolation Forest</li>
+<li>Local Outlier Factor</li>
+<li>K-means clustering for provider profiles</li>
+</ul>
+<p>Evaluation:</p>
+<ul>
+<li>Outlier concentration in top percentile</li>
+<li>Business review of top 50 providers</li>
+<li>Stability by year</li>
+<li>Specialty-specific explainability</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>outlier_score</code></li>
+<li><code>outlier_percentile</code></li>
+<li><code>top_outlier_driver</code></li>
+<li><code>recommended_action</code></li>
+</ul>
+<h3 id="10-2-contracting-opportunity-score">10.2 Contracting opportunity score</h3>
+<p>Purpose:</p>
+<ul>
+<li>Rank providers for value-based contracting or network strategy.</li>
+</ul>
+<p>Scoring formula:</p>
+<pre><code class="language-text">network_value_score =
+    0.30 * volume_score
+  + 0.25 * quality_score
+  + 0.20 * cost_efficiency_score
+  + 0.15 * market_need_score
+  + 0.10 * stability_score
+</code></pre>
+<p>Score components:</p>
+<ul>
+<li>Volume score: beneficiary/service volume percentile</li>
+<li>Quality score: quality composite or proxy</li>
+<li>Cost efficiency score: inverse cost percentile</li>
+<li>Market need score: provider scarcity or high-cost market opportunity</li>
+<li>Stability score: year-over-year consistency</li>
+</ul>
+<p>Output tiers:</p>
+<ul>
+<li>Tier 1: Preferred VBC contract candidate</li>
+<li>Tier 2: Strategic network partner</li>
+<li>Tier 3: Improvement opportunity</li>
+<li>Tier 4: Monitor</li>
+<li>Tier 5: Contract risk</li>
+</ul>
+<h3 id="10-3-aco-performance-segmentation">10.3 ACO performance segmentation</h3>
+<p>Purpose:</p>
+<ul>
+<li>Group ACOs into business-relevant performance segments.</li>
+</ul>
+<p>Inputs:</p>
+<ul>
+<li>Savings rate</li>
+<li>Quality score</li>
+<li>Assigned beneficiaries</li>
+<li>Earned shared savings</li>
+<li>Benchmark vs actual expenditure</li>
+</ul>
+<p>Segments:</p>
+<ul>
+<li>High quality savings performer</li>
+<li>High quality cost opportunity</li>
+<li>Savings with quality concern</li>
+<li>Underperforming ACO</li>
+<li>Small ACO with unstable results</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="11-power-bi-dashboard-specification">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="11-power-bi-dashboard-specification">11. Power BI Dashboard Specification</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#10-ml-and-statistical-scoring-design">Previous</a>
+      <a href="#12-kpi-dictionary">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#12-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#8-sql-build-plan">SQL Marts</a><a class="related-chip" href="#1-executive-project-charter">Executive Story</a>
+    </div>
+    
+<h3 id="11-1-pages">11.1 Pages</h3>
+<h4>Page 1: Executive Provider Network Overview</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Total providers</li>
+<li>Total Medicare payment</li>
+<li>Providers above 90th cost percentile</li>
+<li>Preferred provider candidates</li>
+<li>Contract risk providers</li>
+<li>Average network value score</li>
+<li>ACO shared savings</li>
+<li>Average hospital star rating</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Provider performance quadrant</li>
+<li>Payment by specialty</li>
+<li>Outlier providers by peer group</li>
+<li>Market opportunity map</li>
+<li>ACO quality-cost quadrant</li>
+<li>Hospital quality tier distribution</li>
+</ul>
+<h4>Page 2: Provider Peer Benchmarking</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Selected provider payment per beneficiary</li>
+<li>Peer median payment per beneficiary</li>
+<li>Services per beneficiary</li>
+<li>Cost percentile</li>
+<li>Utilization percentile</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Provider vs peer benchmark bars</li>
+<li>Specialty scatter: cost percentile vs utilization percentile</li>
+<li>Top HCPCS/services</li>
+<li>Service mix treemap</li>
+<li>Provider drill-through table</li>
+</ul>
+<h4>Page 3: Hospital Quality and Readmissions</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Average star rating</li>
+<li>Readmission outlier count</li>
+<li>Preferred facilities</li>
+<li>Quality intervention facilities</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Hospital quality scorecard</li>
+<li>Readmission performance by state</li>
+<li>Star rating distribution</li>
+<li>Quality vs cost quadrant</li>
+<li>Facility drill-through</li>
+</ul>
+<h4>Page 4: ACO Performance</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Assigned beneficiaries</li>
+<li>Total gross savings/losses</li>
+<li>Earned shared savings</li>
+<li>Average quality score</li>
+<li>ACOs with shared savings</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>ACO savings trend</li>
+<li>Quality vs savings scatter</li>
+<li>ACO performance tier table</li>
+<li>Savings rate distribution</li>
+<li>ACO drill-through profile</li>
+</ul>
+<h4>Page 5: Market Opportunity</h4>
+<p>KPI cards:</p>
+<ul>
+<li>High-cost markets</li>
+<li>Low-quality markets</li>
+<li>Provider density</li>
+<li>Market opportunity score</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Map by market opportunity</li>
+<li>Per-capita cost by geography</li>
+<li>Provider density vs cost</li>
+<li>Market quality gap</li>
+<li>Recommended market actions</li>
+</ul>
+<h4>Page 6: Contracting Opportunity</h4>
+<p>KPI cards:</p>
+<ul>
+<li>VBC candidates</li>
+<li>Strategic partners</li>
+<li>Improvement targets</li>
+<li>Contract risks</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Contract opportunity ranked list</li>
+<li>Network value score distribution</li>
+<li>Recommended action matrix</li>
+<li>Provider/facility drill-through</li>
+</ul>
+<h4>Page 7: Data Quality and Governance</h4>
+<p>Visuals:</p>
+<ul>
+<li>Source row counts</li>
+<li>NPI match rate</li>
+<li>Facility match rate</li>
+<li>Missing quality score rate</li>
+<li>Measure coverage by source</li>
+<li>Last refresh date</li>
+</ul>
+<h3 id="11-2-core-dax-measures">11.2 Core DAX measures</h3>
+<pre><code class="language-DAX">Total Medicare Payment =
+SUM(fact_provider_service_utilization[medicare_payment_amount])
+
+Total Services =
+SUM(fact_provider_service_utilization[service_count])
+
+Total Beneficiaries =
+SUM(fact_provider_service_utilization[beneficiary_count])
+
+Payment Per Beneficiary =
+DIVIDE([Total Medicare Payment], [Total Beneficiaries])
+
+Services Per Beneficiary =
+DIVIDE([Total Services], [Total Beneficiaries])
+
+Outlier Providers =
+CALCULATE(
+    DISTINCTCOUNT(mart_provider_peer_benchmark[provider_key]),
+    mart_provider_peer_benchmark[cost_percentile] &gt;= 0.90
+)
+
+Average Quality Score =
+AVERAGE(mart_hospital_quality_scorecard[quality_composite_score])
+
+ACO Gross Savings =
+SUM(mart_aco_performance[gross_savings_losses])
+
+ACO Earned Shared Savings =
+SUM(mart_aco_performance[earned_shared_savings])
+
+Preferred VBC Candidates =
+CALCULATE(
+    DISTINCTCOUNT(mart_contracting_opportunity[provider_or_facility_key]),
+    mart_contracting_opportunity[opportunity_tier] = &quot;Preferred value-based contract candidate&quot;
+)
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="12-kpi-dictionary">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="12-kpi-dictionary">12. KPI Dictionary</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#11-power-bi-dashboard-specification">Previous</a>
+      <a href="#13-data-quality-rules">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#8-sql-build-plan">SQL Marts</a><a class="related-chip" href="#11-power-bi-dashboard-specification">Dashboard Spec</a><a class="related-chip" href="#13-data-quality-rules">Quality Rules</a>
+    </div>
+    
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Formula</th>
+<th>Grain</th>
+<th>Business owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total Medicare payment</td>
+<td>Sum Medicare payment amount</td>
+<td>Provider-service-year</td>
+<td>Finance/network</td>
+</tr>
+<tr>
+<td>Payment per beneficiary</td>
+<td>Total payment / beneficiary count</td>
+<td>Provider-year</td>
+<td>Provider network</td>
+</tr>
+<tr>
+<td>Services per beneficiary</td>
+<td>Service count / beneficiary count</td>
+<td>Provider-year</td>
+<td>Utilization</td>
+</tr>
+<tr>
+<td>Payment per service</td>
+<td>Total payment / service count</td>
+<td>Provider-service</td>
+<td>Contracting</td>
+</tr>
+<tr>
+<td>Cost percentile</td>
+<td>Provider payment per beneficiary percentile within specialty/state/year</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Utilization percentile</td>
+<td>Provider services per beneficiary percentile within specialty/state/year</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Provider outlier count</td>
+<td>Providers with cost or utilization percentile above threshold</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Quality composite score</td>
+<td>Weighted hospital quality domain score</td>
+<td>Facility</td>
+<td>Quality</td>
+</tr>
+<tr>
+<td>Readmission outlier</td>
+<td>Facility worse than benchmark on readmission measures</td>
+<td>Facility</td>
+<td>Quality/UM</td>
+</tr>
+<tr>
+<td>ACO savings rate</td>
+<td>Gross savings/losses / benchmark expenditure</td>
+<td>ACO-year</td>
+<td>VBC</td>
+</tr>
+<tr>
+<td>Earned shared savings</td>
+<td>CMS reported shared savings amount</td>
+<td>ACO-year</td>
+<td>VBC/finance</td>
+</tr>
+<tr>
+<td>ACO quality score</td>
+<td>CMS reported quality score</td>
+<td>ACO-year</td>
+<td>VBC</td>
+</tr>
+<tr>
+<td>Network value score</td>
+<td>Weighted score across volume, quality, efficiency, market need, stability</td>
+<td>Provider/facility</td>
+<td>Contracting</td>
+</tr>
+<tr>
+<td>Market opportunity score</td>
+<td>Weighted high cost, low quality, low provider density, high need</td>
+<td>Geography</td>
+<td>Strategy</td>
+</tr>
+</tbody></table>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="13-data-quality-rules">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="13-data-quality-rules">13. Data Quality Rules</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#12-kpi-dictionary">Previous</a>
+      <a href="#14-business-insights-to-generate">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Required checks:</p>
+<ul>
+<li>NPI is valid length and numeric when applicable.</li>
+<li>Provider rows deduplicated by NPI.</li>
+<li>Provider taxonomy mapped to specialty group.</li>
+<li>Payment amounts are non-negative unless adjustment logic exists.</li>
+<li>Beneficiary counts and service counts are positive.</li>
+<li>Facility IDs match Care Compare where possible.</li>
+<li>Measure IDs map to measure dimension.</li>
+<li>ACO performance year is valid.</li>
+<li>ACO assigned beneficiaries are positive.</li>
+<li>Geographic identifiers are standardized.</li>
+<li>No provider-year duplicates in final scorecard.</li>
+</ul>
+<p>Quality outputs:</p>
+<ul>
+<li>NPI match rate</li>
+<li>Facility match rate</li>
+<li>Missing specialty rate</li>
+<li>Missing quality measure rate</li>
+<li>Payment reconciliation by source</li>
+<li>Row count reconciliation from bronze to gold</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="14-business-insights-to-generate">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="14-business-insights-to-generate">14. Business Insights To Generate</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#13-data-quality-rules">Previous</a>
+      <a href="#15-implementation-roadmap">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Minimum final insights:</p>
+<ol>
+<li>Top provider specialties driving Medicare payment.</li>
+<li>Providers above 90th percentile for cost and utilization within peer group.</li>
+<li>Provider groups with efficient cost and high volume.</li>
+<li>Hospitals with low quality or high readmission risk.</li>
+<li>ACOs that achieved savings with strong quality.</li>
+<li>ACOs with high quality but cost opportunity.</li>
+<li>Markets with high per-capita cost and provider performance gaps.</li>
+<li>Recommended providers for value-based contracting.</li>
+<li>Recommended facilities for quality intervention.</li>
+<li>Network strategy recommendations by market.</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="15-implementation-roadmap">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="15-implementation-roadmap">15. Implementation Roadmap</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#14-business-insights-to-generate">Previous</a>
+      <a href="#16-readme-outline">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="phase-1-data-acquisition">Phase 1: Data acquisition</h3>
+<p>Tasks:</p>
+<ul>
+<li>Download NPPES NPI file.</li>
+<li>Download CMS Physician Provider Utilization by Provider and Service.</li>
+<li>Download Care Compare hospital quality files.</li>
+<li>Download HRRP/readmission data.</li>
+<li>Download Medicare Geographic Variation PUF.</li>
+<li>Download MSSP ACO performance and participation files.</li>
+<li>Optional: download POS, QPP, ACS, AHRQ SDOH.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>docs/data_sources.md</code> with source links, file names, years, limitations.</li>
+</ul>
+<h3 id="phase-2-provider-master-and-normalization">Phase 2: Provider master and normalization</h3>
+<p>Tasks:</p>
+<ul>
+<li>Build NPI provider master.</li>
+<li>Map taxonomy to specialty group.</li>
+<li>Build facility master from POS/Care Compare.</li>
+<li>Standardize geography.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>gold.dim_provider</code></li>
+<li><code>gold.dim_facility</code></li>
+<li><code>gold.dim_geography</code></li>
+</ul>
+<h3 id="phase-3-utilization-and-quality-facts">Phase 3: Utilization and quality facts</h3>
+<p>Tasks:</p>
+<ul>
+<li>Build provider service utilization fact.</li>
+<li>Build provider-year aggregate fact.</li>
+<li>Build hospital quality fact.</li>
+<li>Build ACO performance fact.</li>
+<li>Build geographic variation fact.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Gold star schema ready for marts.</li>
+</ul>
+<h3 id="phase-4-sql-marts">Phase 4: SQL marts</h3>
+<p>Tasks:</p>
+<ul>
+<li>Provider peer benchmark mart.</li>
+<li>Hospital quality scorecard mart.</li>
+<li>ACO performance mart.</li>
+<li>Market opportunity mart.</li>
+<li>Contracting opportunity mart.</li>
+<li>Provider outlier queue.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Reusable governed analytics tables.</li>
+</ul>
+<h3 id="phase-5-python-scoring">Phase 5: Python scoring</h3>
+<p>Tasks:</p>
+<ul>
+<li>Profile provider utilization.</li>
+<li>Build provider features.</li>
+<li>Run provider outlier detection.</li>
+<li>Score contracting opportunity.</li>
+<li>Segment ACO performance.</li>
+<li>Export scores to database.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>score.provider_outlier_scores</code></li>
+<li><code>score.contracting_opportunity_scores</code></li>
+<li>Notebook figures.</li>
+</ul>
+<h3 id="phase-6-power-bi-dashboards">Phase 6: Power BI dashboards</h3>
+<p>Tasks:</p>
+<ul>
+<li>Build semantic model from marts.</li>
+<li>Create executive page.</li>
+<li>Create provider benchmarking page.</li>
+<li>Create hospital quality page.</li>
+<li>Create ACO page.</li>
+<li>Create market opportunity page.</li>
+<li>Create contracting page.</li>
+<li>Create data quality page.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Power BI report and exported screenshots.</li>
+</ul>
+<h3 id="phase-7-portfolio-packaging">Phase 7: Portfolio packaging</h3>
+<p>Tasks:</p>
+<ul>
+<li>Write README.</li>
+<li>Write case study.</li>
+<li>Write KPI dictionary.</li>
+<li>Write architecture explanation.</li>
+<li>Write interview talking points.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Portfolio-ready GitHub repository.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="16-readme-outline">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="16-readme-outline">16. README Outline</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#15-implementation-roadmap">Previous</a>
+      <a href="#17-interview-talking-points">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<pre><code class="language-text"># Provider Network Performance &amp; Value-Based Care Analytics Platform
+
+## Executive Summary
+## Business Problem
+## Data Sources
+## Architecture
+## Data Model
+## Provider Scorecard Methodology
+## ACO Performance Methodology
+## SQL Marts
+## Python Scoring
+## Power BI Dashboard
+## Key Insights
+## Limitations
+## How To Run
+## Interview Talking Points
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="17-interview-talking-points">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="17-interview-talking-points">17. Interview Talking Points</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#16-readme-outline">Previous</a>
+      <a href="#18-final-acceptance-checklist">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="60-second-pitch">60-second pitch</h3>
+<p>&quot;I built a provider network and value-based care analytics platform using CMS provider utilization, NPPES, Care Compare, HRRP, Geographic Variation, and Medicare Shared Savings Program data. The platform creates provider peer benchmarks, hospital quality scorecards, ACO performance segmentation, market opportunity analysis, and contracting opportunity scores. It simulates how payer network teams evaluate providers for cost efficiency, quality, utilization, and value-based care readiness.&quot;</p>
+<h3 id="sql-talking-points">SQL talking points</h3>
+<ul>
+<li>Built provider/facility/ACO/geography dimensions.</li>
+<li>Joined NPI provider identity to provider-service utilization.</li>
+<li>Created provider peer groups by specialty and geography.</li>
+<li>Used percentiles and window functions for provider ranking.</li>
+<li>Built ACO quality-cost quadrant and hospital quality scorecards.</li>
+</ul>
+<h3 id="business-talking-points">Business talking points</h3>
+<ul>
+<li>Provider performance requires peer comparison, not raw ranking.</li>
+<li>Cost metrics need specialty and geography context.</li>
+<li>High quality with high cost is different from low quality with high cost.</li>
+<li>ACO performance should balance savings and quality.</li>
+<li>Contracting decisions need volume, quality, cost efficiency, and market need.</li>
+</ul>
+<h3 id="resume-bullets">Resume bullets</h3>
+<ul>
+<li>Built a CMS-based provider network analytics warehouse integrating NPPES, provider utilization, Care Compare, HRRP, Geographic Variation, and ACO performance data.</li>
+<li>Developed SQL marts for provider peer benchmarking, hospital quality scorecards, ACO quality-cost segmentation, market opportunity, and contracting recommendations.</li>
+<li>Created provider outlier and value-based contracting opportunity scores using peer percentiles, utilization metrics, quality composites, and market context.</li>
+<li>Designed Power BI dashboards for provider network performance, value-based care, ACO outcomes, hospital quality, and market strategy.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="18-final-acceptance-checklist">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="18-final-acceptance-checklist">18. Final Acceptance Checklist</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#17-interview-talking-points">Previous</a>
+      <a href="#table-of-contents">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#15-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<ul>
+<li>Data sources downloaded and documented.</li>
+<li>Provider master created.</li>
+<li>Facility master created.</li>
+<li>Provider utilization fact created.</li>
+<li>Hospital quality fact created.</li>
+<li>ACO performance fact created.</li>
+<li>Geographic variation fact created.</li>
+<li>Provider benchmark mart built.</li>
+<li>Hospital quality scorecard built.</li>
+<li>ACO performance mart built.</li>
+<li>Market opportunity mart built.</li>
+<li>Contracting opportunity mart built.</li>
+<li>Provider outlier scoring complete.</li>
+<li>Power BI dashboard complete.</li>
+<li>KPI dictionary complete.</li>
+<li>Case study complete.</li>
+<li>Interview talking points complete.</li>
+</ul>
+<p>Final positioning:</p>
+<p><strong>An enterprise provider-network analytics platform that uses public CMS datasets to benchmark provider cost, utilization, quality, ACO performance, and market opportunity for value-based care and contracting strategy.</strong></p>
+
+  </div>
+</details>
+  </main>
+
+  <script>
+    window.__HAS_MERMAID__ = Boolean(document.querySelector('.mermaid'));
+    document.querySelectorAll('[data-action="expand"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = true));
+    });
+    document.querySelectorAll('[data-action="collapse"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = false));
+    });
+    function openHashTarget() {
+      if (!window.location.hash) return;
+      const target = document.querySelector(window.location.hash);
+      if (!target) return;
+      const module = target.closest('.section-module');
+      if (module) module.open = true;
+      setTimeout(() => target.scrollIntoView({ block: 'start' }), 30);
+    }
+    window.addEventListener('hashchange', openHashTarget);
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => setTimeout(openHashTarget, 20));
+    });
+    openHashTarget();
+    if (window.__HAS_MERMAID__) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.onload = async () => {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'loose',
+          theme: 'base',
+          themeVariables: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+            primaryColor: '#EAF5F7',
+            primaryTextColor: '#172033',
+            primaryBorderColor: '#2563EB',
+            lineColor: '#64748B',
+            secondaryColor: '#EEF2FF',
+            tertiaryColor: '#F8FAFC',
+          },
+        });
+        await window.mermaid.run({ querySelector: '.mermaid' });
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+</body>
+</html>

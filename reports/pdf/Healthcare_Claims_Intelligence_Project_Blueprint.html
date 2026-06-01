@@ -1,0 +1,4703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Healthcare Claims Intelligence &amp; Risk Analytics Platform</title>
+<style>
+
+:root {
+  --accent: #0E7C86;
+  --secondary: #155E75;
+  --ink: #172033;
+  --muted: #5D687A;
+  --soft: #F5F8FB;
+  --line: #D8E0EA;
+  --code-bg: #0F172A;
+  --code-ink: #E5EEF8;
+}
+
+@page {
+  size: A4;
+  margin: 17mm 14mm 18mm 14mm;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-size: 9.8pt;
+  line-height: 1.48;
+  background: white;
+}
+
+.screen-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: none;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #E5E7EB;
+  backdrop-filter: blur(12px);
+}
+
+.screen-toolbar a,
+.screen-toolbar button {
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+  color: #172033;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.screen-toolbar a:hover,
+.screen-toolbar button:hover {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.print-header,
+.print-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  color: #6B7280;
+  font-size: 7.8pt;
+  z-index: 20;
+}
+
+.print-header {
+  top: -10mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.4pt solid #E5E7EB;
+}
+
+.print-footer {
+  bottom: -11mm;
+  padding-top: 2mm;
+  border-top: 0.4pt solid #E5E7EB;
+}
+
+.cover {
+  min-height: 260mm;
+  break-after: page;
+  position: relative;
+  overflow: hidden;
+  padding: 22mm 16mm;
+  border: 1px solid #E5EAF0;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(245,248,251,0.98)),
+    radial-gradient(circle at 10% 18%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 31%),
+    radial-gradient(circle at 88% 82%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 28%);
+}
+
+.cover-band {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9mm;
+  background: linear-gradient(180deg, var(--accent), var(--secondary));
+}
+
+.cover-grid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  gap: 12mm;
+  align-items: center;
+}
+
+.eyebrow,
+.section-kicker {
+  color: var(--accent);
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.cover h1 {
+  margin: 5mm 0 6mm;
+  max-width: 136mm;
+  color: #0B1220;
+  font-size: 30pt;
+  line-height: 1.02;
+  font-weight: 850;
+}
+
+.subtitle {
+  max-width: 128mm;
+  margin: 0 0 8mm;
+  color: #39465B;
+  font-size: 12.5pt;
+  line-height: 1.5;
+}
+
+.audience {
+  display: inline-block;
+  max-width: 128mm;
+  padding: 3.5mm 5mm;
+  border-left: 2.5mm solid var(--accent);
+  background: rgba(255,255,255,0.78);
+  color: #263244;
+  font-size: 9.2pt;
+  font-weight: 700;
+}
+
+.cover-actions {
+  display: flex;
+  gap: 3mm;
+  flex-wrap: wrap;
+  margin-top: 9mm;
+}
+
+.cover-actions a,
+.button-stack a,
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9mm;
+  padding: 2.6mm 4.2mm;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+  font-size: 8.5pt;
+  font-weight: 850;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.nav-chip.compact {
+  min-height: auto;
+  padding: 6px 10px;
+  color: #172033;
+  background: #F8FAFC;
+  box-shadow: none;
+}
+
+.cover-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8mm;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255,255,255,0.86);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+}
+
+.card-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 8pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cover-card ul {
+  margin: 0;
+  padding-left: 4.5mm;
+}
+
+.cover-card li {
+  margin: 2.5mm 0;
+  color: #2D3748;
+  font-weight: 650;
+}
+
+.toc-page {
+  break-after: page;
+  padding-top: 8mm;
+}
+
+.experience-page {
+  break-after: page;
+  padding-top: 6mm;
+}
+
+.experience-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.lede {
+  max-width: 170mm;
+  color: #475569;
+  font-size: 10.4pt;
+}
+
+.quick-link-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+  margin: 7mm 0;
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: linear-gradient(135deg, #FFFFFF, #F8FAFC);
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 5mm;
+}
+
+.visual-card {
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: #FFFFFF;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  break-inside: avoid;
+}
+
+.visual-card.wide {
+  grid-column: 1 / -1;
+}
+
+.visual-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 7.8pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2.5mm;
+}
+
+.timeline-step {
+  min-height: 36mm;
+  padding: 4mm;
+  color: #172033;
+  text-decoration: none;
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+}
+
+.timeline-step span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8mm;
+  height: 8mm;
+  margin-bottom: 4mm;
+  color: white;
+  background: var(--accent);
+  border-radius: 50%;
+  font-size: 7.5pt;
+  font-weight: 850;
+}
+
+.timeline-step strong,
+.timeline-step em {
+  display: block;
+}
+
+.timeline-step strong {
+  margin-bottom: 2mm;
+  color: #0F172A;
+  font-size: 9pt;
+}
+
+.timeline-step em {
+  color: #64748B;
+  font-size: 7.5pt;
+  font-style: normal;
+}
+
+.bar-chart {
+  display: grid;
+  gap: 3mm;
+}
+
+.bar-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 12mm;
+  gap: 3mm;
+  padding: 3mm 0 5mm;
+  color: #172033;
+  text-decoration: none;
+}
+
+.bar-row i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2mm;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+}
+
+.bar-row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2mm;
+  background: #E5EAF0;
+  border-radius: 999px;
+  z-index: -1;
+}
+
+.button-stack {
+  display: grid;
+  gap: 3mm;
+}
+
+.button-stack a {
+  border-radius: 6px;
+}
+
+.toc-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm 5mm;
+  margin-top: 8mm;
+}
+
+.toc-item {
+  display: grid;
+  grid-template-columns: 12mm 1fr;
+  gap: 3mm;
+  align-items: start;
+  min-height: 11mm;
+  padding: 3mm;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid #E4EAF1;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.toc-number {
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.content > h1:first-child {
+  display: none;
+}
+
+.section-module {
+  margin: 0 0 5mm;
+  border: 1px solid transparent;
+}
+
+.section-module summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.section-module summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-module summary h2 {
+  display: block;
+}
+
+.collapse-indicator {
+  display: none;
+  float: right;
+  margin-top: 13mm;
+  padding: 1.5mm 2.5mm;
+  color: var(--accent);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  font-size: 7.2pt;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.section-body {
+  padding-bottom: 2mm;
+}
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: -1mm 0 3mm;
+  padding: 2.5mm;
+  border: 1px solid #E5EAF0;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.section-nav a,
+.related-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 7mm;
+  padding: 1.6mm 2.6mm;
+  color: var(--secondary);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  background: white;
+  font-size: 7.6pt;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.smart-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2mm;
+  margin: 0 0 4mm;
+  padding: 3mm 4mm;
+  border-left: 1.6mm solid var(--accent);
+  background: #F8FAFC;
+  break-inside: avoid;
+}
+
+.smart-links span {
+  color: #64748B;
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+h1, h2, h3, h4 {
+  color: #101828;
+  line-height: 1.18;
+  break-after: avoid;
+}
+
+h2 {
+  margin: 12mm 0 4mm;
+  padding: 0 0 2.5mm;
+  border-bottom: 1.2pt solid var(--line);
+  font-size: 17pt;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 3.2mm;
+  height: 3.2mm;
+  margin-right: 2.4mm;
+  background: var(--accent);
+  vertical-align: 0.6mm;
+}
+
+h3 {
+  margin: 7mm 0 2.5mm;
+  color: var(--secondary);
+  font-size: 12.5pt;
+}
+
+h4 {
+  margin: 4.5mm 0 1.5mm;
+  color: #334155;
+  font-size: 10.5pt;
+}
+
+p {
+  margin: 0 0 3.5mm;
+}
+
+a {
+  color: var(--secondary);
+  font-weight: 650;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 6mm;
+}
+
+li {
+  margin: 1.3mm 0;
+}
+
+strong {
+  color: #111827;
+  font-weight: 800;
+}
+
+blockquote {
+  margin: 5mm 0;
+  padding: 4mm 5mm;
+  color: #2B3A4F;
+  border-left: 2mm solid var(--accent);
+  background: #F7FAFC;
+}
+
+table {
+  width: 100%;
+  margin: 5mm 0 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 7.6pt;
+  break-inside: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  break-inside: avoid;
+}
+
+th {
+  color: white;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  font-weight: 800;
+  text-align: left;
+}
+
+th, td {
+  padding: 2mm 2.2mm;
+  border: 0.45pt solid #D8E0EA;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+tbody tr:nth-child(even) td {
+  background: #F8FAFC;
+}
+
+code {
+  padding: 0.3mm 1mm;
+  color: #0F3B57;
+  background: #EAF5F7;
+  border-radius: 3px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8.1pt;
+}
+
+pre {
+  margin: 4.5mm 0 6mm;
+  padding: 4mm;
+  overflow: hidden;
+  color: var(--code-ink);
+  background: var(--code-bg);
+  border-radius: 6px;
+  border: 1px solid #1E293B;
+  white-space: pre-wrap;
+  word-break: break-word;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: none;
+  font-size: 7.1pt;
+  line-height: 1.42;
+}
+
+.diagram-shell {
+  margin: 6mm 0;
+  padding: 4mm;
+  border: 1px solid #D8E0EA;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.diagram-label {
+  margin-bottom: 2mm;
+  color: var(--accent);
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.diagram-shell .mermaid {
+  margin: 0;
+  padding: 3mm;
+  text-align: center;
+  color: #1F2937;
+  background: white;
+  border: 1px solid #E4EAF1;
+  white-space: pre-wrap;
+}
+
+.diagram-shell svg {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  height: 1px;
+  margin: 9mm 0;
+  border: 0;
+  background: var(--line);
+}
+
+@media print {
+  .screen-toolbar {
+    display: none !important;
+  }
+
+  .section-module {
+    display: block;
+  }
+
+  .section-module:not([open]) .section-body {
+    display: block;
+  }
+
+  .collapse-indicator {
+    display: none !important;
+  }
+
+  .content h2 {
+    break-before: auto;
+  }
+}
+
+@media screen {
+  body {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #EEF3F8;
+    font-size: 15px;
+  }
+
+  .screen-toolbar {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .cover,
+  .experience-page,
+  .toc-page,
+  .content {
+    background: white;
+  }
+
+  .cover {
+    min-height: 760px;
+    margin-top: 16px;
+  }
+
+  .content {
+    padding: 20px 44px 60px;
+  }
+
+  .section-module {
+    margin: 18px 0;
+    padding: 0 18px 16px;
+    border-color: #E5EAF0;
+    background: white;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  }
+
+  .collapse-indicator {
+    display: inline-flex;
+  }
+
+  .section-module:not([open]) {
+    padding-bottom: 0;
+  }
+
+  .section-module:not([open]) summary h2 {
+    margin-bottom: 12px;
+  }
+
+  .toc-page,
+  .experience-page {
+    padding: 42px 44px;
+    margin: 16px 0;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body {
+    font-size: 14px;
+  }
+
+  .cover {
+    min-height: auto;
+    padding: 34px 24px;
+  }
+
+  .cover-grid,
+  .visual-grid,
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cover h1 {
+    font-size: 34px;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .content,
+  .toc-page,
+  .experience-page {
+    padding: 24px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="screen-toolbar">
+    <a href="#top">Cover</a>
+    <a href="#table-of-contents">Contents</a>
+    <a class="nav-chip compact" href="#table-of-contents">Contents</a><a class="nav-chip compact" href="#2-source-reference-register">Sources</a><a class="nav-chip compact" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip compact" href="#9-sql-build-plan">SQL</a><a class="nav-chip compact" href="#10-python-analytics-plan">Python</a><a class="nav-chip compact" href="#11-machine-learning-design">ML</a><a class="nav-chip compact" href="#12-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip compact" href="#13-kpi-dictionary">KPIs</a><a class="nav-chip compact" href="#17-implementation-roadmap">Roadmap</a>
+    <button type="button" data-action="expand">Expand All</button>
+    <button type="button" data-action="collapse">Collapse All</button>
+  </div>
+  <div class="print-header">
+    <span>Flagship payer analytics build blueprint</span>
+    <span>Healthcare Claims Intelligence &amp; Risk Analytics Platform</span>
+  </div>
+  <div class="print-footer">
+    <span>Enterprise Healthcare Analytics Portfolio Blueprint</span>
+    <span>May 15, 2026</span>
+  </div>
+
+  <section class="cover" id="top">
+    <div class="cover-band"></div>
+    <div class="cover-grid">
+      <div>
+        <div class="eyebrow">Flagship payer analytics build blueprint</div>
+        <h1>Healthcare Claims Intelligence &amp; Risk Analytics Platform</h1>
+        <p class="subtitle">Claims, members, providers, utilization, HCC/RAF, fraud/waste, readmissions, ML, SQL marts, and executive BI.</p>
+        <div class="audience">Healthcare Data Analyst | Claims Analyst | Risk Adjustment Analyst | Healthcare BI Analyst</div>
+        <div class="cover-actions">
+          <a href="#interactive-control-center">Open Navigation Hub</a>
+          <a href="#table-of-contents">Jump To Contents</a>
+        </div>
+      </div>
+      <aside class="cover-card">
+        <div class="card-label">Blueprint Scope</div>
+        <ul>
+          <li>Dataset source register</li>
+          <li>Enterprise warehouse architecture</li>
+          <li>SQL mart plan</li>
+          <li>Python and ML pipeline</li>
+          <li>Power BI dashboard system</li>
+          <li>KPI and portfolio strategy</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  
+  <section class="experience-page">
+    <div class="section-kicker">Interactive Control Center</div>
+    <h2 id="interactive-control-center">Executive Navigation Hub</h2>
+    <p class="lede">Use the controls below to jump through the PDF. The HTML version also supports collapsible sections, hover states, and quick expand/collapse controls.</p>
+    <div class="quick-link-panel"><a class="nav-chip" href="#table-of-contents">Contents</a><a class="nav-chip" href="#2-source-reference-register">Sources</a><a class="nav-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip" href="#9-sql-build-plan">SQL</a><a class="nav-chip" href="#10-python-analytics-plan">Python</a><a class="nav-chip" href="#11-machine-learning-design">ML</a><a class="nav-chip" href="#12-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip" href="#13-kpi-dictionary">KPIs</a><a class="nav-chip" href="#17-implementation-roadmap">Roadmap</a></div>
+
+    <div class="visual-grid">
+      <article class="visual-card wide">
+        <div class="visual-label">Clickable Build Timeline</div>
+        <div class="timeline">
+          
+              <a class="timeline-step" href="#2-source-reference-register">
+                <span>01</span>
+                <strong>Sources</strong>
+                <em>Public reference data and curated source register</em>
+              </a>
+              <a class="timeline-step" href="#5-end-to-end-pipeline">
+                <span>02</span>
+                <strong>Warehouse</strong>
+                <em>Bronze, silver, gold, mart, and scoring layers</em>
+              </a>
+              <a class="timeline-step" href="#9-sql-build-plan">
+                <span>03</span>
+                <strong>SQL Marts</strong>
+                <em>Governed metrics, scorecards, work queues</em>
+              </a>
+              <a class="timeline-step" href="#11-machine-learning-design">
+                <span>04</span>
+                <strong>ML/Scoring</strong>
+                <em>Predictive and prioritization workflows</em>
+              </a>
+              <a class="timeline-step" href="#12-power-bi-dashboard-specification">
+                <span>05</span>
+                <strong>Dashboards</strong>
+                <em>Executive and operational BI</em>
+              </a>
+              <a class="timeline-step" href="#17-implementation-roadmap">
+                <span>06</span>
+                <strong>Roadmap</strong>
+                <em>Build order and acceptance criteria</em>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Portfolio Evidence Stack</div>
+        <div class="bar-chart">
+          
+              <a class="bar-row" href="#9-sql-build-plan">
+                <span>SQL Architecture</span>
+                <strong>96%</strong>
+                <i style="width:96%"></i>
+              </a>
+              <a class="bar-row" href="#2-source-reference-register">
+                <span>Healthcare Domain</span>
+                <strong>94%</strong>
+                <i style="width:94%"></i>
+              </a>
+              <a class="bar-row" href="#12-power-bi-dashboard-specification">
+                <span>BI Storytelling</span>
+                <strong>90%</strong>
+                <i style="width:90%"></i>
+              </a>
+              <a class="bar-row" href="#11-machine-learning-design">
+                <span>ML Readiness</span>
+                <strong>82%</strong>
+                <i style="width:82%"></i>
+              </a>
+              <a class="bar-row" href="#17-implementation-roadmap">
+                <span>Portfolio Evidence</span>
+                <strong>88%</strong>
+                <i style="width:88%"></i>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Navigation Buttons</div>
+        <div class="button-stack">
+          <a href="#table-of-contents">Open Table of Contents</a>
+          <a href="#2-source-reference-register">Open Reference Links</a>
+          <a href="#5-end-to-end-pipeline">Open Architecture</a>
+          <a href="#12-power-bi-dashboard-specification">Open Dashboard Spec</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="toc-page" id="table-of-contents">
+    <div class="section-kicker">Navigation</div>
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#1-executive-project-charter"><span class="toc-number">01</span><span>1. Executive Project Charter</span></a>
+<a class="toc-item" href="#2-source-reference-register"><span class="toc-number">02</span><span>2. Source Reference Register</span></a>
+<a class="toc-item" href="#3-dataset-decision-and-final-recommendation"><span class="toc-number">03</span><span>3. Dataset Decision and Final Recommendation</span></a>
+<a class="toc-item" href="#4-business-domain-model"><span class="toc-number">04</span><span>4. Business Domain Model</span></a>
+<a class="toc-item" href="#5-end-to-end-pipeline"><span class="toc-number">05</span><span>5. End-to-End Pipeline</span></a>
+<a class="toc-item" href="#6-repository-structure"><span class="toc-number">06</span><span>6. Repository Structure</span></a>
+<a class="toc-item" href="#7-data-architecture"><span class="toc-number">07</span><span>7. Data Architecture</span></a>
+<a class="toc-item" href="#8-source-to-target-mapping"><span class="toc-number">08</span><span>8. Source-to-Target Mapping</span></a>
+<a class="toc-item" href="#9-sql-build-plan"><span class="toc-number">09</span><span>9. SQL Build Plan</span></a>
+<a class="toc-item" href="#10-python-analytics-plan"><span class="toc-number">10</span><span>10. Python Analytics Plan</span></a>
+<a class="toc-item" href="#11-machine-learning-design"><span class="toc-number">11</span><span>11. Machine Learning Design</span></a>
+<a class="toc-item" href="#12-power-bi-dashboard-specification"><span class="toc-number">12</span><span>12. Power BI Dashboard Specification</span></a>
+<a class="toc-item" href="#13-kpi-dictionary"><span class="toc-number">13</span><span>13. KPI Dictionary</span></a>
+<a class="toc-item" href="#14-data-quality-rules"><span class="toc-number">14</span><span>14. Data Quality Rules</span></a>
+<a class="toc-item" href="#15-hcc-raf-analytics-methodology"><span class="toc-number">15</span><span>15. HCC/RAF Analytics Methodology</span></a>
+<a class="toc-item" href="#16-business-insight-playbooks"><span class="toc-number">16</span><span>16. Business Insight Playbooks</span></a>
+<a class="toc-item" href="#17-implementation-roadmap"><span class="toc-number">17</span><span>17. Implementation Roadmap</span></a>
+<a class="toc-item" href="#18-readme-structure"><span class="toc-number">18</span><span>18. README Structure</span></a>
+<a class="toc-item" href="#19-portfolio-case-study-format"><span class="toc-number">19</span><span>19. Portfolio Case Study Format</span></a>
+<a class="toc-item" href="#20-interview-talking-points"><span class="toc-number">20</span><span>20. Interview Talking Points</span></a>
+<a class="toc-item" href="#21-resume-bullets"><span class="toc-number">21</span><span>21. Resume Bullets</span></a>
+<a class="toc-item" href="#22-final-acceptance-checklist"><span class="toc-number">22</span><span>22. Final Acceptance Checklist</span></a>
+<a class="toc-item" href="#23-build-order-summary"><span class="toc-number">23</span><span>23. Build Order Summary</span></a>
+<a class="toc-item" href="#24-definition-of-a-strong-final-story"><span class="toc-number">24</span><span>24. Definition of a Strong Final Story</span></a>
+    </div>
+  </section>
+
+  <main class="content">
+    <h1>Healthcare Claims Intelligence &amp; Risk Analytics Platform</h1>
+<p>Single source of truth for building an enterprise-grade healthcare payer analytics portfolio project.</p>
+<p>This document is written as a build blueprint, not a tutorial. It defines the business problem, data sources, warehouse architecture, SQL marts, Python analytics, ML pipelines, Power BI dashboards, KPI dictionary, quality checks, portfolio packaging, and interview story. The goal is to simulate the kind of work done by healthcare payer, Medicare Advantage, provider analytics, utilization management, care management, risk adjustment, and claims intelligence teams.</p>
+<p>Target roles:</p>
+<ul>
+<li>Healthcare Data Analyst</li>
+<li>Insurance Analyst</li>
+<li>Healthcare Business Analyst</li>
+<li>Healthcare BI Analyst</li>
+<li>Population Health Analyst</li>
+<li>Risk Adjustment Analyst</li>
+<li>Claims Analyst</li>
+</ul>
+<p>Primary project title:</p>
+<p><strong>Healthcare Claims Intelligence &amp; Risk Analytics Platform</strong></p>
+<p>Recommended core stack:</p>
+<ul>
+<li>Data warehouse: SQL Server, PostgreSQL, or DuckDB</li>
+<li>Data processing: Python, pandas, polars, SQLAlchemy, dbt-style SQL folders</li>
+<li>Modeling: scikit-learn, xgboost, shap</li>
+<li>BI: Power BI</li>
+<li>Version control: GitHub</li>
+<li>Documentation: Markdown plus optional PDF export</li>
+</ul>
+<hr>
+
+<details class="section-module" open data-section-id="1-executive-project-charter">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="1-executive-project-charter">1. Executive Project Charter</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#table-of-contents">Previous</a>
+      <a href="#2-source-reference-register">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="1-1-business-problem">1.1 Business problem</h3>
+<p>Healthcare payers and Medicare Advantage organizations face rising medical costs, avoidable admissions, complex provider networks, claim payment variation, fraud/waste/abuse exposure, denied claim friction, and incomplete risk capture. A professional analytics team needs a governed platform that can answer operational questions across claims, members, providers, utilization, readmissions, risk adjustment, and financial performance.</p>
+<p>This project simulates a payer analytics platform that turns raw claims files into:</p>
+<ul>
+<li>Claims financial intelligence</li>
+<li>High-cost member identification</li>
+<li>Provider performance benchmarking</li>
+<li>Avoidable readmission analytics</li>
+<li>Utilization management reporting</li>
+<li>Fraud/waste/anomaly detection</li>
+<li>HCC/RAF risk adjustment analytics</li>
+<li>Machine learning driven intervention queues</li>
+<li>Executive Power BI dashboards</li>
+</ul>
+<h3 id="1-2-business-goals">1.2 Business goals</h3>
+<p>The platform should help a payer answer:</p>
+<ul>
+<li>Which members are driving the top 5 percent of paid cost?</li>
+<li>Which provider groups have unusually high paid amounts, procedure intensity, or readmission patterns after risk adjustment?</li>
+<li>Which inpatient discharges are followed by a 30-day readmission?</li>
+<li>Which members should be prioritized for care management?</li>
+<li>Which claims or providers should be routed to fraud/waste/abuse review?</li>
+<li>Which chronic conditions and HCCs drive risk score and expected cost?</li>
+<li>Where are denial, appeal, or payment benchmarks concerning?</li>
+<li>What savings could be achieved by reducing avoidable readmissions, provider outliers, and preventable high-cost utilization?</li>
+</ul>
+<h3 id="1-3-target-enterprise-users">1.3 Target enterprise users</h3>
+<ul>
+<li>Chief Medical Officer: quality, readmissions, chronic condition burden</li>
+<li>CFO or finance analytics team: PMPM, paid cost, trend, savings opportunity</li>
+<li>Claims operations leader: claim volume, allowed/paid amounts, denial benchmarks</li>
+<li>Provider network team: provider outliers, specialty benchmarking, contract performance</li>
+<li>Care management team: high-risk member worklist</li>
+<li>Utilization management team: inpatient, ED, SNF, post-acute trends</li>
+<li>Risk adjustment team: HCC capture, RAF segmentation, chronic condition recurrence</li>
+<li>Special investigations unit: fraud/waste/abuse work queue</li>
+</ul>
+<h3 id="1-4-what-makes-this-enterprise-grade">1.4 What makes this enterprise-grade</h3>
+<p>This project is not a chart-only portfolio artifact. It must include:</p>
+<ul>
+<li>A documented data architecture with raw, staging, warehouse, mart, and BI layers</li>
+<li>Star schema fact and dimension tables</li>
+<li>SQL scripts with repeatable transformations and analytics marts</li>
+<li>Claims grain definitions and member-month logic</li>
+<li>Advanced SQL using CTEs, joins, window functions, percentiles, and rolling calculations</li>
+<li>Python notebooks and scripts for EDA, feature engineering, modeling, and explainability</li>
+<li>Power BI dashboards designed around actual payer workflows</li>
+<li>KPI dictionary and data dictionary</li>
+<li>Model cards and business threshold logic</li>
+<li>Clear limitations and assumptions</li>
+<li>Interview-ready business interpretation</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="2-source-reference-register">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="2-source-reference-register">2. Source Reference Register</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#1-executive-project-charter">Previous</a>
+      <a href="#3-dataset-decision-and-final-recommendation">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#14-data-quality-rules">Validate In DQ</a><a class="related-chip" href="#17-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<p>Use these links in the README, documentation, and GitHub references section.</p>
+<h3 id="2-1-core-claims-and-payer-data">2.1 Core claims and payer data</h3>
+<ol>
+<li><p><strong>CMS Medicare Claims Synthetic Public Use Files (DE-SynPUF)</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files">https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files</a></li>
+<li>Use: Primary claims warehouse backbone.</li>
+<li>Why it matters: CMS states the SynPUFs use Medicare-like formats and variable names so users can gain familiarity with Medicare claims data while protecting beneficiary privacy.</li>
+</ul>
+</li>
+<li><p><strong>CMS 2008-2010 Data Entrepreneurs Synthetic Public Use File</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files/cms-2008-2010-data-entrepreneurs-synthetic-public-use-file-de-synpuf">https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files/cms-2008-2010-data-entrepreneurs-synthetic-public-use-file-de-synpuf</a></li>
+<li>Use: Download beneficiary, inpatient, outpatient, carrier, and prescription drug event files.</li>
+</ul>
+</li>
+<li><p><strong>CMS Synthetic Medicare Enrollment, Fee-for-Service Claims, and Prescription Drug Event PUF</strong></p>
+<ul>
+<li>Link: <a href="https://data.cms.gov/collection/synthetic-medicare-enrollment-fee-for-service-claims-and-prescription-drug-event">https://data.cms.gov/collection/synthetic-medicare-enrollment-fee-for-service-claims-and-prescription-drug-event</a></li>
+<li>User guide: <a href="https://data.cms.gov/sites/default/files/2023-05/d51e1218-68c3-4c7c-9598-0b81f22fe903/User%20Guide%20-%20CMS%20Synthetic%20RIF%20Files%20May%202023_AM508_v2.pdf">https://data.cms.gov/sites/default/files/2023-05/d51e1218-68c3-4c7c-9598-0b81f22fe903/User%20Guide%20-%20CMS%20Synthetic%20RIF%20Files%20May%202023_AM508_v2.pdf</a></li>
+<li>Use: More modern CMS RIF-style synthetic Medicare files.</li>
+<li>Why it matters: The user guide describes a synthetic public dataset representing enrollment, healthcare claims, and prescription drug events for 8,671 Medicare beneficiaries.</li>
+</ul>
+</li>
+<li><p><strong>Kaggle CMS SynPUF synthetic claims 55M</strong></p>
+<ul>
+<li>Link: <a href="https://www.kaggle.com/datasets/drscarlat/cmssynpuf55m">https://www.kaggle.com/datasets/drscarlat/cmssynpuf55m</a></li>
+<li>Use: Larger-scale version for realistic row counts.</li>
+<li>Recommended use: Use only if your local machine can handle large files with DuckDB, SQL Server bulk load, or parquet conversion.</li>
+</ul>
+</li>
+<li><p><strong>Kaggle MedicalClaimsSynthetic1M</strong></p>
+<ul>
+<li>Link: <a href="https://www.kaggle.com/datasets/drscarlat/medicalclaimssynthetic1m">https://www.kaggle.com/datasets/drscarlat/medicalclaimssynthetic1m</a></li>
+<li>Use: Faster starter option based on CMS synthetic claims.</li>
+<li>Recommended use: Use for initial development if 55M is too heavy.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-2-fraud-and-waste-data">2.2 Fraud and waste data</h3>
+<ol start="6">
+<li><p><strong>Kaggle Healthcare Provider Fraud Detection Analysis</strong></p>
+<ul>
+<li>Link: <a href="https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis">https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis</a></li>
+<li>Use: Supervised provider fraud model.</li>
+<li>Tables: beneficiary data, inpatient claims, outpatient claims, provider fraud label.</li>
+<li>Strength: Good for provider-level fraud modeling.</li>
+<li>Limitation: Overused and usually modeled as a standalone Kaggle problem. In this project it should be one module inside a larger payer platform.</li>
+</ul>
+</li>
+<li><p><strong>Kaggle Healthcare Fraud Detection Dataset</strong></p>
+<ul>
+<li>Link: <a href="https://www.kaggle.com/datasets/jaiswalmagic1/healthcare-fraud-detection-dataset">https://www.kaggle.com/datasets/jaiswalmagic1/healthcare-fraud-detection-dataset</a></li>
+<li>Use: Optional synthetic fraud practice data.</li>
+<li>Limitation: Synthetic and less authoritative than CMS-style claims.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-3-provider-performance-and-quality-data">2.3 Provider performance and quality data</h3>
+<ol start="8">
+<li><p><strong>CMS Medicare Physician and Other Practitioners by Provider and Service</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/medicare-physician-other-practitioners-by-provider-and-service">https://catalog.data.gov/dataset/medicare-physician-other-practitioners-by-provider-and-service</a></li>
+<li>Use: Provider benchmarking by NPI, HCPCS, place of service, submitted charges, allowed amount, payment, utilization.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Quality Initiative / Care Compare</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/quality/initiatives/hospital-quality-initiative/hospital-compare">https://www.cms.gov/medicare/quality/initiatives/hospital-quality-initiative/hospital-compare</a></li>
+<li>Provider data catalog: <a href="https://developer.cms.gov/provider-data/">https://developer.cms.gov/provider-data/</a></li>
+<li>Use: Hospital quality, star rating, readmission, patient experience, and process/outcome context.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Readmissions Reduction Program (HRRP)</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp">https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp</a></li>
+<li>Use: Readmission program context and public hospital readmission measures.</li>
+<li>Why it matters: HRRP uses 30-day risk-standardized unplanned readmission measures for AMI, COPD, HF, pneumonia, CABG, and THA/TKA.</li>
+</ul>
+</li>
+<li><p><strong>HHS COVID-19 Hospital Capacity Facility-Level Data</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/covid-19-reported-patient-impact-and-hospital-capacity-by-facility-raw">https://catalog.data.gov/dataset/covid-19-reported-patient-impact-and-hospital-capacity-by-facility-raw</a></li>
+<li>Use: Optional utilization and capacity overlay.</li>
+<li>Recommended use: Only if adding a hospital operations page.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-4-risk-adjustment-and-coding">2.4 Risk adjustment and coding</h3>
+<ol start="12">
+<li><p><strong>CMS Risk Adjustment</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/payment/medicare-advantage-rates-statistics/risk-adjustment">https://www.cms.gov/medicare/payment/medicare-advantage-rates-statistics/risk-adjustment</a></li>
+<li>Use: CMS-HCC model software, diagnosis mappings, and risk adjustment documentation.</li>
+</ul>
+</li>
+<li><p><strong>CMS ICD-10</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/medicare/coding-billing/icd-10-codes">https://www.cms.gov/medicare/coding-billing/icd-10-codes</a></li>
+<li>Use: ICD-10 code files and coding documentation.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-5-denials-and-marketplace-insurance-benchmarks">2.5 Denials and marketplace insurance benchmarks</h3>
+<ol start="14">
+<li><p><strong>CMS Health Insurance Exchange Public Use Files</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/marketplace/resources/data/public-use-files">https://www.cms.gov/marketplace/resources/data/public-use-files</a></li>
+<li>Use: Marketplace issuer/plan public use files.</li>
+</ul>
+</li>
+<li><p><strong>CMS Transparency in Coverage PUF</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/transparency-in-coverage-puf-py2026">https://catalog.data.gov/dataset/transparency-in-coverage-puf-py2026</a></li>
+<li>Use: Issuer and plan-level claims, appeals, denial data.</li>
+<li>Important: This is aggregate benchmark data, not member-level claim adjudication data.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-6-clinical-readmission-data">2.6 Clinical readmission data</h3>
+<ol start="16">
+<li><p><strong>MIMIC-IV v3.1</strong></p>
+<ul>
+<li>Link: <a href="https://physionet.org/content/mimiciv/3.1/">https://physionet.org/content/mimiciv/3.1/</a></li>
+<li>Use: Optional advanced provider-side readmission and clinical utilization module.</li>
+<li>Access: Requires credentialed PhysioNet access, data use agreement, and training.</li>
+</ul>
+</li>
+<li><p><strong>UCI Diabetes 130-US Hospitals for Years 1999-2008</strong></p>
+<ul>
+<li>Link: <a href="https://archive.ics.uci.edu/dataset/296/diabetes%2B130-us-hospitals%2Bfor-years%2B1999-2008">https://archive.ics.uci.edu/dataset/296/diabetes%2B130-us-hospitals%2Bfor-years%2B1999-2008</a></li>
+<li>Use: Readmission ML benchmark.</li>
+<li>Strength: 101,766 encounters, 47 features, 30-day readmission target.</li>
+<li>Limitation: Very common; use only as a secondary model, not the flagship dataset.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-7-synthetic-patient-generation">2.7 Synthetic patient generation</h3>
+<ol start="18">
+<li><strong>Synthea</strong><ul>
+<li>Link: <a href="https://synthetichealth.github.io/synthea/">https://synthetichealth.github.io/synthea/</a></li>
+<li>GitHub: <a href="https://github.com/synthetichealth/synthea">https://github.com/synthetichealth/synthea</a></li>
+<li>Use: Optional generation of modern synthetic patient records with encounters, conditions, medications, claims, and FHIR/CSV outputs.</li>
+<li>Strength: Good if you want ICD-10 and FHIR-style modern healthcare data.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-8-portfolio-comparison-references">2.8 Portfolio comparison references</h3>
+<ol start="19">
+<li><p><strong>claimsdb GitHub</strong></p>
+<ul>
+<li>Link: <a href="https://github.com/jfangmeier/claimsdb">https://github.com/jfangmeier/claimsdb</a></li>
+<li>Use: Example of relational access to CMS DE-SynPUF samples.</li>
+<li>Lesson: Good source for understanding how to package claims data relationally.</li>
+</ul>
+</li>
+<li><p><strong>Example Healthcare Provider Fraud Project</strong></p>
+<ul>
+<li>Link: <a href="https://github.com/pradlanka/medical-fraud-detection-analysis">https://github.com/pradlanka/medical-fraud-detection-analysis</a></li>
+<li>Use: Benchmark for common Kaggle fraud modeling.</li>
+<li>Lesson: Useful modeling approach, but a flagship portfolio should add warehouse architecture, SQL marts, business workflow, and BI.</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="3-dataset-decision-and-final-recommendation">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="3-dataset-decision-and-final-recommendation">3. Dataset Decision and Final Recommendation</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#2-source-reference-register">Previous</a>
+      <a href="#4-business-domain-model">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#14-data-quality-rules">Validate In DQ</a><a class="related-chip" href="#17-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<h3 id="3-1-final-recommended-dataset-architecture">3.1 Final recommended dataset architecture</h3>
+<p>Use a layered dataset strategy:</p>
+<p><strong>Primary claims backbone</strong></p>
+<ul>
+<li>Start with CMS DE-SynPUF or Kaggle MedicalClaimsSynthetic1M.</li>
+<li>Upgrade to Kaggle CMS SynPUF 55M if performance allows.</li>
+<li>Use CMS Synthetic Medicare RIF PUF if you want more modern CMS RIF-style documentation and ICD-10-style workflows.</li>
+</ul>
+<p><strong>Provider enrichment</strong></p>
+<ul>
+<li>Use CMS Physician and Other Practitioners by Provider and Service.</li>
+<li>Use CMS Care Compare or Hospital Quality Initiative for hospital quality context.</li>
+</ul>
+<p><strong>Risk adjustment</strong></p>
+<ul>
+<li>Use CMS Risk Adjustment model software and ICD mappings.</li>
+<li>If the claims data uses ICD-9, document the limitation and use historical HCC mapping logic. If using ICD-10 synthetic RIF or Synthea, use current CMS-HCC mappings.</li>
+</ul>
+<p><strong>Fraud/waste modeling</strong></p>
+<ul>
+<li>Use Kaggle Healthcare Provider Fraud Detection Analysis for supervised labels.</li>
+<li>Use anomaly detection on CMS-style claims for unsupervised provider outlier scoring.</li>
+</ul>
+<p><strong>Readmission modeling</strong></p>
+<ul>
+<li>Use CMS claims inpatient episodes for SQL-based readmission logic.</li>
+<li>Add MIMIC-IV only if credentialed.</li>
+<li>Add UCI Diabetes as a benchmark model if you want a clean public readmission target.</li>
+</ul>
+<p><strong>Denial analytics</strong></p>
+<ul>
+<li>Use CMS Transparency in Coverage PUF as aggregate denial benchmark.</li>
+<li>Do not pretend SynPUF has real claim denial adjudication unless you simulate explicit denial rules.</li>
+</ul>
+<h3 id="3-2-dataset-role-matrix">3.2 Dataset role matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Best dataset</th>
+<th>Use in project</th>
+<th>Portfolio value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claims analytics</td>
+<td>CMS DE-SynPUF / CMS SynPUF 55M</td>
+<td>Claim header, claim line, diagnosis, procedure, paid amount</td>
+<td>Very high</td>
+</tr>
+<tr>
+<td>Member analytics</td>
+<td>CMS beneficiary files</td>
+<td>Member demographics, eligibility months, chronic flags</td>
+<td>Very high</td>
+</tr>
+<tr>
+<td>Provider analytics</td>
+<td>CMS provider claims plus Physician Provider Utilization</td>
+<td>Provider ranking, peer benchmarks</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Fraud/waste</td>
+<td>Kaggle provider fraud plus outlier detection</td>
+<td>Supervised fraud model and audit queue</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Readmission</td>
+<td>Inpatient claims, MIMIC-IV, UCI Diabetes</td>
+<td>30-day readmission logic and prediction</td>
+<td>High</td>
+</tr>
+<tr>
+<td>HCC/RAF</td>
+<td>CMS Risk Adjustment</td>
+<td>Diagnosis to HCC grouping, RAF segmentation</td>
+<td>Very high</td>
+</tr>
+<tr>
+<td>Denials</td>
+<td>CMS Transparency in Coverage PUF</td>
+<td>Issuer/plan benchmark dashboard</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Hospital operations</td>
+<td>HHS capacity, Care Compare</td>
+<td>Utilization and quality context</td>
+<td>Medium</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-explicit-datasets-to-avoid-as-primary-source">3.3 Explicit datasets to avoid as primary source</h3>
+<p>Avoid making these the flagship source:</p>
+<ul>
+<li>1,338-row medical insurance cost dataset</li>
+<li>Generic health insurance cross-sell data</li>
+<li>Tiny self-made fake insurance CSVs</li>
+<li>Single-table hospital dashboards</li>
+<li>Any dataset without member/provider/claim relationships</li>
+</ul>
+<p>These can be mentioned as &quot;not chosen&quot; in the README to show judgment.</p>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="4-business-domain-model">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="4-business-domain-model">4. Business Domain Model</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#3-dataset-decision-and-final-recommendation">Previous</a>
+      <a href="#5-end-to-end-pipeline">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="4-1-payer-workflow-being-simulated">4.1 Payer workflow being simulated</h3>
+<p>The project simulates a Medicare-style payer analytics environment:</p>
+<ol>
+<li>Members enroll in a plan.</li>
+<li>Members receive services from providers.</li>
+<li>Providers submit inpatient, outpatient, professional, and pharmacy claims.</li>
+<li>Claims carry diagnosis codes, procedure codes, service dates, paid amounts, provider identifiers, and claim type.</li>
+<li>The payer monitors cost, utilization, quality, risk adjustment, and provider performance.</li>
+<li>Analytics teams create operational work queues for care management, utilization management, risk adjustment, and fraud/waste/abuse review.</li>
+</ol>
+<h3 id="4-2-core-business-entities">4.2 Core business entities</h3>
+<ul>
+<li>Member: person covered by the plan</li>
+<li>Claim: billable healthcare transaction</li>
+<li>Claim line: service-level detail inside a claim</li>
+<li>Provider: billing, rendering, attending, operating, or facility provider</li>
+<li>Diagnosis: ICD code describing condition</li>
+<li>Procedure: ICD procedure, CPT, or HCPCS service</li>
+<li>Drug: Part D prescription event</li>
+<li>Episode: inpatient admission and discharge event</li>
+<li>Member month: monthly eligibility unit for PMPM calculations</li>
+<li>HCC: hierarchical condition category used for risk adjustment</li>
+<li>Risk score: RAF-like member risk weight</li>
+<li>Intervention: member/provider/case flagged for action</li>
+</ul>
+<h3 id="4-3-core-business-questions">4.3 Core business questions</h3>
+<p>Claims finance:</p>
+<ul>
+<li>What is total submitted, allowed, and paid amount by month, claim type, geography, provider, diagnosis, and procedure?</li>
+<li>What is PMPM by plan, state, age band, chronic condition, and risk segment?</li>
+<li>Which claim types are driving trend?</li>
+</ul>
+<p>Population health:</p>
+<ul>
+<li>What is chronic condition prevalence by member segment?</li>
+<li>Which members have multi-morbidity and rising utilization?</li>
+<li>Which members are likely to become high-cost next period?</li>
+</ul>
+<p>Provider performance:</p>
+<ul>
+<li>Which providers are outliers after peer comparison?</li>
+<li>Which providers have high readmission rate, high paid-per-member, high procedure intensity, or abnormal place-of-service mix?</li>
+<li>Which provider groups should be targeted for contracting or education?</li>
+</ul>
+<p>Utilization management:</p>
+<ul>
+<li>What are admits per 1,000, ED visits per 1,000, inpatient days per 1,000, and average length of stay?</li>
+<li>Which members have repeat ED or inpatient utilization?</li>
+<li>Which discharges need follow-up to reduce readmission?</li>
+</ul>
+<p>Risk adjustment:</p>
+<ul>
+<li>Which members have HCC-eligible chronic conditions?</li>
+<li>Which HCCs are recurring year over year?</li>
+<li>Which members have documented chronic conditions that are not captured in the current risk year?</li>
+</ul>
+<p>Fraud/waste/abuse:</p>
+<ul>
+<li>Which providers show duplicate billing, unusually high service frequency, excessive paid amount, or abnormal procedure mix?</li>
+<li>Which providers should be sent to SIU for review?</li>
+</ul>
+<p>Denials:</p>
+<ul>
+<li>How do issuer-level denial benchmarks compare by state, plan, or market?</li>
+<li>Which denial categories deserve operational investigation?</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="5-end-to-end-pipeline">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="5-end-to-end-pipeline">5. End-to-End Pipeline</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#4-business-domain-model">Previous</a>
+      <a href="#6-repository-structure">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#9-sql-build-plan">SQL Build</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<h3 id="5-1-pipeline-diagram">5.1 Pipeline diagram</h3>
+<section class="diagram-shell">
+<div class="diagram-label">Architecture Diagram</div>
+<pre class="mermaid">flowchart LR
+    A[&quot;Raw Source Files&quot;] --&gt; B[&quot;Bronze Staging&quot;]
+    B --&gt; C[&quot;Silver Normalized Tables&quot;]
+    C --&gt; D[&quot;Gold Star Schema&quot;]
+    D --&gt; E[&quot;SQL Analytics Marts&quot;]
+    E --&gt; F[&quot;Feature Store&quot;]
+    F --&gt; G[&quot;ML Training and Scoring&quot;]
+    E --&gt; H[&quot;Power BI Semantic Model&quot;]
+    G --&gt; H
+    H --&gt; I[&quot;Executive Dashboards&quot;]
+    G --&gt; J[&quot;Operational Work Queues&quot;]
+    E --&gt; K[&quot;Documentation and KPI Dictionary&quot;]</pre>
+</section>
+
+
+<h3 id="5-2-layer-definitions">5.2 Layer definitions</h3>
+<p><strong>Raw layer</strong></p>
+<ul>
+<li>Original downloaded CSV/TXT files.</li>
+<li>No edits.</li>
+<li>Store in <code>data/raw/source_name/year_or_sample/</code>.</li>
+</ul>
+<p><strong>Bronze staging</strong></p>
+<ul>
+<li>One table per source file.</li>
+<li>Minimal data type casting.</li>
+<li>Preserve original column names where useful.</li>
+<li>Add <code>source_file</code>, <code>ingested_at</code>, <code>record_hash</code>.</li>
+</ul>
+<p><strong>Silver normalized</strong></p>
+<ul>
+<li>Standardized data types.</li>
+<li>Standardized date columns.</li>
+<li>Member, provider, claim, diagnosis, procedure, and drug identifiers normalized.</li>
+<li>Wide diagnosis columns unpivoted into diagnosis bridge table.</li>
+<li>Wide procedure columns unpivoted into procedure bridge table.</li>
+</ul>
+<p><strong>Gold star schema</strong></p>
+<ul>
+<li>Fact and dimension tables for BI and analytics.</li>
+<li>Surrogate keys.</li>
+<li>Business-friendly fields.</li>
+<li>Clean measures.</li>
+</ul>
+<p><strong>SQL marts</strong></p>
+<ul>
+<li>Reusable analytic outputs.</li>
+<li>Examples: <code>mart_member_month_pmpm</code>, <code>mart_provider_performance</code>, <code>mart_readmission</code>, <code>mart_fwa_queue</code>, <code>mart_hcc_risk</code>.</li>
+</ul>
+<p><strong>Feature store</strong></p>
+<ul>
+<li>Model-ready member/provider/episode features.</li>
+<li>Leakage-controlled time windows.</li>
+<li>Separate training and scoring views.</li>
+</ul>
+<p><strong>BI semantic model</strong></p>
+<ul>
+<li>Power BI model connected to gold tables and marts.</li>
+<li>DAX measures built from governed KPI definitions.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="6-repository-structure">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="6-repository-structure">6. Repository Structure</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#5-end-to-end-pipeline">Previous</a>
+      <a href="#7-data-architecture">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Create this exact repository layout.</p>
+<pre><code class="language-text">healthcare-claims-intelligence-risk-analytics/
+  README.md
+  LICENSE
+  requirements.txt
+  pyproject.toml
+  .gitignore
+  .env.example
+
+  docs/
+    Healthcare_Claims_Intelligence_Project_Blueprint.md
+    business_problem.md
+    data_sources.md
+    architecture.md
+    kpi_dictionary.md
+    data_dictionary.md
+    hcc_raf_methodology.md
+    sql_mart_catalog.md
+    dashboard_spec.md
+    model_cards.md
+    executive_summary.md
+    portfolio_case_study.md
+    interview_talking_points.md
+
+  data/
+    raw/
+      cms_desynpuf/
+      cms_synthetic_rif/
+      cms_provider_utilization/
+      cms_care_compare/
+      cms_hcc_mappings/
+      kaggle_provider_fraud/
+      uci_diabetes/
+    interim/
+    processed/
+    sample_outputs/
+
+  sql/
+    00_admin/
+      create_database.sql
+      create_schemas.sql
+    01_bronze_ddl/
+      bronze_cms_desynpuf.sql
+      bronze_provider_utilization.sql
+      bronze_hcc_mapping.sql
+      bronze_denial_benchmark.sql
+    02_silver_transforms/
+      silver_claim_header.sql
+      silver_claim_diagnosis_bridge.sql
+      silver_claim_procedure_bridge.sql
+      silver_member.sql
+      silver_provider.sql
+      silver_pharmacy.sql
+    03_gold_star_schema/
+      dim_date.sql
+      dim_member.sql
+      dim_provider.sql
+      dim_diagnosis.sql
+      dim_procedure.sql
+      dim_hcc.sql
+      fact_claim_header.sql
+      fact_claim_line.sql
+      fact_member_month.sql
+      fact_inpatient_episode.sql
+      fact_provider_month.sql
+      fact_member_risk.sql
+    04_marts/
+      mart_claims_financials.sql
+      mart_member_month_pmpm.sql
+      mart_high_cost_members.sql
+      mart_readmission_30day.sql
+      mart_provider_performance.sql
+      mart_fwa_provider_flags.sql
+      mart_hcc_risk_adjustment.sql
+      mart_denial_benchmark.sql
+    05_quality_tests/
+      test_claim_keys.sql
+      test_member_months.sql
+      test_paid_amounts.sql
+      test_date_ranges.sql
+      test_referential_integrity.sql
+    06_analytics_queries/
+      q01_cost_trend_pmpm.sql
+      q02_top_high_cost_members.sql
+      q03_provider_peer_ranking.sql
+      q04_readmission_drivers.sql
+      q05_fwa_audit_queue.sql
+      q06_hcc_gap_analysis.sql
+
+  src/
+    config/
+      settings.py
+    etl/
+      load_raw_files.py
+      validate_raw_files.py
+      build_duckdb.py
+      export_powerbi_tables.py
+    features/
+      member_features.py
+      provider_features.py
+      episode_features.py
+    models/
+      train_readmission_model.py
+      train_high_cost_model.py
+      train_fraud_model.py
+      score_work_queues.py
+    evaluation/
+      evaluate_classification.py
+      shap_explainability.py
+      threshold_analysis.py
+    reporting/
+      generate_data_dictionary.py
+      generate_model_cards.py
+
+  notebooks/
+    01_source_data_profile.ipynb
+    02_claims_eda.ipynb
+    03_member_pmpm_analysis.ipynb
+    04_provider_performance_analysis.ipynb
+    05_readmission_modeling.ipynb
+    06_fraud_waste_detection.ipynb
+    07_high_cost_prediction.ipynb
+    08_hcc_raf_analysis.ipynb
+
+  powerbi/
+    claims_intelligence_platform.pbip/
+    exports/
+      dashboard_screenshots/
+      executive_pdf/
+
+  reports/
+    figures/
+    tables/
+    executive_summary.pdf
+    portfolio_case_study.pdf
+
+  tests/
+    test_feature_engineering.py
+    test_model_inputs.py
+    test_kpi_calculations.py
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="7-data-architecture">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="7-data-architecture">7. Data Architecture</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#6-repository-structure">Previous</a>
+      <a href="#8-source-to-target-mapping">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#9-sql-build-plan">SQL Build</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<h3 id="7-1-schemas">7.1 Schemas</h3>
+<p>Use separate database schemas:</p>
+<ul>
+<li><code>raw</code>: original loaded files</li>
+<li><code>bronze</code>: typed staging tables</li>
+<li><code>silver</code>: normalized source-aligned tables</li>
+<li><code>gold</code>: conformed dimensional model</li>
+<li><code>mart</code>: analytics marts</li>
+<li><code>ml</code>: feature store and model scores</li>
+<li><code>dq</code>: quality test results</li>
+</ul>
+<h3 id="7-2-grain-rules">7.2 Grain rules</h3>
+<p>Every table must have a documented grain.</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Grain</th>
+<th>Primary use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dim_member</code></td>
+<td>One row per member</td>
+<td>Demographics, eligibility, segmentation</td>
+</tr>
+<tr>
+<td><code>dim_provider</code></td>
+<td>One row per provider/facility identifier</td>
+<td>Provider benchmarking</td>
+</tr>
+<tr>
+<td><code>dim_date</code></td>
+<td>One row per calendar date</td>
+<td>Time intelligence</td>
+</tr>
+<tr>
+<td><code>dim_diagnosis</code></td>
+<td>One row per diagnosis code</td>
+<td>ICD grouping</td>
+</tr>
+<tr>
+<td><code>dim_procedure</code></td>
+<td>One row per procedure/HCPCS code</td>
+<td>Service grouping</td>
+</tr>
+<tr>
+<td><code>dim_hcc</code></td>
+<td>One row per HCC category</td>
+<td>Risk adjustment</td>
+</tr>
+<tr>
+<td><code>fact_claim_header</code></td>
+<td>One row per claim</td>
+<td>Claim-level payments and dates</td>
+</tr>
+<tr>
+<td><code>fact_claim_line</code></td>
+<td>One row per service line if line data exists</td>
+<td>Procedure/service-level analysis</td>
+</tr>
+<tr>
+<td><code>bridge_claim_diagnosis</code></td>
+<td>One row per claim-diagnosis position</td>
+<td>Multi-diagnosis analysis</td>
+</tr>
+<tr>
+<td><code>bridge_claim_procedure</code></td>
+<td>One row per claim-procedure position</td>
+<td>Multi-procedure analysis</td>
+</tr>
+<tr>
+<td><code>fact_member_month</code></td>
+<td>One row per member per eligible month</td>
+<td>PMPM denominator</td>
+</tr>
+<tr>
+<td><code>fact_inpatient_episode</code></td>
+<td>One row per inpatient stay</td>
+<td>Readmissions, LOS</td>
+</tr>
+<tr>
+<td><code>fact_provider_month</code></td>
+<td>One row per provider per month</td>
+<td>Provider trend and peer benchmarking</td>
+</tr>
+<tr>
+<td><code>fact_member_risk</code></td>
+<td>One row per member per risk year</td>
+<td>HCC/RAF segmentation</td>
+</tr>
+<tr>
+<td><code>fact_model_score</code></td>
+<td>One row per scored entity per model run</td>
+<td>Operational queue</td>
+</tr>
+</tbody></table>
+<h3 id="7-3-key-relationships">7.3 Key relationships</h3>
+<section class="diagram-shell">
+<div class="diagram-label">Architecture Diagram</div>
+<pre class="mermaid">erDiagram
+    DIM_MEMBER ||--o{ FACT_CLAIM_HEADER : submits
+    DIM_PROVIDER ||--o{ FACT_CLAIM_HEADER : bills_or_renders
+    DIM_DATE ||--o{ FACT_CLAIM_HEADER : service_date
+    FACT_CLAIM_HEADER ||--o{ BRIDGE_CLAIM_DIAGNOSIS : has
+    DIM_DIAGNOSIS ||--o{ BRIDGE_CLAIM_DIAGNOSIS : maps
+    FACT_CLAIM_HEADER ||--o{ BRIDGE_CLAIM_PROCEDURE : has
+    DIM_PROCEDURE ||--o{ BRIDGE_CLAIM_PROCEDURE : maps
+    DIM_MEMBER ||--o{ FACT_MEMBER_MONTH : eligible
+    DIM_MEMBER ||--o{ FACT_MEMBER_RISK : risk_profile
+    DIM_HCC ||--o{ FACT_MEMBER_RISK : contributes
+    DIM_PROVIDER ||--o{ FACT_PROVIDER_MONTH : performs
+    FACT_INPATIENT_EPISODE ||--o{ FACT_MODEL_SCORE : scored</pre>
+</section>
+
+
+<h3 id="7-4-core-table-specifications">7.4 Core table specifications</h3>
+<h4>dim_member</h4>
+<p>Purpose: member demographics, geography, enrollment, chronic condition flags.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>member_key</code> integer surrogate key</li>
+<li><code>member_id</code> source beneficiary identifier</li>
+<li><code>birth_date</code></li>
+<li><code>death_date</code></li>
+<li><code>sex</code></li>
+<li><code>race</code></li>
+<li><code>state_code</code></li>
+<li><code>county_code</code></li>
+<li><code>age</code></li>
+<li><code>age_band</code></li>
+<li><code>medicare_eligibility_reason</code></li>
+<li><code>part_a_months</code></li>
+<li><code>part_b_months</code></li>
+<li><code>hmo_months</code></li>
+<li><code>part_d_months</code></li>
+<li><code>chronic_alzheimer</code></li>
+<li><code>chronic_heart_failure</code></li>
+<li><code>chronic_kidney_disease</code></li>
+<li><code>chronic_cancer</code></li>
+<li><code>chronic_copd</code></li>
+<li><code>chronic_depression</code></li>
+<li><code>chronic_diabetes</code></li>
+<li><code>chronic_ischemic_heart</code></li>
+<li><code>chronic_osteoporosis</code></li>
+<li><code>chronic_rheumatoid_arthritis</code></li>
+<li><code>chronic_stroke</code></li>
+<li><code>created_at</code></li>
+<li><code>updated_at</code></li>
+</ul>
+<h4>dim_provider</h4>
+<p>Purpose: provider and facility rollups.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>provider_id</code></li>
+<li><code>npi</code></li>
+<li><code>facility_provider_number</code></li>
+<li><code>provider_name</code></li>
+<li><code>provider_type</code></li>
+<li><code>specialty</code></li>
+<li><code>state_code</code></li>
+<li><code>place_of_service_default</code></li>
+<li><code>source_system</code></li>
+<li><code>provider_peer_group</code></li>
+</ul>
+<p>Provider peer groups:</p>
+<ul>
+<li>Primary care</li>
+<li>Cardiology</li>
+<li>Orthopedics</li>
+<li>Emergency medicine</li>
+<li>Internal medicine</li>
+<li>Hospital/facility</li>
+<li>DME/supplier</li>
+<li>Other professional</li>
+</ul>
+<p>If SynPUF provider details are limited, use a generated peer group based on claim type, place of service, or joined CMS provider utilization specialty.</p>
+<h4>fact_claim_header</h4>
+<p>Purpose: one row per adjudicated claim.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>claim_key</code></li>
+<li><code>claim_id</code></li>
+<li><code>member_key</code></li>
+<li><code>billing_provider_key</code></li>
+<li><code>rendering_provider_key</code></li>
+<li><code>attending_provider_key</code></li>
+<li><code>operating_provider_key</code></li>
+<li><code>claim_type</code></li>
+<li><code>claim_from_date_key</code></li>
+<li><code>claim_thru_date_key</code></li>
+<li><code>claim_from_date</code></li>
+<li><code>claim_thru_date</code></li>
+<li><code>claim_paid_date</code></li>
+<li><code>submitted_amount</code></li>
+<li><code>allowed_amount</code></li>
+<li><code>paid_amount</code></li>
+<li><code>primary_payer_paid_amount</code></li>
+<li><code>member_responsibility_amount</code></li>
+<li><code>deductible_amount</code></li>
+<li><code>coinsurance_amount</code></li>
+<li><code>claim_status</code></li>
+<li><code>place_of_service</code></li>
+<li><code>revenue_center_code</code></li>
+<li><code>admission_date</code></li>
+<li><code>discharge_date</code></li>
+<li><code>length_of_stay</code></li>
+<li><code>principal_diagnosis_code</code></li>
+<li><code>admitting_diagnosis_code</code></li>
+<li><code>primary_procedure_code</code></li>
+<li><code>drg_code</code></li>
+<li><code>source_file</code></li>
+</ul>
+<p>Claim types:</p>
+<ul>
+<li>Inpatient</li>
+<li>Outpatient</li>
+<li>Carrier/professional</li>
+<li>Pharmacy/PDE</li>
+<li>DME if available</li>
+<li>SNF/home health/hospice if using modern RIF files</li>
+</ul>
+<h4>fact_member_month</h4>
+<p>Purpose: PMPM denominator and eligibility tracking.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>member_month_key</code></li>
+<li><code>member_key</code></li>
+<li><code>year_month</code></li>
+<li><code>month_start_date</code></li>
+<li><code>month_end_date</code></li>
+<li><code>is_eligible</code></li>
+<li><code>is_part_a_eligible</code></li>
+<li><code>is_part_b_eligible</code></li>
+<li><code>is_part_d_eligible</code></li>
+<li><code>is_hmo_enrolled</code></li>
+<li><code>plan_id</code></li>
+<li><code>risk_segment</code></li>
+<li><code>age_band</code></li>
+<li><code>state_code</code></li>
+</ul>
+<p>Important rule:</p>
+<ul>
+<li>For payer PMPM analytics, exclude months where the member is not eligible.</li>
+<li>For traditional Medicare FFS SynPUF analysis, document HMO month treatment. Many analyses exclude HMO months because claims may be incomplete for managed care months.</li>
+</ul>
+<h4>fact_inpatient_episode</h4>
+<p>Purpose: readmission, inpatient utilization, and LOS analytics.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>episode_key</code></li>
+<li><code>claim_key</code></li>
+<li><code>member_key</code></li>
+<li><code>facility_provider_key</code></li>
+<li><code>admission_date</code></li>
+<li><code>discharge_date</code></li>
+<li><code>length_of_stay</code></li>
+<li><code>discharge_status</code></li>
+<li><code>principal_diagnosis_code</code></li>
+<li><code>drg_code</code></li>
+<li><code>index_admission_flag</code></li>
+<li><code>readmission_30day_flag</code></li>
+<li><code>days_to_next_admission</code></li>
+<li><code>next_admission_date</code></li>
+<li><code>readmission_claim_key</code></li>
+<li><code>condition_group</code></li>
+<li><code>planned_readmission_exclusion_flag</code></li>
+</ul>
+<p>Simplified readmission logic:</p>
+<ul>
+<li>Index event: inpatient discharge.</li>
+<li>Readmission: next inpatient admission for same member within 30 days after discharge.</li>
+<li>Exclude same-day transfers when the next admission date equals discharge date and provider/facility differs.</li>
+<li>Optional: exclude planned readmissions using procedure or DRG rules if available.</li>
+</ul>
+<h4>fact_member_risk</h4>
+<p>Purpose: risk adjustment and chronic condition segmentation.</p>
+<p>Required columns:</p>
+<ul>
+<li><code>member_risk_key</code></li>
+<li><code>member_key</code></li>
+<li><code>risk_year</code></li>
+<li><code>hcc_count</code></li>
+<li><code>hcc_list</code></li>
+<li><code>chronic_condition_count</code></li>
+<li><code>demographic_factor</code></li>
+<li><code>disease_factor</code></li>
+<li><code>interaction_factor</code></li>
+<li><code>raf_score_estimate</code></li>
+<li><code>risk_segment</code></li>
+<li><code>last_hcc_capture_date</code></li>
+<li><code>suspected_gap_count</code></li>
+<li><code>recaptured_hcc_count</code></li>
+</ul>
+<p>Risk segments:</p>
+<ul>
+<li>Low risk: RAF estimate less than 0.7</li>
+<li>Moderate risk: RAF estimate 0.7 to 1.2</li>
+<li>High risk: RAF estimate 1.2 to 2.5</li>
+<li>Very high risk: RAF estimate above 2.5</li>
+</ul>
+<p>Document that RAF is an estimate unless full CMS model software is implemented.</p>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="8-source-to-target-mapping">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="8-source-to-target-mapping">8. Source-to-Target Mapping</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#7-data-architecture">Previous</a>
+      <a href="#9-sql-build-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#14-data-quality-rules">Validate In DQ</a><a class="related-chip" href="#17-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<h3 id="8-1-cms-de-synpuf-mapping">8.1 CMS DE-SynPUF mapping</h3>
+<p>Common SynPUF source tables:</p>
+<ul>
+<li>Beneficiary Summary</li>
+<li>Inpatient Claims</li>
+<li>Outpatient Claims</li>
+<li>Carrier Claims</li>
+<li>Prescription Drug Event</li>
+</ul>
+<p>Key beneficiary fields to map:</p>
+<table>
+<thead>
+<tr>
+<th>Source field concept</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>beneficiary ID</td>
+<td><code>dim_member.member_id</code></td>
+</tr>
+<tr>
+<td>birth date</td>
+<td><code>dim_member.birth_date</code></td>
+</tr>
+<tr>
+<td>death date</td>
+<td><code>dim_member.death_date</code></td>
+</tr>
+<tr>
+<td>sex code</td>
+<td><code>dim_member.sex</code></td>
+</tr>
+<tr>
+<td>race code</td>
+<td><code>dim_member.race</code></td>
+</tr>
+<tr>
+<td>state code</td>
+<td><code>dim_member.state_code</code></td>
+</tr>
+<tr>
+<td>county code</td>
+<td><code>dim_member.county_code</code></td>
+</tr>
+<tr>
+<td>Part A months</td>
+<td><code>dim_member.part_a_months</code> and <code>fact_member_month</code></td>
+</tr>
+<tr>
+<td>Part B months</td>
+<td><code>dim_member.part_b_months</code> and <code>fact_member_month</code></td>
+</tr>
+<tr>
+<td>HMO months</td>
+<td>exclusion or flag in <code>fact_member_month</code></td>
+</tr>
+<tr>
+<td>chronic condition flags</td>
+<td><code>dim_member</code> and <code>fact_member_risk</code></td>
+</tr>
+</tbody></table>
+<p>Key inpatient fields to map:</p>
+<table>
+<thead>
+<tr>
+<th>Source field concept</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>claim ID</td>
+<td><code>fact_claim_header.claim_id</code></td>
+</tr>
+<tr>
+<td>beneficiary ID</td>
+<td><code>fact_claim_header.member_key</code></td>
+</tr>
+<tr>
+<td>claim from/thru date</td>
+<td><code>fact_claim_header.claim_from_date</code>, <code>claim_thru_date</code></td>
+</tr>
+<tr>
+<td>claim payment amount</td>
+<td><code>fact_claim_header.paid_amount</code></td>
+</tr>
+<tr>
+<td>primary payer paid amount</td>
+<td><code>fact_claim_header.primary_payer_paid_amount</code></td>
+</tr>
+<tr>
+<td>provider number</td>
+<td><code>dim_provider.provider_id</code></td>
+</tr>
+<tr>
+<td>attending physician NPI</td>
+<td><code>fact_claim_header.attending_provider_key</code></td>
+</tr>
+<tr>
+<td>operating physician NPI</td>
+<td><code>fact_claim_header.operating_provider_key</code></td>
+</tr>
+<tr>
+<td>admission date</td>
+<td><code>fact_inpatient_episode.admission_date</code></td>
+</tr>
+<tr>
+<td>discharge date</td>
+<td><code>fact_inpatient_episode.discharge_date</code></td>
+</tr>
+<tr>
+<td>diagnosis codes 1 to N</td>
+<td><code>bridge_claim_diagnosis</code></td>
+</tr>
+<tr>
+<td>procedure codes 1 to N</td>
+<td><code>bridge_claim_procedure</code></td>
+</tr>
+</tbody></table>
+<p>Key outpatient/carrier fields to map:</p>
+<table>
+<thead>
+<tr>
+<th>Source field concept</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>claim ID</td>
+<td><code>fact_claim_header.claim_id</code></td>
+</tr>
+<tr>
+<td>provider/physician NPI</td>
+<td><code>dim_provider</code> and provider keys</td>
+</tr>
+<tr>
+<td>claim dates</td>
+<td>date keys and service dates</td>
+</tr>
+<tr>
+<td>diagnosis codes</td>
+<td><code>bridge_claim_diagnosis</code></td>
+</tr>
+<tr>
+<td>HCPCS/procedure codes</td>
+<td><code>bridge_claim_procedure</code> or <code>fact_claim_line</code></td>
+</tr>
+<tr>
+<td>payment fields</td>
+<td>submitted/allowed/paid measures as available</td>
+</tr>
+</tbody></table>
+<p>Key PDE fields to map:</p>
+<table>
+<thead>
+<tr>
+<th>Source field concept</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PDE ID or event ID</td>
+<td><code>fact_pharmacy_claim</code></td>
+</tr>
+<tr>
+<td>beneficiary ID</td>
+<td><code>member_key</code></td>
+</tr>
+<tr>
+<td>service date</td>
+<td><code>fill_date</code></td>
+</tr>
+<tr>
+<td>product service ID</td>
+<td><code>drug_code</code></td>
+</tr>
+<tr>
+<td>quantity dispensed</td>
+<td><code>quantity</code></td>
+</tr>
+<tr>
+<td>days supply</td>
+<td><code>days_supply</code></td>
+</tr>
+<tr>
+<td>gross drug cost</td>
+<td><code>gross_drug_cost</code></td>
+</tr>
+<tr>
+<td>patient pay amount</td>
+<td><code>member_responsibility_amount</code></td>
+</tr>
+</tbody></table>
+<h3 id="8-2-cms-provider-utilization-mapping">8.2 CMS provider utilization mapping</h3>
+<p>Use CMS Physician and Other Practitioners by Provider and Service for aggregate provider benchmarks.</p>
+<p>Target table: <code>silver.provider_service_utilization</code></p>
+<p>Required concepts:</p>
+<ul>
+<li>NPI</li>
+<li>provider type/specialty</li>
+<li>state</li>
+<li>HCPCS code</li>
+<li>place of service</li>
+<li>number of services</li>
+<li>number of beneficiaries</li>
+<li>submitted charge amount</li>
+<li>allowed amount</li>
+<li>Medicare payment amount</li>
+</ul>
+<p>Use this to create:</p>
+<ul>
+<li>Provider peer group benchmarks</li>
+<li>Payment per beneficiary</li>
+<li>Service intensity</li>
+<li>Provider specialty norms</li>
+<li>Outlier thresholds</li>
+</ul>
+<h3 id="8-3-hcc-mapping">8.3 HCC mapping</h3>
+<p>Target table: <code>dim_hcc</code> and <code>bridge_diagnosis_hcc</code>.</p>
+<p>Required fields:</p>
+<ul>
+<li><code>diagnosis_code</code></li>
+<li><code>diagnosis_description</code></li>
+<li><code>hcc_model_version</code></li>
+<li><code>hcc_code</code></li>
+<li><code>hcc_description</code></li>
+<li><code>hcc_hierarchy_group</code></li>
+<li><code>risk_weight</code></li>
+<li><code>payment_year</code></li>
+</ul>
+<p>Important implementation note:</p>
+<ul>
+<li>DE-SynPUF 2008-2010 uses ICD-9 style diagnosis codes. Current CMS-HCC mappings are ICD-10 based. Do not silently mix them.</li>
+<li>Option A: Use historical ICD-9 CMS-HCC mappings for DE-SynPUF.</li>
+<li>Option B: Use CMS Synthetic RIF, Synthea, or MIMIC-IV ICD-10 data for current CMS-HCC mapping.</li>
+<li>Option C: Build a simplified chronic condition risk score from SynPUF chronic flags and call it &quot;RAF-like estimate&quot;, not official RAF.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="9-sql-build-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="9-sql-build-plan">9. SQL Build Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#8-source-to-target-mapping">Previous</a>
+      <a href="#10-python-analytics-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#7-data-architecture">Data Architecture</a><a class="related-chip" href="#13-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Power BI</a>
+    </div>
+    
+<h3 id="9-1-sql-deliverables">9.1 SQL deliverables</h3>
+<p>Build these scripts in order.</p>
+<h4>00_admin</h4>
+<ol>
+<li><p><code>create_database.sql</code></p>
+<ul>
+<li>Creates database.</li>
+<li>Creates filegroups or schemas if using SQL Server.</li>
+</ul>
+</li>
+<li><p><code>create_schemas.sql</code></p>
+<ul>
+<li>Creates <code>raw</code>, <code>bronze</code>, <code>silver</code>, <code>gold</code>, <code>mart</code>, <code>ml</code>, <code>dq</code>.</li>
+</ul>
+</li>
+</ol>
+<h4>01_bronze_ddl</h4>
+<ol>
+<li><p><code>bronze_cms_desynpuf.sql</code></p>
+<ul>
+<li>Creates source-shaped tables.</li>
+<li>Adds ingestion columns.</li>
+</ul>
+</li>
+<li><p><code>bronze_provider_utilization.sql</code></p>
+<ul>
+<li>Creates provider service utilization staging.</li>
+</ul>
+</li>
+<li><p><code>bronze_hcc_mapping.sql</code></p>
+<ul>
+<li>Creates diagnosis to HCC mapping table.</li>
+</ul>
+</li>
+<li><p><code>bronze_denial_benchmark.sql</code></p>
+<ul>
+<li>Creates Transparency in Coverage benchmark staging.</li>
+</ul>
+</li>
+</ol>
+<h4>02_silver_transforms</h4>
+<ol>
+<li><p><code>silver_member.sql</code></p>
+<ul>
+<li>Standardizes beneficiary fields.</li>
+<li>Decodes sex, race, state if mapping tables are available.</li>
+<li>Calculates age and age band.</li>
+</ul>
+</li>
+<li><p><code>silver_claim_header.sql</code></p>
+<ul>
+<li>Unifies inpatient, outpatient, carrier, and pharmacy into a common claim header format.</li>
+<li>Adds <code>claim_type</code>.</li>
+<li>Standardizes claim dates.</li>
+</ul>
+</li>
+<li><p><code>silver_claim_diagnosis_bridge.sql</code></p>
+<ul>
+<li>Unpivots diagnosis code columns.</li>
+<li>Adds diagnosis position.</li>
+<li>Flags principal diagnosis.</li>
+</ul>
+</li>
+<li><p><code>silver_claim_procedure_bridge.sql</code></p>
+<ul>
+<li>Unpivots procedure and HCPCS columns.</li>
+<li>Adds procedure position and procedure type.</li>
+</ul>
+</li>
+<li><p><code>silver_provider.sql</code></p>
+<ul>
+<li>Creates provider/facility master.</li>
+<li>Coalesces facility provider numbers and NPIs where available.</li>
+</ul>
+</li>
+</ol>
+<h4>03_gold_star_schema</h4>
+<p>Build conformed dimensions first, then facts.</p>
+<ol>
+<li><p>Dimensions:</p>
+<ul>
+<li><code>dim_date</code></li>
+<li><code>dim_member</code></li>
+<li><code>dim_provider</code></li>
+<li><code>dim_diagnosis</code></li>
+<li><code>dim_procedure</code></li>
+<li><code>dim_hcc</code></li>
+</ul>
+</li>
+<li><p>Facts:</p>
+<ul>
+<li><code>fact_claim_header</code></li>
+<li><code>fact_claim_line</code></li>
+<li><code>fact_member_month</code></li>
+<li><code>fact_inpatient_episode</code></li>
+<li><code>fact_provider_month</code></li>
+<li><code>fact_member_risk</code></li>
+</ul>
+</li>
+</ol>
+<h4>04_marts</h4>
+<ol>
+<li><code>mart_claims_financials.sql</code></li>
+<li><code>mart_member_month_pmpm.sql</code></li>
+<li><code>mart_high_cost_members.sql</code></li>
+<li><code>mart_readmission_30day.sql</code></li>
+<li><code>mart_provider_performance.sql</code></li>
+<li><code>mart_fwa_provider_flags.sql</code></li>
+<li><code>mart_hcc_risk_adjustment.sql</code></li>
+<li><code>mart_denial_benchmark.sql</code></li>
+</ol>
+<h3 id="9-2-core-sql-patterns">9.2 Core SQL patterns</h3>
+<h4>Member-month PMPM mart</h4>
+<p>Purpose:</p>
+<ul>
+<li>Calculate monthly eligible members and paid PMPM.</li>
+</ul>
+<p>Output table: <code>mart.mart_member_month_pmpm</code></p>
+<p>Required columns:</p>
+<ul>
+<li><code>year_month</code></li>
+<li><code>state_code</code></li>
+<li><code>age_band</code></li>
+<li><code>risk_segment</code></li>
+<li><code>eligible_member_months</code></li>
+<li><code>total_paid_amount</code></li>
+<li><code>medical_paid_amount</code></li>
+<li><code>pharmacy_paid_amount</code></li>
+<li><code>inpatient_paid_amount</code></li>
+<li><code>outpatient_paid_amount</code></li>
+<li><code>professional_paid_amount</code></li>
+<li><code>pmpm</code></li>
+<li><code>rolling_3m_pmpm</code></li>
+<li><code>rolling_12m_pmpm</code></li>
+</ul>
+<p>SQL logic:</p>
+<pre><code class="language-sql">WITH monthly_claims AS (
+    SELECT
+        m.member_key,
+        d.year_month,
+        SUM(CASE WHEN c.claim_type &lt;&gt; &#39;Pharmacy&#39; THEN c.paid_amount ELSE 0 END) AS medical_paid_amount,
+        SUM(CASE WHEN c.claim_type = &#39;Pharmacy&#39; THEN c.paid_amount ELSE 0 END) AS pharmacy_paid_amount,
+        SUM(CASE WHEN c.claim_type = &#39;Inpatient&#39; THEN c.paid_amount ELSE 0 END) AS inpatient_paid_amount,
+        SUM(CASE WHEN c.claim_type = &#39;Outpatient&#39; THEN c.paid_amount ELSE 0 END) AS outpatient_paid_amount,
+        SUM(CASE WHEN c.claim_type = &#39;Professional&#39; THEN c.paid_amount ELSE 0 END) AS professional_paid_amount,
+        SUM(c.paid_amount) AS total_paid_amount
+    FROM gold.fact_claim_header c
+    JOIN gold.dim_member m
+        ON c.member_key = m.member_key
+    JOIN gold.dim_date d
+        ON c.claim_from_date_key = d.date_key
+    GROUP BY m.member_key, d.year_month
+),
+base AS (
+    SELECT
+        mm.year_month,
+        dm.state_code,
+        dm.age_band,
+        COALESCE(fr.risk_segment, &#39;Unassigned&#39;) AS risk_segment,
+        COUNT(*) AS eligible_member_months,
+        SUM(COALESCE(mc.total_paid_amount, 0)) AS total_paid_amount,
+        SUM(COALESCE(mc.medical_paid_amount, 0)) AS medical_paid_amount,
+        SUM(COALESCE(mc.pharmacy_paid_amount, 0)) AS pharmacy_paid_amount,
+        SUM(COALESCE(mc.inpatient_paid_amount, 0)) AS inpatient_paid_amount,
+        SUM(COALESCE(mc.outpatient_paid_amount, 0)) AS outpatient_paid_amount,
+        SUM(COALESCE(mc.professional_paid_amount, 0)) AS professional_paid_amount
+    FROM gold.fact_member_month mm
+    JOIN gold.dim_member dm
+        ON mm.member_key = dm.member_key
+    LEFT JOIN monthly_claims mc
+        ON mm.member_key = mc.member_key
+       AND mm.year_month = mc.year_month
+    LEFT JOIN gold.fact_member_risk fr
+        ON mm.member_key = fr.member_key
+       AND LEFT(mm.year_month, 4) = CAST(fr.risk_year AS VARCHAR)
+    WHERE mm.is_eligible = 1
+    GROUP BY
+        mm.year_month,
+        dm.state_code,
+        dm.age_band,
+        COALESCE(fr.risk_segment, &#39;Unassigned&#39;)
+)
+SELECT
+    *,
+    total_paid_amount * 1.0 / NULLIF(eligible_member_months, 0) AS pmpm,
+    AVG(total_paid_amount * 1.0 / NULLIF(eligible_member_months, 0))
+        OVER (
+            PARTITION BY state_code, age_band, risk_segment
+            ORDER BY year_month
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+        ) AS rolling_3m_pmpm,
+    AVG(total_paid_amount * 1.0 / NULLIF(eligible_member_months, 0))
+        OVER (
+            PARTITION BY state_code, age_band, risk_segment
+            ORDER BY year_month
+            ROWS BETWEEN 11 PRECEDING AND CURRENT ROW
+        ) AS rolling_12m_pmpm
+FROM base;
+</code></pre>
+<h4>High-cost member detection</h4>
+<p>Purpose:</p>
+<ul>
+<li>Identify top-cost members for care management.</li>
+</ul>
+<p>Output table: <code>mart.mart_high_cost_members</code></p>
+<p>Required columns:</p>
+<ul>
+<li><code>member_key</code></li>
+<li><code>measurement_year</code></li>
+<li><code>total_paid_12m</code></li>
+<li><code>inpatient_paid_12m</code></li>
+<li><code>ed_visit_count_12m</code></li>
+<li><code>admission_count_12m</code></li>
+<li><code>readmission_count_12m</code></li>
+<li><code>chronic_condition_count</code></li>
+<li><code>hcc_count</code></li>
+<li><code>risk_segment</code></li>
+<li><code>cost_percentile</code></li>
+<li><code>high_cost_flag</code></li>
+<li><code>recommended_intervention</code></li>
+</ul>
+<p>SQL logic:</p>
+<pre><code class="language-sql">WITH member_cost AS (
+    SELECT
+        c.member_key,
+        d.calendar_year AS measurement_year,
+        SUM(c.paid_amount) AS total_paid_12m,
+        SUM(CASE WHEN c.claim_type = &#39;Inpatient&#39; THEN c.paid_amount ELSE 0 END) AS inpatient_paid_12m,
+        COUNT(DISTINCT CASE WHEN c.claim_type = &#39;Inpatient&#39; THEN c.claim_id END) AS admission_count_12m,
+        COUNT(DISTINCT CASE WHEN c.place_of_service = &#39;Emergency&#39; THEN c.claim_id END) AS ed_visit_count_12m
+    FROM gold.fact_claim_header c
+    JOIN gold.dim_date d
+        ON c.claim_from_date_key = d.date_key
+    GROUP BY c.member_key, d.calendar_year
+),
+ranked AS (
+    SELECT
+        mc.*,
+        PERCENT_RANK() OVER (
+            PARTITION BY measurement_year
+            ORDER BY total_paid_12m
+        ) AS cost_percentile
+    FROM member_cost mc
+)
+SELECT
+    r.member_key,
+    r.measurement_year,
+    r.total_paid_12m,
+    r.inpatient_paid_12m,
+    r.ed_visit_count_12m,
+    r.admission_count_12m,
+    COALESCE(rr.readmission_count_12m, 0) AS readmission_count_12m,
+    dm.chronic_condition_count,
+    COALESCE(fr.hcc_count, 0) AS hcc_count,
+    COALESCE(fr.risk_segment, &#39;Unassigned&#39;) AS risk_segment,
+    r.cost_percentile,
+    CASE WHEN r.cost_percentile &gt;= 0.95 THEN 1 ELSE 0 END AS high_cost_flag,
+    CASE
+        WHEN COALESCE(rr.readmission_count_12m, 0) &gt; 0 THEN &#39;Post-discharge care management&#39;
+        WHEN r.ed_visit_count_12m &gt;= 3 THEN &#39;ED diversion and primary care access&#39;
+        WHEN dm.chronic_condition_count &gt;= 3 THEN &#39;Complex chronic care management&#39;
+        WHEN r.total_paid_12m &gt;= 50000 THEN &#39;High-cost case review&#39;
+        ELSE &#39;Monitor&#39;
+    END AS recommended_intervention
+FROM ranked r
+JOIN gold.dim_member dm
+    ON r.member_key = dm.member_key
+LEFT JOIN gold.fact_member_risk fr
+    ON r.member_key = fr.member_key
+   AND r.measurement_year = fr.risk_year
+LEFT JOIN (
+    SELECT
+        member_key,
+        YEAR(discharge_date) AS measurement_year,
+        SUM(CASE WHEN readmission_30day_flag = 1 THEN 1 ELSE 0 END) AS readmission_count_12m
+    FROM gold.fact_inpatient_episode
+    GROUP BY member_key, YEAR(discharge_date)
+) rr
+    ON r.member_key = rr.member_key
+   AND r.measurement_year = rr.measurement_year;
+</code></pre>
+<h4>30-day readmission mart</h4>
+<p>Purpose:</p>
+<ul>
+<li>Identify index admissions and readmissions within 30 days.</li>
+</ul>
+<p>Output table: <code>mart.mart_readmission_30day</code></p>
+<p>Required columns:</p>
+<ul>
+<li><code>index_claim_key</code></li>
+<li><code>member_key</code></li>
+<li><code>facility_provider_key</code></li>
+<li><code>admission_date</code></li>
+<li><code>discharge_date</code></li>
+<li><code>principal_diagnosis_code</code></li>
+<li><code>drg_code</code></li>
+<li><code>length_of_stay</code></li>
+<li><code>next_admission_date</code></li>
+<li><code>days_to_readmission</code></li>
+<li><code>readmission_30day_flag</code></li>
+<li><code>same_day_transfer_flag</code></li>
+</ul>
+<p>SQL logic:</p>
+<pre><code class="language-sql">WITH inpatient AS (
+    SELECT
+        claim_key,
+        member_key,
+        facility_provider_key,
+        admission_date,
+        discharge_date,
+        principal_diagnosis_code,
+        drg_code,
+        DATEDIFF(day, admission_date, discharge_date) + 1 AS length_of_stay
+    FROM gold.fact_inpatient_episode
+    WHERE admission_date IS NOT NULL
+      AND discharge_date IS NOT NULL
+),
+sequenced AS (
+    SELECT
+        i.*,
+        LEAD(admission_date) OVER (
+            PARTITION BY member_key
+            ORDER BY admission_date, discharge_date, claim_key
+        ) AS next_admission_date,
+        LEAD(claim_key) OVER (
+            PARTITION BY member_key
+            ORDER BY admission_date, discharge_date, claim_key
+        ) AS next_claim_key,
+        LEAD(facility_provider_key) OVER (
+            PARTITION BY member_key
+            ORDER BY admission_date, discharge_date, claim_key
+        ) AS next_facility_provider_key
+    FROM inpatient i
+)
+SELECT
+    claim_key AS index_claim_key,
+    member_key,
+    facility_provider_key,
+    admission_date,
+    discharge_date,
+    principal_diagnosis_code,
+    drg_code,
+    length_of_stay,
+    next_admission_date,
+    DATEDIFF(day, discharge_date, next_admission_date) AS days_to_readmission,
+    CASE
+        WHEN next_admission_date &gt; discharge_date
+         AND DATEDIFF(day, discharge_date, next_admission_date) BETWEEN 1 AND 30
+        THEN 1 ELSE 0
+    END AS readmission_30day_flag,
+    CASE
+        WHEN next_admission_date = discharge_date
+         AND next_facility_provider_key &lt;&gt; facility_provider_key
+        THEN 1 ELSE 0
+    END AS same_day_transfer_flag
+FROM sequenced;
+</code></pre>
+<h4>Provider performance mart</h4>
+<p>Purpose:</p>
+<ul>
+<li>Rank providers within peer groups by cost, utilization, readmission, and anomaly indicators.</li>
+</ul>
+<p>Output table: <code>mart.mart_provider_performance</code></p>
+<p>Required columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>provider_peer_group</code></li>
+<li><code>measurement_year</code></li>
+<li><code>claim_count</code></li>
+<li><code>unique_member_count</code></li>
+<li><code>total_paid_amount</code></li>
+<li><code>paid_per_member</code></li>
+<li><code>paid_per_claim</code></li>
+<li><code>admissions</code></li>
+<li><code>readmissions_30day</code></li>
+<li><code>readmission_rate</code></li>
+<li><code>provider_cost_percentile</code></li>
+<li><code>readmission_percentile</code></li>
+<li><code>composite_outlier_score</code></li>
+<li><code>provider_rank</code></li>
+</ul>
+<p>SQL logic:</p>
+<pre><code class="language-sql">WITH provider_base AS (
+    SELECT
+        c.billing_provider_key AS provider_key,
+        dp.provider_peer_group,
+        dd.calendar_year AS measurement_year,
+        COUNT(DISTINCT c.claim_id) AS claim_count,
+        COUNT(DISTINCT c.member_key) AS unique_member_count,
+        SUM(c.paid_amount) AS total_paid_amount,
+        SUM(CASE WHEN c.claim_type = &#39;Inpatient&#39; THEN 1 ELSE 0 END) AS admissions
+    FROM gold.fact_claim_header c
+    JOIN gold.dim_provider dp
+        ON c.billing_provider_key = dp.provider_key
+    JOIN gold.dim_date dd
+        ON c.claim_from_date_key = dd.date_key
+    GROUP BY c.billing_provider_key, dp.provider_peer_group, dd.calendar_year
+),
+readmits AS (
+    SELECT
+        facility_provider_key AS provider_key,
+        YEAR(discharge_date) AS measurement_year,
+        SUM(CASE WHEN readmission_30day_flag = 1 THEN 1 ELSE 0 END) AS readmissions_30day,
+        COUNT(*) AS index_admissions
+    FROM gold.fact_inpatient_episode
+    GROUP BY facility_provider_key, YEAR(discharge_date)
+),
+metrics AS (
+    SELECT
+        pb.*,
+        pb.total_paid_amount * 1.0 / NULLIF(pb.unique_member_count, 0) AS paid_per_member,
+        pb.total_paid_amount * 1.0 / NULLIF(pb.claim_count, 0) AS paid_per_claim,
+        COALESCE(r.readmissions_30day, 0) AS readmissions_30day,
+        COALESCE(r.readmissions_30day, 0) * 1.0 / NULLIF(r.index_admissions, 0) AS readmission_rate
+    FROM provider_base pb
+    LEFT JOIN readmits r
+        ON pb.provider_key = r.provider_key
+       AND pb.measurement_year = r.measurement_year
+)
+SELECT
+    *,
+    PERCENT_RANK() OVER (
+        PARTITION BY provider_peer_group, measurement_year
+        ORDER BY paid_per_member
+    ) AS provider_cost_percentile,
+    PERCENT_RANK() OVER (
+        PARTITION BY provider_peer_group, measurement_year
+        ORDER BY readmission_rate
+    ) AS readmission_percentile,
+    (
+        0.60 * PERCENT_RANK() OVER (
+            PARTITION BY provider_peer_group, measurement_year
+            ORDER BY paid_per_member
+        )
+        +
+        0.40 * PERCENT_RANK() OVER (
+            PARTITION BY provider_peer_group, measurement_year
+            ORDER BY readmission_rate
+        )
+    ) AS composite_outlier_score,
+    DENSE_RANK() OVER (
+        PARTITION BY provider_peer_group, measurement_year
+        ORDER BY paid_per_member DESC
+    ) AS provider_rank
+FROM metrics;
+</code></pre>
+<h4>Fraud/waste/abuse provider flags</h4>
+<p>Purpose:</p>
+<ul>
+<li>Build a provider audit work queue.</li>
+</ul>
+<p>Output table: <code>mart.mart_fwa_provider_flags</code></p>
+<p>Required flags:</p>
+<ul>
+<li>High paid per beneficiary</li>
+<li>High claims per beneficiary</li>
+<li>High duplicate claim count</li>
+<li>High procedure intensity</li>
+<li>High same-day service frequency</li>
+<li>Unusual place-of-service distribution</li>
+<li>High outlier percentile within specialty</li>
+</ul>
+<p>Example rule logic:</p>
+<pre><code class="language-sql">WITH provider_service AS (
+    SELECT
+        billing_provider_key AS provider_key,
+        COUNT(DISTINCT claim_id) AS claim_count,
+        COUNT(DISTINCT member_key) AS member_count,
+        SUM(paid_amount) AS total_paid_amount,
+        COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT member_key), 0) AS claims_per_member,
+        SUM(paid_amount) * 1.0 / NULLIF(COUNT(DISTINCT member_key), 0) AS paid_per_member
+    FROM gold.fact_claim_header
+    GROUP BY billing_provider_key
+),
+percentiles AS (
+    SELECT
+        ps.*,
+        dp.provider_peer_group,
+        PERCENT_RANK() OVER (
+            PARTITION BY dp.provider_peer_group
+            ORDER BY paid_per_member
+        ) AS paid_per_member_pct,
+        PERCENT_RANK() OVER (
+            PARTITION BY dp.provider_peer_group
+            ORDER BY claims_per_member
+        ) AS claims_per_member_pct
+    FROM provider_service ps
+    JOIN gold.dim_provider dp
+        ON ps.provider_key = dp.provider_key
+)
+SELECT
+    provider_key,
+    provider_peer_group,
+    claim_count,
+    member_count,
+    total_paid_amount,
+    claims_per_member,
+    paid_per_member,
+    paid_per_member_pct,
+    claims_per_member_pct,
+    CASE WHEN paid_per_member_pct &gt;= 0.95 THEN 1 ELSE 0 END AS high_paid_per_member_flag,
+    CASE WHEN claims_per_member_pct &gt;= 0.95 THEN 1 ELSE 0 END AS high_claims_per_member_flag,
+    CASE
+        WHEN paid_per_member_pct &gt;= 0.95 AND claims_per_member_pct &gt;= 0.95 THEN &#39;High priority SIU review&#39;
+        WHEN paid_per_member_pct &gt;= 0.95 THEN &#39;Payment outlier review&#39;
+        WHEN claims_per_member_pct &gt;= 0.95 THEN &#39;Utilization pattern review&#39;
+        ELSE &#39;Monitor&#39;
+    END AS audit_recommendation
+FROM percentiles;
+</code></pre>
+<h4>HCC risk adjustment mart</h4>
+<p>Purpose:</p>
+<ul>
+<li>Convert diagnoses into HCC categories and member-level risk segments.</li>
+</ul>
+<p>Output table: <code>mart.mart_hcc_risk_adjustment</code></p>
+<p>Required columns:</p>
+<ul>
+<li><code>member_key</code></li>
+<li><code>risk_year</code></li>
+<li><code>diagnosis_count</code></li>
+<li><code>hcc_count</code></li>
+<li><code>hcc_list</code></li>
+<li><code>raf_score_estimate</code></li>
+<li><code>risk_segment</code></li>
+<li><code>recaptured_hcc_count</code></li>
+<li><code>suspected_gap_count</code></li>
+<li><code>top_hcc_category</code></li>
+</ul>
+<p>Business rules:</p>
+<ul>
+<li>Use diagnosis codes from face-to-face or claim-eligible settings when possible.</li>
+<li>Map diagnosis to HCC.</li>
+<li>Apply hierarchy rules if implemented.</li>
+<li>Sum demographic and disease factors if official coefficients are used.</li>
+<li>If official full model is not implemented, label it clearly as &quot;RAF-like estimate.&quot;</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="10-python-analytics-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="10-python-analytics-plan">10. Python Analytics Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#9-sql-build-plan">Previous</a>
+      <a href="#11-machine-learning-design">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#14-data-quality-rules">Model Governance</a>
+    </div>
+    
+<h3 id="10-1-python-deliverables">10.1 Python deliverables</h3>
+<p>Build Python in script-first style. Notebooks should explain; scripts should reproduce.</p>
+<h4><code>src/etl/load_raw_files.py</code></h4>
+<p>Responsibilities:</p>
+<ul>
+<li>Read raw CMS/Kaggle files.</li>
+<li>Detect delimiter and encoding.</li>
+<li>Create row counts.</li>
+<li>Save typed parquet copies to <code>data/interim/</code>.</li>
+<li>Optionally load to DuckDB or SQL Server.</li>
+</ul>
+<p>Inputs:</p>
+<ul>
+<li><code>data/raw/cms_desynpuf/</code></li>
+<li><code>data/raw/cms_provider_utilization/</code></li>
+<li><code>data/raw/cms_hcc_mappings/</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>data/interim/*.parquet</code></li>
+<li>ingestion log CSV</li>
+</ul>
+<h4><code>src/etl/validate_raw_files.py</code></h4>
+<p>Data checks:</p>
+<ul>
+<li>Row count by file</li>
+<li>Duplicate claim IDs</li>
+<li>Missing member IDs</li>
+<li>Invalid dates</li>
+<li>Negative paid amounts</li>
+<li>Diagnosis code fill rate</li>
+<li>Provider ID fill rate</li>
+<li>Claim date range</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li><code>reports/tables/raw_data_quality_report.csv</code></li>
+</ul>
+<h4><code>src/features/member_features.py</code></h4>
+<p>Feature output:</p>
+<ul>
+<li><code>ml.feature_member_year</code></li>
+</ul>
+<p>Features:</p>
+<ul>
+<li>Prior 12-month total paid</li>
+<li>Prior 12-month inpatient paid</li>
+<li>Prior 12-month outpatient paid</li>
+<li>Prior 12-month pharmacy paid</li>
+<li>Admission count</li>
+<li>ED visit count</li>
+<li>Unique provider count</li>
+<li>Chronic condition count</li>
+<li>HCC count</li>
+<li>RAF estimate</li>
+<li>Prior readmission count</li>
+<li>Age band</li>
+<li>Sex</li>
+<li>Race</li>
+<li>State</li>
+</ul>
+<h4><code>src/features/provider_features.py</code></h4>
+<p>Feature output:</p>
+<ul>
+<li><code>ml.feature_provider_year</code></li>
+</ul>
+<p>Features:</p>
+<ul>
+<li>Total claims</li>
+<li>Unique members</li>
+<li>Paid per member</li>
+<li>Paid per claim</li>
+<li>Claims per member</li>
+<li>Same-day duplicate count</li>
+<li>Top HCPCS concentration</li>
+<li>Procedure diversity</li>
+<li>Diagnosis diversity</li>
+<li>Place-of-service mix</li>
+<li>Peer percentile measures</li>
+<li>Readmission rate</li>
+</ul>
+<h4><code>src/features/episode_features.py</code></h4>
+<p>Feature output:</p>
+<ul>
+<li><code>ml.feature_inpatient_episode</code></li>
+</ul>
+<p>Features:</p>
+<ul>
+<li>Age at admission</li>
+<li>Sex</li>
+<li>Race</li>
+<li>Admission type</li>
+<li>Principal diagnosis group</li>
+<li>DRG group</li>
+<li>Length of stay</li>
+<li>Prior admissions</li>
+<li>Prior ED visits</li>
+<li>Chronic condition count</li>
+<li>HCC count</li>
+<li>Discharge month</li>
+<li>Prior total cost</li>
+<li>Provider readmission rate</li>
+</ul>
+<h3 id="10-2-eda-requirements">10.2 EDA requirements</h3>
+<p>Notebook: <code>notebooks/02_claims_eda.ipynb</code></p>
+<p>Minimum EDA outputs:</p>
+<ul>
+<li>Row counts by source table</li>
+<li>Claim volume by month and claim type</li>
+<li>Paid amount distribution by claim type</li>
+<li>Top diagnosis groups by paid amount</li>
+<li>Top procedure/HCPCS groups by paid amount</li>
+<li>Member cost concentration curve</li>
+<li>Provider paid amount distribution</li>
+<li>Inpatient length of stay distribution</li>
+<li>Readmission rate by age band and chronic condition count</li>
+<li>Chronic condition prevalence</li>
+<li>Missingness heatmap</li>
+<li>Outlier profile table</li>
+</ul>
+<p>Business interpretation required:</p>
+<ul>
+<li>Which claim types drive cost?</li>
+<li>How concentrated is cost among members?</li>
+<li>Which provider groups are outliers?</li>
+<li>Which chronic segments drive avoidable utilization?</li>
+<li>Which data quality issues affect conclusions?</li>
+</ul>
+<h3 id="10-3-feature-engineering-rules">10.3 Feature engineering rules</h3>
+<p>Do:</p>
+<ul>
+<li>Use time windows to avoid leakage.</li>
+<li>Build prior-period features only.</li>
+<li>Use per-member and per-provider normalized metrics.</li>
+<li>Winsorize extreme paid amounts only for modeling, not for financial reporting.</li>
+<li>Keep original financial values for dashboard KPIs.</li>
+<li>Encode categorical variables with one-hot or target-safe encoding.</li>
+<li>Separate entity-level models: member, provider, episode.</li>
+</ul>
+<p>Do not:</p>
+<ul>
+<li>Train a model using future cost to predict current high-cost status.</li>
+<li>Use readmission flag itself as a feature for readmission prediction.</li>
+<li>Mix official RAF with simplified estimates without labeling.</li>
+<li>Remove outliers from fraud models without analysis.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="11-machine-learning-design">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="11-machine-learning-design">11. Machine Learning Design</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#10-python-analytics-plan">Previous</a>
+      <a href="#12-power-bi-dashboard-specification">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#14-data-quality-rules">Model Governance</a>
+    </div>
+    
+<h3 id="11-1-model-1-30-day-readmission-prediction">11.1 Model 1: 30-day readmission prediction</h3>
+<p>Business owner:</p>
+<ul>
+<li>Utilization management and care management.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>One inpatient discharge.</li>
+</ul>
+<p>Target:</p>
+<ul>
+<li><code>readmission_30day_flag = 1</code> if same member has an inpatient admission within 30 days after discharge.</li>
+</ul>
+<p>Training table:</p>
+<ul>
+<li><code>ml.feature_inpatient_episode</code></li>
+</ul>
+<p>Candidate features:</p>
+<ul>
+<li>Age</li>
+<li>Sex</li>
+<li>Race</li>
+<li>State</li>
+<li>Principal diagnosis group</li>
+<li>DRG group</li>
+<li>Length of stay</li>
+<li>Prior 6-month admissions</li>
+<li>Prior 6-month ED visits</li>
+<li>Prior 12-month paid amount</li>
+<li>Chronic condition count</li>
+<li>HCC count</li>
+<li>RAF estimate</li>
+<li>Discharge month</li>
+<li>Provider historical readmission rate</li>
+<li>Facility paid-per-admission percentile</li>
+</ul>
+<p>Models:</p>
+<ul>
+<li>Logistic Regression baseline</li>
+<li>Random Forest</li>
+<li>XGBoost</li>
+</ul>
+<p>Evaluation:</p>
+<ul>
+<li>ROC-AUC</li>
+<li>PR-AUC</li>
+<li>Recall</li>
+<li>Precision</li>
+<li>F1</li>
+<li>Confusion matrix</li>
+<li>Calibration curve</li>
+<li>Lift in top decile</li>
+<li>SHAP feature importance</li>
+</ul>
+<p>Business threshold:</p>
+<ul>
+<li>Choose a threshold that identifies the top 10 percent highest-risk discharges for post-discharge outreach.</li>
+<li>Report expected workload: number of members flagged per month.</li>
+<li>Report estimated opportunity: avoidable readmission count times estimated readmission paid amount times realistic preventable fraction.</li>
+</ul>
+<p>Example output:</p>
+<ul>
+<li><code>member_key</code></li>
+<li><code>episode_key</code></li>
+<li><code>readmission_probability</code></li>
+<li><code>risk_decile</code></li>
+<li><code>top_drivers</code></li>
+<li><code>recommended_action</code></li>
+</ul>
+<p>Recommended actions:</p>
+<ul>
+<li>Schedule 7-day follow-up</li>
+<li>Medication reconciliation</li>
+<li>Care manager call</li>
+<li>Home health review</li>
+<li>PCP appointment assistance</li>
+</ul>
+<h3 id="11-2-model-2-high-cost-claimant-prediction">11.2 Model 2: High-cost claimant prediction</h3>
+<p>Business owner:</p>
+<ul>
+<li>Population health, care management, finance.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>One member-year or member-month.</li>
+</ul>
+<p>Target:</p>
+<ul>
+<li>Member becomes top 5 percent of paid cost in the next 6 or 12 months.</li>
+</ul>
+<p>Training table:</p>
+<ul>
+<li><code>ml.feature_member_year</code></li>
+</ul>
+<p>Candidate features:</p>
+<ul>
+<li>Prior 12-month paid amount</li>
+<li>Prior inpatient paid</li>
+<li>Prior pharmacy paid</li>
+<li>Admissions count</li>
+<li>ED visits</li>
+<li>Unique provider count</li>
+<li>Chronic condition count</li>
+<li>HCC count</li>
+<li>RAF estimate</li>
+<li>Diabetes/COPD/CHF/CKD flags</li>
+<li>Recent readmission flag</li>
+<li>Age band</li>
+<li>State</li>
+</ul>
+<p>Models:</p>
+<ul>
+<li>Logistic Regression</li>
+<li>Random Forest</li>
+<li>XGBoost</li>
+</ul>
+<p>Evaluation:</p>
+<ul>
+<li>ROC-AUC</li>
+<li>PR-AUC</li>
+<li>Precision@K</li>
+<li>Recall@K</li>
+<li>Lift chart</li>
+<li>Calibration</li>
+<li>SHAP</li>
+</ul>
+<p>Business threshold:</p>
+<ul>
+<li>Use top 5 or top 10 risk deciles as care management candidates.</li>
+<li>Evaluate how much future paid cost is captured by the flagged cohort.</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li><code>member_key</code></li>
+<li><code>prediction_period</code></li>
+<li><code>high_cost_probability</code></li>
+<li><code>risk_decile</code></li>
+<li><code>expected_future_cost_band</code></li>
+<li><code>intervention_reason</code></li>
+</ul>
+<h3 id="11-3-model-3-provider-fraud-waste-detection">11.3 Model 3: Provider fraud/waste detection</h3>
+<p>Business owner:</p>
+<ul>
+<li>Special investigations unit, payment integrity.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>One provider-year.</li>
+</ul>
+<p>Target:</p>
+<ul>
+<li>For Kaggle provider fraud dataset: <code>PotentialFraud</code>.</li>
+<li>For SynPUF anomaly detection: no label, use anomaly score.</li>
+</ul>
+<p>Training table:</p>
+<ul>
+<li><code>ml.feature_provider_year</code></li>
+</ul>
+<p>Candidate features:</p>
+<ul>
+<li>Claim count</li>
+<li>Member count</li>
+<li>Paid per member</li>
+<li>Claims per member</li>
+<li>Inpatient share</li>
+<li>Outpatient share</li>
+<li>Procedure concentration</li>
+<li>Duplicate claim count</li>
+<li>Average length of stay</li>
+<li>Average deductible paid</li>
+<li>Chronic condition mix of members</li>
+<li>Diagnosis diversity</li>
+<li>Procedure diversity</li>
+<li>High-cost claim share</li>
+<li>Peer percentile metrics</li>
+</ul>
+<p>Models:</p>
+<ul>
+<li>Logistic Regression baseline</li>
+<li>Random Forest</li>
+<li>XGBoost</li>
+<li>Isolation Forest for unsupervised anomaly detection</li>
+</ul>
+<p>Evaluation:</p>
+<ul>
+<li>ROC-AUC</li>
+<li>PR-AUC</li>
+<li>Precision@K</li>
+<li>Recall</li>
+<li>Confusion matrix</li>
+<li>SHAP</li>
+<li>Provider audit queue quality</li>
+</ul>
+<p>Business threshold:</p>
+<ul>
+<li>Focus on top 1 percent or top 5 percent of suspicious providers.</li>
+<li>This matches SIU capacity better than optimizing raw accuracy.</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>fraud_probability</code></li>
+<li><code>anomaly_score</code></li>
+<li><code>audit_priority</code></li>
+<li><code>top_risk_drivers</code></li>
+<li><code>recommended_review_type</code></li>
+</ul>
+<p>Review types:</p>
+<ul>
+<li>Duplicate billing review</li>
+<li>Upcoding/intensity review</li>
+<li>Medical necessity review</li>
+<li>Excessive utilization review</li>
+<li>Provider education</li>
+</ul>
+<h3 id="11-4-model-4-risk-segmentation">11.4 Model 4: Risk segmentation</h3>
+<p>Business owner:</p>
+<ul>
+<li>Risk adjustment, population health, finance.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>One member-year.</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li>Risk segment, not necessarily supervised target.</li>
+</ul>
+<p>Segmentation logic:</p>
+<ul>
+<li>Clinical risk: HCC count, chronic condition count, condition severity</li>
+<li>Cost risk: prior PMPM, inpatient cost, pharmacy cost</li>
+<li>Utilization risk: admissions, ED visits, readmissions</li>
+<li>Rising risk: low historical cost but growing utilization</li>
+</ul>
+<p>Segments:</p>
+<ul>
+<li>Healthy/stable</li>
+<li>Chronic stable</li>
+<li>Rising risk</li>
+<li>Complex chronic</li>
+<li>High-cost acute</li>
+<li>End-stage/catastrophic</li>
+</ul>
+<p>Use:</p>
+<ul>
+<li>Dashboard slicer</li>
+<li>Care management queue</li>
+<li>PMPM stratification</li>
+<li>Provider panel comparison</li>
+</ul>
+<h3 id="11-5-model-cards">11.5 Model cards</h3>
+<p>Each model must have a model card in <code>docs/model_cards.md</code>.</p>
+<p>Required fields:</p>
+<ul>
+<li>Model name</li>
+<li>Business purpose</li>
+<li>Target definition</li>
+<li>Training data</li>
+<li>Exclusion criteria</li>
+<li>Feature groups</li>
+<li>Algorithm</li>
+<li>Evaluation metrics</li>
+<li>Threshold choice</li>
+<li>Bias/fairness checks</li>
+<li>Limitations</li>
+<li>Recommended use</li>
+<li>Not recommended use</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="12-power-bi-dashboard-specification">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="12-power-bi-dashboard-specification">12. Power BI Dashboard Specification</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#11-machine-learning-design">Previous</a>
+      <a href="#13-kpi-dictionary">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#13-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#9-sql-build-plan">SQL Marts</a><a class="related-chip" href="#1-executive-project-charter">Executive Story</a>
+    </div>
+    
+<h3 id="12-1-data-model">12.1 Data model</h3>
+<p>Power BI should connect to gold and mart tables only. Do not connect dashboards directly to raw files.</p>
+<p>Recommended import tables:</p>
+<ul>
+<li><code>gold.dim_date</code></li>
+<li><code>gold.dim_member</code></li>
+<li><code>gold.dim_provider</code></li>
+<li><code>gold.dim_diagnosis</code></li>
+<li><code>gold.dim_procedure</code></li>
+<li><code>gold.dim_hcc</code></li>
+<li><code>mart.mart_claims_financials</code></li>
+<li><code>mart.mart_member_month_pmpm</code></li>
+<li><code>mart.mart_high_cost_members</code></li>
+<li><code>mart.mart_readmission_30day</code></li>
+<li><code>mart.mart_provider_performance</code></li>
+<li><code>mart.mart_fwa_provider_flags</code></li>
+<li><code>mart.mart_hcc_risk_adjustment</code></li>
+<li><code>ml.model_scores</code></li>
+</ul>
+<h3 id="12-2-required-dax-measures">12.2 Required DAX measures</h3>
+<pre><code class="language-DAX">Total Paid = SUM(mart_claims_financials[paid_amount])
+
+Total Claims = DISTINCTCOUNT(mart_claims_financials[claim_id])
+
+Eligible Member Months = SUM(mart_member_month_pmpm[eligible_member_months])
+
+PMPM = DIVIDE([Total Paid], [Eligible Member Months])
+
+Inpatient Paid = SUM(mart_claims_financials[inpatient_paid_amount])
+
+Outpatient Paid = SUM(mart_claims_financials[outpatient_paid_amount])
+
+Professional Paid = SUM(mart_claims_financials[professional_paid_amount])
+
+Pharmacy Paid = SUM(mart_claims_financials[pharmacy_paid_amount])
+
+Readmission Rate = DIVIDE(
+    SUM(mart_readmission_30day[readmission_30day_flag]),
+    COUNTROWS(mart_readmission_30day)
+)
+
+High Cost Members = CALCULATE(
+    DISTINCTCOUNT(mart_high_cost_members[member_key]),
+    mart_high_cost_members[high_cost_flag] = 1
+)
+
+Provider Outliers = CALCULATE(
+    DISTINCTCOUNT(mart_provider_performance[provider_key]),
+    mart_provider_performance[composite_outlier_score] &gt;= 0.95
+)
+
+Average RAF Estimate = AVERAGE(mart_hcc_risk_adjustment[raf_score_estimate])
+</code></pre>
+<h3 id="12-3-dashboard-pages">12.3 Dashboard pages</h3>
+<h4>Page 1: Executive Overview</h4>
+<p>Audience:</p>
+<ul>
+<li>CFO, CMO, VP analytics, payer leadership.</li>
+</ul>
+<p>Top KPI cards:</p>
+<ul>
+<li>Total paid amount</li>
+<li>PMPM</li>
+<li>Claim count</li>
+<li>Eligible member months</li>
+<li>High-cost member count</li>
+<li>30-day readmission rate</li>
+<li>Provider outlier count</li>
+<li>Average RAF estimate</li>
+<li>Estimated savings opportunity</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Monthly PMPM trend with rolling 12-month line</li>
+<li>Paid amount by claim type</li>
+<li>Top 10 diagnosis groups by paid amount</li>
+<li>High-cost member concentration curve</li>
+<li>Provider outlier summary</li>
+<li>Savings opportunity waterfall</li>
+</ul>
+<p>Filters:</p>
+<ul>
+<li>Year</li>
+<li>State</li>
+<li>Claim type</li>
+<li>Risk segment</li>
+<li>Age band</li>
+<li>Provider peer group</li>
+</ul>
+<p>Business question answered:</p>
+<ul>
+<li>What is driving medical cost, and where should leadership focus?</li>
+</ul>
+<h4>Page 2: Claims Financials</h4>
+<p>Audience:</p>
+<ul>
+<li>Claims analytics, finance, actuarial, payment integrity.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Submitted amount</li>
+<li>Allowed amount</li>
+<li>Paid amount</li>
+<li>Paid per claim</li>
+<li>Paid per member</li>
+<li>Claim count</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Paid trend by claim type</li>
+<li>Paid distribution by claim type</li>
+<li>Top procedures/HCPCS by paid amount</li>
+<li>Top principal diagnosis groups</li>
+<li>Claim count vs paid amount scatter by provider</li>
+<li>Heatmap by state and claim type</li>
+</ul>
+<p>Drill-through:</p>
+<ul>
+<li>Claim detail table with member, provider, dates, diagnosis, procedure, paid amount.</li>
+</ul>
+<h4>Page 3: Population Health and High-Cost Members</h4>
+<p>Audience:</p>
+<ul>
+<li>Population health, care management.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>High-cost members</li>
+<li>Percent of members high-cost</li>
+<li>Percent of paid amount from high-cost members</li>
+<li>Average chronic condition count</li>
+<li>Average RAF estimate</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Cost concentration Pareto</li>
+<li>High-cost members by chronic condition count</li>
+<li>Admissions and ED visits by risk segment</li>
+<li>Members by risk segment</li>
+<li>Care management candidate table</li>
+</ul>
+<p>Candidate table columns:</p>
+<ul>
+<li>Member ID masked</li>
+<li>Risk segment</li>
+<li>Total paid 12m</li>
+<li>Admissions 12m</li>
+<li>ED visits 12m</li>
+<li>Readmissions 12m</li>
+<li>HCC count</li>
+<li>Top driver</li>
+<li>Recommended intervention</li>
+</ul>
+<h4>Page 4: Utilization and Readmissions</h4>
+<p>Audience:</p>
+<ul>
+<li>Utilization management, care management, clinical leadership.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Admissions per 1,000</li>
+<li>ED visits per 1,000</li>
+<li>Inpatient days per 1,000</li>
+<li>Average length of stay</li>
+<li>30-day readmission rate</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Admissions trend</li>
+<li>Readmission rate by diagnosis group</li>
+<li>Readmission rate by provider/facility</li>
+<li>LOS distribution</li>
+<li>Top readmission conditions</li>
+<li>Discharge follow-up priority list</li>
+</ul>
+<h4>Page 5: Provider Performance</h4>
+<p>Audience:</p>
+<ul>
+<li>Provider network, contracting, payment integrity.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Provider count</li>
+<li>Outlier provider count</li>
+<li>Total paid to outlier providers</li>
+<li>Average paid per member</li>
+<li>Average readmission rate</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Provider ranking table</li>
+<li>Paid per member vs readmission rate scatter</li>
+<li>Peer percentile distribution</li>
+<li>Top outlier providers by composite score</li>
+<li>Procedure intensity by peer group</li>
+<li>Provider drill-through profile</li>
+</ul>
+<p>Provider profile drill-through:</p>
+<ul>
+<li>Provider summary</li>
+<li>Paid trend</li>
+<li>Claim type mix</li>
+<li>Top diagnosis codes</li>
+<li>Top procedure codes</li>
+<li>Member mix</li>
+<li>Readmission rate</li>
+<li>Audit flags</li>
+</ul>
+<h4>Page 6: Fraud, Waste, and Abuse</h4>
+<p>Audience:</p>
+<ul>
+<li>SIU, payment integrity, compliance.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Providers flagged</li>
+<li>Claims flagged</li>
+<li>Paid amount at risk</li>
+<li>Duplicate claim count</li>
+<li>Top anomaly score</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Provider anomaly score distribution</li>
+<li>Audit priority matrix</li>
+<li>Duplicate claim trend</li>
+<li>High paid-per-member provider list</li>
+<li>Procedure concentration outliers</li>
+<li>Fraud model SHAP drivers</li>
+</ul>
+<p>Work queue columns:</p>
+<ul>
+<li>Provider ID</li>
+<li>Peer group</li>
+<li>Paid amount</li>
+<li>Paid percentile</li>
+<li>Claims per member percentile</li>
+<li>Duplicate flag</li>
+<li>Model probability</li>
+<li>Audit priority</li>
+<li>Recommended review</li>
+</ul>
+<h4>Page 7: HCC/RAF Risk Adjustment</h4>
+<p>Audience:</p>
+<ul>
+<li>Risk adjustment team, MA analytics, finance.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Average RAF estimate</li>
+<li>HCC members</li>
+<li>HCC count</li>
+<li>Suspected gaps</li>
+<li>Recapture rate</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>RAF distribution</li>
+<li>HCC prevalence by category</li>
+<li>Chronic condition to HCC mapping</li>
+<li>HCC gap worklist</li>
+<li>Risk segment PMPM</li>
+<li>HCC count vs paid amount</li>
+</ul>
+<p>Important label:</p>
+<ul>
+<li>If full CMS model software is not implemented, label the metric &quot;RAF-like estimate.&quot;</li>
+</ul>
+<h4>Page 8: Denial Benchmarks</h4>
+<p>Audience:</p>
+<ul>
+<li>Claims operations and payer strategy.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Issuer benchmark denial rate</li>
+<li>Appeal rate</li>
+<li>Appeal upheld rate</li>
+<li>Claims received</li>
+<li>Claims denied</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Denial rate by issuer/state/plan</li>
+<li>Appeal outcomes</li>
+<li>In-network vs out-of-network denial comparison</li>
+<li>Denial benchmark trend by plan year</li>
+</ul>
+<p>Important limitation:</p>
+<ul>
+<li>This page uses aggregate public benchmark data. It is not claim-level adjudication unless you add a simulated denial engine.</li>
+</ul>
+<h4>Page 9: ML Monitoring and Intervention Queue</h4>
+<p>Audience:</p>
+<ul>
+<li>Analytics leadership, care management, SIU.</li>
+</ul>
+<p>KPI cards:</p>
+<ul>
+<li>Scored members</li>
+<li>Scored providers</li>
+<li>Top-decile lift</li>
+<li>Work queue volume</li>
+<li>Estimated opportunity</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Model score distribution</li>
+<li>Lift chart</li>
+<li>Precision-recall curve</li>
+<li>SHAP summary</li>
+<li>Threshold simulator</li>
+<li>Intervention queue by risk band</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="13-kpi-dictionary">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="13-kpi-dictionary">13. KPI Dictionary</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#12-power-bi-dashboard-specification">Previous</a>
+      <a href="#14-data-quality-rules">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#9-sql-build-plan">SQL Marts</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Spec</a><a class="related-chip" href="#14-data-quality-rules">Quality Rules</a>
+    </div>
+    
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Formula</th>
+<th>Grain</th>
+<th>Business owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total paid amount</td>
+<td>Sum of claim paid amount</td>
+<td>Claim</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Submitted amount</td>
+<td>Sum of provider submitted charge</td>
+<td>Claim or line</td>
+<td>Claims finance</td>
+</tr>
+<tr>
+<td>Allowed amount</td>
+<td>Sum of payer allowed amount</td>
+<td>Claim or line</td>
+<td>Claims finance</td>
+</tr>
+<tr>
+<td>Paid per claim</td>
+<td>Total paid / claim count</td>
+<td>Claim</td>
+<td>Claims operations</td>
+</tr>
+<tr>
+<td>Eligible member months</td>
+<td>Count of eligible member-month records</td>
+<td>Member month</td>
+<td>Actuarial/finance</td>
+</tr>
+<tr>
+<td>PMPM</td>
+<td>Total paid / eligible member months</td>
+<td>Month/segment</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Rolling 12m PMPM</td>
+<td>12-month rolling average PMPM</td>
+<td>Month/segment</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Admissions per 1,000</td>
+<td>Inpatient admissions / member months * 12,000</td>
+<td>Month/segment</td>
+<td>UM</td>
+</tr>
+<tr>
+<td>ED visits per 1,000</td>
+<td>ED visits / member months * 12,000</td>
+<td>Month/segment</td>
+<td>UM</td>
+</tr>
+<tr>
+<td>Inpatient days per 1,000</td>
+<td>Inpatient days / member months * 12,000</td>
+<td>Month/segment</td>
+<td>UM</td>
+</tr>
+<tr>
+<td>Average length of stay</td>
+<td>Inpatient days / admissions</td>
+<td>Episode</td>
+<td>UM</td>
+</tr>
+<tr>
+<td>30-day readmission rate</td>
+<td>30-day readmissions / index discharges</td>
+<td>Episode</td>
+<td>Clinical quality</td>
+</tr>
+<tr>
+<td>High-cost member rate</td>
+<td>High-cost members / total members</td>
+<td>Member-year</td>
+<td>Care management</td>
+</tr>
+<tr>
+<td>Cost concentration</td>
+<td>Paid amount for top X percent members / total paid</td>
+<td>Member-year</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Provider paid per member</td>
+<td>Provider paid / unique members treated</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Provider paid per claim</td>
+<td>Provider paid / claim count</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Provider cost percentile</td>
+<td>Provider rank within peer group by paid per member</td>
+<td>Provider-year</td>
+<td>Network</td>
+</tr>
+<tr>
+<td>Composite provider outlier score</td>
+<td>Weighted cost percentile plus readmission/utilization percentiles</td>
+<td>Provider-year</td>
+<td>Network/SIU</td>
+</tr>
+<tr>
+<td>Duplicate claim rate</td>
+<td>Duplicate claim count / total claims</td>
+<td>Claim</td>
+<td>Payment integrity</td>
+</tr>
+<tr>
+<td>Fraud probability</td>
+<td>ML predicted probability</td>
+<td>Provider-year</td>
+<td>SIU</td>
+</tr>
+<tr>
+<td>HCC count</td>
+<td>Distinct HCCs per member per risk year</td>
+<td>Member-year</td>
+<td>Risk adjustment</td>
+</tr>
+<tr>
+<td>RAF estimate</td>
+<td>Demographic factor plus disease factors plus interactions</td>
+<td>Member-year</td>
+<td>Risk adjustment</td>
+</tr>
+<tr>
+<td>Suspected HCC gap count</td>
+<td>Prior/chronic evidence HCCs not captured in current risk year</td>
+<td>Member-year</td>
+<td>Risk adjustment</td>
+</tr>
+<tr>
+<td>Denial rate</td>
+<td>Denied claims / received claims</td>
+<td>Issuer/plan</td>
+<td>Claims operations</td>
+</tr>
+<tr>
+<td>Appeal rate</td>
+<td>Appealed denied claims / denied claims</td>
+<td>Issuer/plan</td>
+<td>Claims operations</td>
+</tr>
+</tbody></table>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="14-data-quality-rules">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="14-data-quality-rules">14. Data Quality Rules</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#13-kpi-dictionary">Previous</a>
+      <a href="#15-hcc-raf-analytics-methodology">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="14-1-required-tests">14.1 Required tests</h3>
+<p>Run these tests and save results to <code>dq.test_results</code>.</p>
+<p>Claim tests:</p>
+<ul>
+<li>Claim ID is not null.</li>
+<li>Claim ID is unique within source claim type.</li>
+<li>Claim from date is less than or equal to claim thru date.</li>
+<li>Paid amount is not null.</li>
+<li>Paid amount is not extremely negative unless adjustment logic is documented.</li>
+<li>Claim member exists in <code>dim_member</code>.</li>
+<li>Claim provider exists in <code>dim_provider</code> when provider ID exists.</li>
+</ul>
+<p>Member tests:</p>
+<ul>
+<li>Member ID is unique.</li>
+<li>Birth date is before claim dates.</li>
+<li>Age is between 0 and 110.</li>
+<li>Eligibility months are between 0 and 12 per year.</li>
+</ul>
+<p>Diagnosis/procedure tests:</p>
+<ul>
+<li>Diagnosis bridge has no blank codes.</li>
+<li>Diagnosis position is valid.</li>
+<li>Principal diagnosis is position 1 for inpatient claims.</li>
+<li>Procedure bridge has no blank codes.</li>
+</ul>
+<p>Readmission tests:</p>
+<ul>
+<li>Discharge date exists for readmission denominator.</li>
+<li>Days to readmission is non-negative.</li>
+<li>Same-day transfers are separated from readmissions.</li>
+</ul>
+<p>PMPM tests:</p>
+<ul>
+<li>Member months are not duplicated for member and month.</li>
+<li>Eligible member months are positive for PMPM denominator.</li>
+<li>PMPM denominator excludes ineligible months.</li>
+</ul>
+<p>ML feature tests:</p>
+<ul>
+<li>No target leakage columns.</li>
+<li>No future dates in prior-window features.</li>
+<li>Training target is not null.</li>
+<li>Feature rows match expected prediction grain.</li>
+</ul>
+<h3 id="14-2-data-quality-dashboard">14.2 Data quality dashboard</h3>
+<p>Create a small Power BI or notebook section showing:</p>
+<ul>
+<li>Row counts by layer</li>
+<li>Claim count reconciliation raw to gold</li>
+<li>Missing key field percentages</li>
+<li>Paid amount reconciliation</li>
+<li>Failed quality checks</li>
+<li>Known limitations</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="15-hcc-raf-analytics-methodology">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="15-hcc-raf-analytics-methodology">15. HCC/RAF Analytics Methodology</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#14-data-quality-rules">Previous</a>
+      <a href="#16-business-insight-playbooks">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="15-1-purpose">15.1 Purpose</h3>
+<p>Risk adjustment analytics should show Medicare Advantage realism. The goal is to demonstrate knowledge of diagnosis-driven risk scoring, chronic condition tracking, and risk segmentation.</p>
+<h3 id="15-2-workflow">15.2 Workflow</h3>
+<ol>
+<li>Collect diagnosis codes from claim diagnosis bridge.</li>
+<li>Filter to eligible claim types and provider types if possible.</li>
+<li>Map diagnosis codes to HCC categories.</li>
+<li>Apply hierarchy rules if using official CMS model software.</li>
+<li>Add demographic factors.</li>
+<li>Add disease factors.</li>
+<li>Add interaction factors if implemented.</li>
+<li>Generate member-level risk score estimate.</li>
+<li>Segment members by risk.</li>
+<li>Identify gaps:<ul>
+<li>HCC captured last year but not current year.</li>
+<li>Chronic condition flag exists but no current mapped diagnosis.</li>
+<li>High utilization suggests missing chronic documentation.</li>
+</ul>
+</li>
+</ol>
+<h3 id="15-3-deliverables">15.3 Deliverables</h3>
+<p>Tables:</p>
+<ul>
+<li><code>gold.dim_hcc</code></li>
+<li><code>gold.bridge_diagnosis_hcc</code></li>
+<li><code>gold.fact_member_risk</code></li>
+<li><code>mart.mart_hcc_risk_adjustment</code></li>
+<li><code>mart.mart_hcc_gap_worklist</code></li>
+</ul>
+<p>Dashboard:</p>
+<ul>
+<li>HCC prevalence</li>
+<li>RAF distribution</li>
+<li>HCC recapture</li>
+<li>Suspected gaps</li>
+<li>Risk segment PMPM</li>
+<li>Provider documentation variation</li>
+</ul>
+<h3 id="15-4-important-language-for-portfolio">15.4 Important language for portfolio</h3>
+<p>Use this wording:</p>
+<p>&quot;This project implements a CMS-HCC inspired risk adjustment analytics workflow. Where official CMS model software and correct ICD version mappings are available, the RAF estimate can be calculated using published coefficients. Where only synthetic ICD-9 DE-SynPUF fields are used, the project labels the score as a RAF-like estimate and documents limitations.&quot;</p>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="16-business-insight-playbooks">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="16-business-insight-playbooks">16. Business Insight Playbooks</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#15-hcc-raf-analytics-methodology">Previous</a>
+      <a href="#17-implementation-roadmap">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="16-1-high-cost-member-playbook">16.1 High-cost member playbook</h3>
+<p>Trigger:</p>
+<ul>
+<li>Member is in top 5 percent of rolling 12-month paid amount or top decile predicted future high-cost risk.</li>
+</ul>
+<p>Analytics:</p>
+<ul>
+<li>Total paid 12m</li>
+<li>Admission count</li>
+<li>ED count</li>
+<li>Readmission flag</li>
+<li>Chronic condition count</li>
+<li>HCC count</li>
+<li>Top diagnosis drivers</li>
+<li>Provider fragmentation</li>
+</ul>
+<p>Recommended interventions:</p>
+<ul>
+<li>Complex care management</li>
+<li>Medication reconciliation</li>
+<li>PCP access support</li>
+<li>Specialist coordination</li>
+<li>Post-discharge outreach</li>
+<li>ED diversion plan</li>
+</ul>
+<p>Measured outcome:</p>
+<ul>
+<li>Reduced admissions per 1,000</li>
+<li>Reduced readmissions</li>
+<li>Lower future PMPM</li>
+<li>Improved care gap closure</li>
+</ul>
+<h3 id="16-2-provider-outlier-playbook">16.2 Provider outlier playbook</h3>
+<p>Trigger:</p>
+<ul>
+<li>Provider is above 95th percentile within peer group for paid per member, claims per member, readmission rate, or composite outlier score.</li>
+</ul>
+<p>Analytics:</p>
+<ul>
+<li>Peer group comparison</li>
+<li>Claim type mix</li>
+<li>Procedure concentration</li>
+<li>Diagnosis mix</li>
+<li>Patient risk profile</li>
+<li>Readmission rate</li>
+<li>Paid trend</li>
+</ul>
+<p>Recommended interventions:</p>
+<ul>
+<li>Provider education</li>
+<li>Coding review</li>
+<li>Contracting review</li>
+<li>Prior authorization review</li>
+<li>Case audit</li>
+<li>Network performance discussion</li>
+</ul>
+<p>Measured outcome:</p>
+<ul>
+<li>Lower outlier paid amount</li>
+<li>Reduced avoidable utilization</li>
+<li>Reduced inappropriate billing patterns</li>
+<li>Improved provider performance variation</li>
+</ul>
+<h3 id="16-3-readmission-reduction-playbook">16.3 Readmission reduction playbook</h3>
+<p>Trigger:</p>
+<ul>
+<li>Inpatient discharge has high predicted readmission risk.</li>
+</ul>
+<p>Analytics:</p>
+<ul>
+<li>Principal diagnosis</li>
+<li>LOS</li>
+<li>Prior utilization</li>
+<li>Chronic burden</li>
+<li>Provider historical readmission rate</li>
+<li>Recent ED use</li>
+</ul>
+<p>Recommended interventions:</p>
+<ul>
+<li>7-day follow-up</li>
+<li>Care manager call</li>
+<li>Medication reconciliation</li>
+<li>Transportation support</li>
+<li>Home health review</li>
+<li>PCP/specialist scheduling</li>
+</ul>
+<p>Measured outcome:</p>
+<ul>
+<li>Reduced 30-day readmission rate</li>
+<li>Reduced inpatient PMPM</li>
+<li>Improved quality measure performance</li>
+</ul>
+<h3 id="16-4-fraud-waste-abuse-playbook">16.4 Fraud/waste/abuse playbook</h3>
+<p>Trigger:</p>
+<ul>
+<li>Provider or claim exceeds anomaly thresholds or high model probability.</li>
+</ul>
+<p>Analytics:</p>
+<ul>
+<li>Duplicate claim patterns</li>
+<li>Unusual procedure mix</li>
+<li>High services per beneficiary</li>
+<li>High paid per member</li>
+<li>Peer percentile</li>
+<li>Place-of-service anomalies</li>
+</ul>
+<p>Recommended interventions:</p>
+<ul>
+<li>SIU audit queue</li>
+<li>Prepayment review</li>
+<li>Provider documentation request</li>
+<li>Medical necessity review</li>
+<li>Coding pattern review</li>
+</ul>
+<p>Measured outcome:</p>
+<ul>
+<li>Paid amount protected</li>
+<li>Suspicious claims reviewed</li>
+<li>Provider billing behavior normalized</li>
+</ul>
+<h3 id="16-5-risk-adjustment-playbook">16.5 Risk adjustment playbook</h3>
+<p>Trigger:</p>
+<ul>
+<li>Prior HCC not recaptured, chronic condition evidence exists, or member has high utilization with low RAF estimate.</li>
+</ul>
+<p>Analytics:</p>
+<ul>
+<li>HCC history</li>
+<li>Current diagnosis capture</li>
+<li>Chronic condition flags</li>
+<li>Provider documentation pattern</li>
+<li>RAF estimate</li>
+</ul>
+<p>Recommended interventions:</p>
+<ul>
+<li>Chart review</li>
+<li>Provider documentation education</li>
+<li>Annual wellness visit prioritization</li>
+<li>Chronic condition recapture workflow</li>
+</ul>
+<p>Measured outcome:</p>
+<ul>
+<li>Improved documented disease burden</li>
+<li>Reduced suspected gap count</li>
+<li>More accurate risk-adjusted performance reporting</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="17-implementation-roadmap">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="17-implementation-roadmap">17. Implementation Roadmap</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#16-business-insight-playbooks">Previous</a>
+      <a href="#18-readme-structure">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="phase-0-project-setup">Phase 0: Project setup</h3>
+<p>Duration: 0.5 day</p>
+<p>Tasks:</p>
+<ul>
+<li>Create GitHub repository.</li>
+<li>Add folder structure.</li>
+<li>Create Python environment.</li>
+<li>Add <code>.gitignore</code>.</li>
+<li>Add README skeleton.</li>
+<li>Add this blueprint to <code>docs/</code>.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Repository is organized.</li>
+<li>Environment installs successfully.</li>
+<li>Documentation folder exists.</li>
+</ul>
+<h3 id="phase-1-data-acquisition-and-source-profiling">Phase 1: Data acquisition and source profiling</h3>
+<p>Duration: 2 to 3 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Download CMS DE-SynPUF or MedicalClaimsSynthetic1M.</li>
+<li>Download CMS provider utilization.</li>
+<li>Download CMS HCC mapping files.</li>
+<li>Download CMS Transparency in Coverage PUF if using denial page.</li>
+<li>Download Kaggle provider fraud dataset if using supervised fraud.</li>
+<li>Optional: download UCI Diabetes or MIMIC-IV if credentialed.</li>
+<li>Create <code>data_sources.md</code>.</li>
+<li>Run raw data profiling.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Raw files are stored in <code>data/raw/</code>.</li>
+<li>Row counts are documented.</li>
+<li>Source links are documented.</li>
+<li>Initial data quality report exists.</li>
+</ul>
+<h3 id="phase-2-bronze-and-silver-data-loading">Phase 2: Bronze and silver data loading</h3>
+<p>Duration: 3 to 5 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Create bronze DDL.</li>
+<li>Load raw files into database.</li>
+<li>Convert heavy CSV files to parquet if needed.</li>
+<li>Standardize dates and numeric fields.</li>
+<li>Build silver member table.</li>
+<li>Build silver unified claim header.</li>
+<li>Build silver diagnosis bridge.</li>
+<li>Build silver procedure bridge.</li>
+<li>Build silver provider table.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Raw-to-bronze row counts reconcile.</li>
+<li>Claim/member/provider keys are populated.</li>
+<li>Diagnosis and procedure bridge tables are unpivoted.</li>
+<li>Data quality tests pass or limitations are documented.</li>
+</ul>
+<h3 id="phase-3-gold-star-schema">Phase 3: Gold star schema</h3>
+<p>Duration: 4 to 6 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Build date dimension.</li>
+<li>Build member dimension.</li>
+<li>Build provider dimension.</li>
+<li>Build diagnosis/procedure dimensions.</li>
+<li>Build claim facts.</li>
+<li>Build member-month fact.</li>
+<li>Build inpatient episode fact.</li>
+<li>Build member risk fact.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Star schema can answer claims, member, provider, and time questions.</li>
+<li>Power BI can connect without raw transformations.</li>
+<li>Member-month denominator is valid.</li>
+<li>Claim paid totals reconcile to silver.</li>
+</ul>
+<h3 id="phase-4-sql-marts">Phase 4: SQL marts</h3>
+<p>Duration: 5 to 7 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Build PMPM mart.</li>
+<li>Build high-cost member mart.</li>
+<li>Build readmission mart.</li>
+<li>Build provider performance mart.</li>
+<li>Build FWA flags mart.</li>
+<li>Build HCC risk mart.</li>
+<li>Build denial benchmark mart.</li>
+<li>Build query examples and save outputs.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Each mart has documented grain.</li>
+<li>Each mart has a business owner.</li>
+<li>SQL uses joins, CTEs, windows, rolling metrics, percentiles, and rankings.</li>
+<li>KPI dictionary maps to mart columns.</li>
+</ul>
+<h3 id="phase-5-python-analytics-and-eda">Phase 5: Python analytics and EDA</h3>
+<p>Duration: 4 to 6 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Build EDA notebooks.</li>
+<li>Create missingness and distribution charts.</li>
+<li>Profile cost concentration.</li>
+<li>Analyze provider variation.</li>
+<li>Analyze readmission drivers.</li>
+<li>Analyze chronic condition and HCC prevalence.</li>
+<li>Save figures to <code>reports/figures/</code>.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>EDA produces business findings, not just charts.</li>
+<li>Figures are saved for README and case study.</li>
+<li>Data limitations are documented.</li>
+</ul>
+<h3 id="phase-6-ml-pipelines">Phase 6: ML pipelines</h3>
+<p>Duration: 6 to 10 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Build member, provider, and episode feature tables.</li>
+<li>Train readmission model.</li>
+<li>Train high-cost claimant model.</li>
+<li>Train provider fraud model.</li>
+<li>Add SHAP explainability.</li>
+<li>Add threshold analysis.</li>
+<li>Create model cards.</li>
+<li>Score work queues.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Models have baseline and advanced versions.</li>
+<li>Metrics include ROC-AUC, PR-AUC, confusion matrix, lift, and SHAP.</li>
+<li>Thresholds are chosen using business capacity.</li>
+<li>Model scores are loaded to <code>ml.model_scores</code>.</li>
+</ul>
+<h3 id="phase-7-power-bi-dashboard">Phase 7: Power BI dashboard</h3>
+<p>Duration: 5 to 8 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Import gold and mart tables.</li>
+<li>Build semantic model.</li>
+<li>Create DAX measures.</li>
+<li>Build executive overview.</li>
+<li>Build claims, provider, population health, utilization, FWA, HCC, denial, and ML pages.</li>
+<li>Export screenshots and PDF.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>Dashboard has at least 7 professional pages.</li>
+<li>Every page has a clear business user and action.</li>
+<li>No raw unexplained charts.</li>
+<li>Drill-through pages exist.</li>
+<li>Measures match KPI dictionary.</li>
+</ul>
+<h3 id="phase-8-documentation-and-portfolio-packaging">Phase 8: Documentation and portfolio packaging</h3>
+<p>Duration: 3 to 5 days</p>
+<p>Tasks:</p>
+<ul>
+<li>Finish README.</li>
+<li>Finish architecture doc.</li>
+<li>Finish KPI dictionary.</li>
+<li>Finish data dictionary.</li>
+<li>Finish model cards.</li>
+<li>Finish executive summary.</li>
+<li>Finish portfolio case study.</li>
+<li>Add screenshots.</li>
+<li>Add resume bullets and interview talking points.</li>
+</ul>
+<p>Acceptance criteria:</p>
+<ul>
+<li>A hiring manager can understand the project in 3 minutes.</li>
+<li>A technical interviewer can inspect SQL/Python details.</li>
+<li>A domain interviewer sees claims, PMPM, HCC, readmission, provider, and FWA realism.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="18-readme-structure">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="18-readme-structure">18. README Structure</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#17-implementation-roadmap">Previous</a>
+      <a href="#19-portfolio-case-study-format">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Use this README outline.</p>
+<pre><code class="language-text"># Healthcare Claims Intelligence &amp; Risk Analytics Platform
+
+## Executive Summary
+What business problem this solves and who uses it.
+
+## Why This Project Is Different
+Claims warehouse, SQL marts, ML, risk adjustment, Power BI, operational queues.
+
+## Data Sources
+Source table with links and limitations.
+
+## Architecture
+Pipeline diagram and layer explanation.
+
+## Business Use Cases
+Claims finance, provider performance, population health, utilization, FWA, HCC/RAF.
+
+## Data Model
+Star schema diagram and table grains.
+
+## SQL Analytics
+List of marts and advanced SQL techniques.
+
+## Machine Learning
+Readmission, high-cost, fraud/waste, risk segmentation.
+
+## Power BI Dashboard
+Pages, screenshots, KPI examples.
+
+## Key Insights
+Business findings and recommendations.
+
+## Limitations
+Synthetic data, ICD version limitations, aggregate denial data, credentialed MIMIC access.
+
+## How To Run
+Environment setup, data download instructions, SQL run order, Python scripts.
+
+## Repository Structure
+Folder tree.
+
+## Interview Talking Points
+How to explain the project.
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="19-portfolio-case-study-format">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="19-portfolio-case-study-format">19. Portfolio Case Study Format</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#18-readme-structure">Previous</a>
+      <a href="#20-interview-talking-points">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Use this format for <code>docs/portfolio_case_study.md</code>.</p>
+<h3 id="problem">Problem</h3>
+<p>Healthcare payers need to control rising claims cost while improving quality and identifying high-risk members, provider outliers, readmission risk, and risk adjustment gaps.</p>
+<h3 id="role">Role</h3>
+<p>Acted as healthcare analytics architect, data engineer, BI developer, and ML analyst.</p>
+<h3 id="data">Data</h3>
+<p>Used CMS synthetic Medicare claims, provider utilization data, risk adjustment mappings, public denial benchmark data, and optional readmission/fraud datasets.</p>
+<h3 id="architecture">Architecture</h3>
+<p>Built raw, bronze, silver, gold, mart, feature store, ML scoring, and Power BI layers.</p>
+<h3 id="methods">Methods</h3>
+<p>SQL dimensional modeling, PMPM calculation, readmission logic, provider percentile ranking, high-cost member segmentation, HCC mapping, ML prediction, SHAP interpretation.</p>
+<h3 id="results">Results</h3>
+<p>Summarize:</p>
+<ul>
+<li>Identified top high-cost member cohorts.</li>
+<li>Built provider outlier ranking.</li>
+<li>Created 30-day readmission work queue.</li>
+<li>Built fraud/waste provider flags.</li>
+<li>Created HCC/RAF risk segmentation.</li>
+<li>Delivered executive Power BI dashboards.</li>
+</ul>
+<h3 id="business-impact">Business impact</h3>
+<p>Frame potential impact:</p>
+<ul>
+<li>Reduce avoidable readmissions.</li>
+<li>Prioritize care management.</li>
+<li>Improve provider contracting and education.</li>
+<li>Support payment integrity review.</li>
+<li>Improve visibility into documented disease burden.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="20-interview-talking-points">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="20-interview-talking-points">20. Interview Talking Points</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#19-portfolio-case-study-format">Previous</a>
+      <a href="#21-resume-bullets">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="20-1-project-explanation-in-60-seconds">20.1 Project explanation in 60 seconds</h3>
+<p>&quot;I built a Medicare-style healthcare claims intelligence platform that starts with CMS synthetic claims and turns them into a dimensional warehouse, SQL analytics marts, ML risk models, and Power BI dashboards. The project covers payer workflows such as PMPM trend, high-cost member detection, 30-day readmissions, provider peer benchmarking, fraud/waste flags, and HCC/RAF risk adjustment. I focused on realistic claims grain, member-month denominators, provider outlier logic, and operational work queues rather than a simple visualization project.&quot;</p>
+<h3 id="20-2-sql-talking-points">20.2 SQL talking points</h3>
+<ul>
+<li>Built a star schema with claim, member, provider, diagnosis, procedure, HCC, and member-month facts.</li>
+<li>Used CTEs and window functions for 30-day readmission sequencing.</li>
+<li>Used rolling windows for 3-month and 12-month PMPM.</li>
+<li>Used percentiles for provider outlier ranking.</li>
+<li>Used bridge tables for diagnosis and procedure columns.</li>
+<li>Built reusable marts for BI and ML.</li>
+</ul>
+<h3 id="20-3-healthcare-domain-talking-points">20.3 Healthcare domain talking points</h3>
+<ul>
+<li>PMPM requires eligible member months as denominator.</li>
+<li>High-cost analytics should distinguish cost concentration from avoidable utilization.</li>
+<li>Readmission logic depends on discharge and next admission sequencing.</li>
+<li>Provider performance must use peer groups and risk adjustment context.</li>
+<li>HCC/RAF depends on diagnosis coding, model version, hierarchy, and eligible encounters.</li>
+<li>Fraud models should be evaluated with precision@K because audit capacity is limited.</li>
+</ul>
+<h3 id="20-4-ml-talking-points">20.4 ML talking points</h3>
+<ul>
+<li>Used baseline Logistic Regression for interpretability.</li>
+<li>Used Random Forest and XGBoost for nonlinear interactions.</li>
+<li>Used SHAP to explain model drivers.</li>
+<li>Used threshold analysis based on care management or SIU capacity.</li>
+<li>Avoided target leakage by building prior-period features.</li>
+</ul>
+<h3 id="20-5-limitation-talking-points">20.5 Limitation talking points</h3>
+<ul>
+<li>CMS synthetic data is realistic for structure and training but should not be used for real Medicare population inference.</li>
+<li>DE-SynPUF uses older code systems, so current HCC mappings require careful version handling.</li>
+<li>Public denial files are aggregate benchmarks, not claim-level denial adjudication.</li>
+<li>MIMIC-IV requires credentialing and is provider/EHR oriented rather than payer-claims native.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="21-resume-bullets">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="21-resume-bullets">21. Resume Bullets</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#20-interview-talking-points">Previous</a>
+      <a href="#22-final-acceptance-checklist">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Use or adapt these.</p>
+<ul>
+<li>Architected a Medicare-style claims analytics warehouse using CMS synthetic claims, provider utilization, risk adjustment, and public quality datasets to simulate payer operations.</li>
+<li>Built SQL marts for PMPM trend, high-cost claimant detection, 30-day readmissions, provider peer benchmarking, HCC risk segmentation, and fraud/waste audit queues.</li>
+<li>Developed Python ML pipelines for readmission prediction, high-cost member prediction, and provider fraud/waste scoring using Logistic Regression, Random Forest, XGBoost, SHAP, and threshold-based business evaluation.</li>
+<li>Designed Power BI executive dashboards for claims financials, population health, utilization management, provider performance, fraud/waste, denials, and HCC/RAF analytics.</li>
+<li>Created healthcare KPI and data dictionaries covering member months, PMPM, admissions per 1,000, readmission rate, provider cost index, RAF estimate, and denial benchmarks.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="22-final-acceptance-checklist">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="22-final-acceptance-checklist">22. Final Acceptance Checklist</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#21-resume-bullets">Previous</a>
+      <a href="#23-build-order-summary">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>The project is portfolio-ready only when all items below are complete.</p>
+<h3 id="data-engineering">Data engineering</h3>
+<ul>
+<li>Raw files downloaded and documented.</li>
+<li>Bronze tables loaded.</li>
+<li>Silver normalized tables built.</li>
+<li>Gold star schema built.</li>
+<li>Data quality report created.</li>
+</ul>
+<h3 id="sql">SQL</h3>
+<ul>
+<li>PMPM mart complete.</li>
+<li>High-cost member mart complete.</li>
+<li>Readmission mart complete.</li>
+<li>Provider performance mart complete.</li>
+<li>FWA flags mart complete.</li>
+<li>HCC risk mart complete.</li>
+<li>Denial benchmark mart complete.</li>
+</ul>
+<h3 id="python">Python</h3>
+<ul>
+<li>EDA notebooks complete.</li>
+<li>Feature engineering scripts complete.</li>
+<li>Readmission model complete.</li>
+<li>High-cost model complete.</li>
+<li>Fraud/waste model complete.</li>
+<li>SHAP outputs saved.</li>
+<li>Model cards complete.</li>
+</ul>
+<h3 id="power-bi">Power BI</h3>
+<ul>
+<li>Executive overview page complete.</li>
+<li>Claims page complete.</li>
+<li>Population health page complete.</li>
+<li>Utilization/readmission page complete.</li>
+<li>Provider performance page complete.</li>
+<li>FWA page complete.</li>
+<li>HCC/RAF page complete.</li>
+<li>ML monitoring page complete.</li>
+<li>Dashboard screenshots exported.</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>README complete.</li>
+<li>Architecture doc complete.</li>
+<li>KPI dictionary complete.</li>
+<li>Data dictionary complete.</li>
+<li>SQL mart catalog complete.</li>
+<li>Dashboard spec complete.</li>
+<li>Executive summary complete.</li>
+<li>Portfolio case study complete.</li>
+<li>Interview talking points complete.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="23-build-order-summary">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="23-build-order-summary">23. Build Order Summary</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#22-final-acceptance-checklist">Previous</a>
+      <a href="#24-definition-of-a-strong-final-story">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Follow this exact order:</p>
+<ol>
+<li>Set up repo and environment.</li>
+<li>Download CMS claims data and reference datasets.</li>
+<li>Profile raw files.</li>
+<li>Load bronze tables.</li>
+<li>Build silver normalized claims/member/provider/diagnosis/procedure tables.</li>
+<li>Build gold dimensions.</li>
+<li>Build gold fact tables.</li>
+<li>Build member-month denominator.</li>
+<li>Build PMPM and claims financial marts.</li>
+<li>Build inpatient episode and readmission mart.</li>
+<li>Build provider performance mart.</li>
+<li>Build FWA mart.</li>
+<li>Build HCC/RAF mart.</li>
+<li>Build Python EDA.</li>
+<li>Build ML feature store.</li>
+<li>Train and evaluate readmission model.</li>
+<li>Train and evaluate high-cost member model.</li>
+<li>Train and evaluate fraud/waste model.</li>
+<li>Export ML scores to database.</li>
+<li>Build Power BI semantic model.</li>
+<li>Build dashboard pages.</li>
+<li>Export screenshots.</li>
+<li>Finish README and case study.</li>
+<li>Practice interview explanation.</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="24-definition-of-a-strong-final-story">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="24-definition-of-a-strong-final-story">24. Definition of a Strong Final Story</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#23-build-order-summary">Previous</a>
+      <a href="#table-of-contents">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#17-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>A hiring manager should see this project and think:</p>
+<ul>
+<li>This candidate understands claims data, not just charts.</li>
+<li>This candidate knows payer terminology: PMPM, member months, readmissions, HCC, RAF, provider peer groups, denial rate, FWA, utilization.</li>
+<li>This candidate can build SQL architecture.</li>
+<li>This candidate can turn analytics into operational workflows.</li>
+<li>This candidate can explain business impact.</li>
+<li>This candidate can handle messy, multi-table healthcare data.</li>
+</ul>
+<p>Final one-line portfolio positioning:</p>
+<p><strong>An enterprise-style payer analytics platform that converts Medicare-like claims data into governed SQL marts, predictive risk models, and executive dashboards for cost containment, care management, provider performance, payment integrity, and risk adjustment.</strong></p>
+
+  </div>
+</details>
+  </main>
+
+  <script>
+    window.__HAS_MERMAID__ = Boolean(document.querySelector('.mermaid'));
+    document.querySelectorAll('[data-action="expand"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = true));
+    });
+    document.querySelectorAll('[data-action="collapse"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = false));
+    });
+    function openHashTarget() {
+      if (!window.location.hash) return;
+      const target = document.querySelector(window.location.hash);
+      if (!target) return;
+      const module = target.closest('.section-module');
+      if (module) module.open = true;
+      setTimeout(() => target.scrollIntoView({ block: 'start' }), 30);
+    }
+    window.addEventListener('hashchange', openHashTarget);
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => setTimeout(openHashTarget, 20));
+    });
+    openHashTarget();
+    if (window.__HAS_MERMAID__) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.onload = async () => {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'loose',
+          theme: 'base',
+          themeVariables: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+            primaryColor: '#EAF5F7',
+            primaryTextColor: '#172033',
+            primaryBorderColor: '#0E7C86',
+            lineColor: '#64748B',
+            secondaryColor: '#EEF2FF',
+            tertiaryColor: '#F8FAFC',
+          },
+        });
+        await window.mermaid.run({ querySelector: '.mermaid' });
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+</body>
+</html>

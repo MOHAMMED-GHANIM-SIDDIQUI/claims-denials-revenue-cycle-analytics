@@ -1,0 +1,18 @@
+[project]
+name = "claims-denials-revenue-cycle-analytics"
+version = "0.1.0"
+description = "Claims denials, appeals, and revenue cycle analytics pipeline with simulated claim-level adjudication data."
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.2",
+  "numpy>=2.0",
+  "scikit-learn>=1.5",
+  "plotly>=5.20",
+  "jinja2>=3.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+

@@ -1,0 +1,3182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform</title>
+<style>
+
+:root {
+  --accent: #7C3AED;
+  --secondary: #0E7490;
+  --ink: #172033;
+  --muted: #5D687A;
+  --soft: #F5F8FB;
+  --line: #D8E0EA;
+  --code-bg: #0F172A;
+  --code-ink: #E5EEF8;
+}
+
+@page {
+  size: A4;
+  margin: 17mm 14mm 18mm 14mm;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-size: 9.8pt;
+  line-height: 1.48;
+  background: white;
+}
+
+.screen-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: none;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #E5E7EB;
+  backdrop-filter: blur(12px);
+}
+
+.screen-toolbar a,
+.screen-toolbar button {
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+  color: #172033;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.screen-toolbar a:hover,
+.screen-toolbar button:hover {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.print-header,
+.print-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  color: #6B7280;
+  font-size: 7.8pt;
+  z-index: 20;
+}
+
+.print-header {
+  top: -10mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.4pt solid #E5E7EB;
+}
+
+.print-footer {
+  bottom: -11mm;
+  padding-top: 2mm;
+  border-top: 0.4pt solid #E5E7EB;
+}
+
+.cover {
+  min-height: 260mm;
+  break-after: page;
+  position: relative;
+  overflow: hidden;
+  padding: 22mm 16mm;
+  border: 1px solid #E5EAF0;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(245,248,251,0.98)),
+    radial-gradient(circle at 10% 18%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 31%),
+    radial-gradient(circle at 88% 82%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 28%);
+}
+
+.cover-band {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 9mm;
+  background: linear-gradient(180deg, var(--accent), var(--secondary));
+}
+
+.cover-grid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58mm;
+  gap: 12mm;
+  align-items: center;
+}
+
+.eyebrow,
+.section-kicker {
+  color: var(--accent);
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.cover h1 {
+  margin: 5mm 0 6mm;
+  max-width: 136mm;
+  color: #0B1220;
+  font-size: 30pt;
+  line-height: 1.02;
+  font-weight: 850;
+}
+
+.subtitle {
+  max-width: 128mm;
+  margin: 0 0 8mm;
+  color: #39465B;
+  font-size: 12.5pt;
+  line-height: 1.5;
+}
+
+.audience {
+  display: inline-block;
+  max-width: 128mm;
+  padding: 3.5mm 5mm;
+  border-left: 2.5mm solid var(--accent);
+  background: rgba(255,255,255,0.78);
+  color: #263244;
+  font-size: 9.2pt;
+  font-weight: 700;
+}
+
+.cover-actions {
+  display: flex;
+  gap: 3mm;
+  flex-wrap: wrap;
+  margin-top: 9mm;
+}
+
+.cover-actions a,
+.button-stack a,
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9mm;
+  padding: 2.6mm 4.2mm;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+  font-size: 8.5pt;
+  font-weight: 850;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.nav-chip.compact {
+  min-height: auto;
+  padding: 6px 10px;
+  color: #172033;
+  background: #F8FAFC;
+  box-shadow: none;
+}
+
+.cover-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8mm;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255,255,255,0.86);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+}
+
+.card-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 8pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cover-card ul {
+  margin: 0;
+  padding-left: 4.5mm;
+}
+
+.cover-card li {
+  margin: 2.5mm 0;
+  color: #2D3748;
+  font-weight: 650;
+}
+
+.toc-page {
+  break-after: page;
+  padding-top: 8mm;
+}
+
+.experience-page {
+  break-after: page;
+  padding-top: 6mm;
+}
+
+.experience-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.lede {
+  max-width: 170mm;
+  color: #475569;
+  font-size: 10.4pt;
+}
+
+.quick-link-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+  margin: 7mm 0;
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: linear-gradient(135deg, #FFFFFF, #F8FAFC);
+}
+
+.visual-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 5mm;
+}
+
+.visual-card {
+  padding: 5mm;
+  border: 1px solid #DDE6EF;
+  background: #FFFFFF;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  break-inside: avoid;
+}
+
+.visual-card.wide {
+  grid-column: 1 / -1;
+}
+
+.visual-label {
+  margin-bottom: 4mm;
+  color: var(--accent);
+  font-size: 7.8pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2.5mm;
+}
+
+.timeline-step {
+  min-height: 36mm;
+  padding: 4mm;
+  color: #172033;
+  text-decoration: none;
+  border: 1px solid #D8E0EA;
+  background: #F8FAFC;
+}
+
+.timeline-step span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8mm;
+  height: 8mm;
+  margin-bottom: 4mm;
+  color: white;
+  background: var(--accent);
+  border-radius: 50%;
+  font-size: 7.5pt;
+  font-weight: 850;
+}
+
+.timeline-step strong,
+.timeline-step em {
+  display: block;
+}
+
+.timeline-step strong {
+  margin-bottom: 2mm;
+  color: #0F172A;
+  font-size: 9pt;
+}
+
+.timeline-step em {
+  color: #64748B;
+  font-size: 7.5pt;
+  font-style: normal;
+}
+
+.bar-chart {
+  display: grid;
+  gap: 3mm;
+}
+
+.bar-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 12mm;
+  gap: 3mm;
+  padding: 3mm 0 5mm;
+  color: #172033;
+  text-decoration: none;
+}
+
+.bar-row i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2mm;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  border-radius: 999px;
+}
+
+.bar-row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2mm;
+  background: #E5EAF0;
+  border-radius: 999px;
+  z-index: -1;
+}
+
+.button-stack {
+  display: grid;
+  gap: 3mm;
+}
+
+.button-stack a {
+  border-radius: 6px;
+}
+
+.toc-page h2 {
+  margin-top: 2mm;
+  font-size: 22pt;
+  border: none;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm 5mm;
+  margin-top: 8mm;
+}
+
+.toc-item {
+  display: grid;
+  grid-template-columns: 12mm 1fr;
+  gap: 3mm;
+  align-items: start;
+  min-height: 11mm;
+  padding: 3mm;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid #E4EAF1;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.toc-number {
+  color: var(--accent);
+  font-weight: 850;
+}
+
+.content > h1:first-child {
+  display: none;
+}
+
+.section-module {
+  margin: 0 0 5mm;
+  border: 1px solid transparent;
+}
+
+.section-module summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.section-module summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-module summary h2 {
+  display: block;
+}
+
+.collapse-indicator {
+  display: none;
+  float: right;
+  margin-top: 13mm;
+  padding: 1.5mm 2.5mm;
+  color: var(--accent);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  font-size: 7.2pt;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.section-body {
+  padding-bottom: 2mm;
+}
+
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2mm;
+  margin: -1mm 0 3mm;
+  padding: 2.5mm;
+  border: 1px solid #E5EAF0;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.section-nav a,
+.related-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 7mm;
+  padding: 1.6mm 2.6mm;
+  color: var(--secondary);
+  border: 1px solid #D8E0EA;
+  border-radius: 999px;
+  background: white;
+  font-size: 7.6pt;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.smart-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2mm;
+  margin: 0 0 4mm;
+  padding: 3mm 4mm;
+  border-left: 1.6mm solid var(--accent);
+  background: #F8FAFC;
+  break-inside: avoid;
+}
+
+.smart-links span {
+  color: #64748B;
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+h1, h2, h3, h4 {
+  color: #101828;
+  line-height: 1.18;
+  break-after: avoid;
+}
+
+h2 {
+  margin: 12mm 0 4mm;
+  padding: 0 0 2.5mm;
+  border-bottom: 1.2pt solid var(--line);
+  font-size: 17pt;
+}
+
+h2::before {
+  content: "";
+  display: inline-block;
+  width: 3.2mm;
+  height: 3.2mm;
+  margin-right: 2.4mm;
+  background: var(--accent);
+  vertical-align: 0.6mm;
+}
+
+h3 {
+  margin: 7mm 0 2.5mm;
+  color: var(--secondary);
+  font-size: 12.5pt;
+}
+
+h4 {
+  margin: 4.5mm 0 1.5mm;
+  color: #334155;
+  font-size: 10.5pt;
+}
+
+p {
+  margin: 0 0 3.5mm;
+}
+
+a {
+  color: var(--secondary);
+  font-weight: 650;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+ul, ol {
+  margin: 0 0 4mm;
+  padding-left: 6mm;
+}
+
+li {
+  margin: 1.3mm 0;
+}
+
+strong {
+  color: #111827;
+  font-weight: 800;
+}
+
+blockquote {
+  margin: 5mm 0;
+  padding: 4mm 5mm;
+  color: #2B3A4F;
+  border-left: 2mm solid var(--accent);
+  background: #F7FAFC;
+}
+
+table {
+  width: 100%;
+  margin: 5mm 0 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 7.6pt;
+  break-inside: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  break-inside: avoid;
+}
+
+th {
+  color: white;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  font-weight: 800;
+  text-align: left;
+}
+
+th, td {
+  padding: 2mm 2.2mm;
+  border: 0.45pt solid #D8E0EA;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+tbody tr:nth-child(even) td {
+  background: #F8FAFC;
+}
+
+code {
+  padding: 0.3mm 1mm;
+  color: #0F3B57;
+  background: #EAF5F7;
+  border-radius: 3px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 8.1pt;
+}
+
+pre {
+  margin: 4.5mm 0 6mm;
+  padding: 4mm;
+  overflow: hidden;
+  color: var(--code-ink);
+  background: var(--code-bg);
+  border-radius: 6px;
+  border: 1px solid #1E293B;
+  white-space: pre-wrap;
+  word-break: break-word;
+  break-inside: avoid;
+}
+
+pre code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: none;
+  font-size: 7.1pt;
+  line-height: 1.42;
+}
+
+.diagram-shell {
+  margin: 6mm 0;
+  padding: 4mm;
+  border: 1px solid #D8E0EA;
+  background: #FBFCFE;
+  break-inside: avoid;
+}
+
+.diagram-label {
+  margin-bottom: 2mm;
+  color: var(--accent);
+  font-size: 7.6pt;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.diagram-shell .mermaid {
+  margin: 0;
+  padding: 3mm;
+  text-align: center;
+  color: #1F2937;
+  background: white;
+  border: 1px solid #E4EAF1;
+  white-space: pre-wrap;
+}
+
+.diagram-shell svg {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  height: 1px;
+  margin: 9mm 0;
+  border: 0;
+  background: var(--line);
+}
+
+@media print {
+  .screen-toolbar {
+    display: none !important;
+  }
+
+  .section-module {
+    display: block;
+  }
+
+  .section-module:not([open]) .section-body {
+    display: block;
+  }
+
+  .collapse-indicator {
+    display: none !important;
+  }
+
+  .content h2 {
+    break-before: auto;
+  }
+}
+
+@media screen {
+  body {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #EEF3F8;
+    font-size: 15px;
+  }
+
+  .screen-toolbar {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .cover,
+  .experience-page,
+  .toc-page,
+  .content {
+    background: white;
+  }
+
+  .cover {
+    min-height: 760px;
+    margin-top: 16px;
+  }
+
+  .content {
+    padding: 20px 44px 60px;
+  }
+
+  .section-module {
+    margin: 18px 0;
+    padding: 0 18px 16px;
+    border-color: #E5EAF0;
+    background: white;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  }
+
+  .collapse-indicator {
+    display: inline-flex;
+  }
+
+  .section-module:not([open]) {
+    padding-bottom: 0;
+  }
+
+  .section-module:not([open]) summary h2 {
+    margin-bottom: 12px;
+  }
+
+  .toc-page,
+  .experience-page {
+    padding: 42px 44px;
+    margin: 16px 0;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body {
+    font-size: 14px;
+  }
+
+  .cover {
+    min-height: auto;
+    padding: 34px 24px;
+  }
+
+  .cover-grid,
+  .visual-grid,
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cover h1 {
+    font-size: 34px;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .content,
+  .toc-page,
+  .experience-page {
+    padding: 24px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="screen-toolbar">
+    <a href="#top">Cover</a>
+    <a href="#table-of-contents">Contents</a>
+    <a class="nav-chip compact" href="#table-of-contents">Contents</a><a class="nav-chip compact" href="#2-source-reference-register">Sources</a><a class="nav-chip compact" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip compact" href="#9-sql-build-plan">SQL</a><a class="nav-chip compact" href="#10-python-analytics-plan">Python</a><a class="nav-chip compact" href="#11-ml-design">ML</a><a class="nav-chip compact" href="#12-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip compact" href="#13-kpi-dictionary">KPIs</a><a class="nav-chip compact" href="#16-implementation-roadmap">Roadmap</a>
+    <button type="button" data-action="expand">Expand All</button>
+    <button type="button" data-action="collapse">Collapse All</button>
+  </div>
+  <div class="print-header">
+    <span>Claims operations and revenue cycle blueprint</span>
+    <span>Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform</span>
+  </div>
+  <div class="print-footer">
+    <span>Enterprise Healthcare Analytics Portfolio Blueprint</span>
+    <span>May 15, 2026</span>
+  </div>
+
+  <section class="cover" id="top">
+    <div class="cover-band"></div>
+    <div class="cover-grid">
+      <div>
+        <div class="eyebrow">Claims operations and revenue cycle blueprint</div>
+        <h1>Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform</h1>
+        <p class="subtitle">Denial benchmarks, appeal workflow, payer friction, claim-level simulation, recovery prioritization, underpayment analytics, and work queues.</p>
+        <div class="audience">Claims Analyst | Revenue Cycle Analyst | Insurance Analyst | Healthcare Business Analyst</div>
+        <div class="cover-actions">
+          <a href="#interactive-control-center">Open Navigation Hub</a>
+          <a href="#table-of-contents">Jump To Contents</a>
+        </div>
+      </div>
+      <aside class="cover-card">
+        <div class="card-label">Blueprint Scope</div>
+        <ul>
+          <li>Dataset source register</li>
+          <li>Enterprise warehouse architecture</li>
+          <li>SQL mart plan</li>
+          <li>Python and ML pipeline</li>
+          <li>Power BI dashboard system</li>
+          <li>KPI and portfolio strategy</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  
+  <section class="experience-page">
+    <div class="section-kicker">Interactive Control Center</div>
+    <h2 id="interactive-control-center">Executive Navigation Hub</h2>
+    <p class="lede">Use the controls below to jump through the PDF. The HTML version also supports collapsible sections, hover states, and quick expand/collapse controls.</p>
+    <div class="quick-link-panel"><a class="nav-chip" href="#table-of-contents">Contents</a><a class="nav-chip" href="#2-source-reference-register">Sources</a><a class="nav-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="nav-chip" href="#9-sql-build-plan">SQL</a><a class="nav-chip" href="#10-python-analytics-plan">Python</a><a class="nav-chip" href="#11-ml-design">ML</a><a class="nav-chip" href="#12-power-bi-dashboard-specification">Dashboards</a><a class="nav-chip" href="#13-kpi-dictionary">KPIs</a><a class="nav-chip" href="#16-implementation-roadmap">Roadmap</a></div>
+
+    <div class="visual-grid">
+      <article class="visual-card wide">
+        <div class="visual-label">Clickable Build Timeline</div>
+        <div class="timeline">
+          
+              <a class="timeline-step" href="#2-source-reference-register">
+                <span>01</span>
+                <strong>Sources</strong>
+                <em>Public reference data and curated source register</em>
+              </a>
+              <a class="timeline-step" href="#5-end-to-end-pipeline">
+                <span>02</span>
+                <strong>Warehouse</strong>
+                <em>Bronze, silver, gold, mart, and scoring layers</em>
+              </a>
+              <a class="timeline-step" href="#9-sql-build-plan">
+                <span>03</span>
+                <strong>SQL Marts</strong>
+                <em>Governed metrics, scorecards, work queues</em>
+              </a>
+              <a class="timeline-step" href="#11-ml-design">
+                <span>04</span>
+                <strong>ML/Scoring</strong>
+                <em>Predictive and prioritization workflows</em>
+              </a>
+              <a class="timeline-step" href="#12-power-bi-dashboard-specification">
+                <span>05</span>
+                <strong>Dashboards</strong>
+                <em>Executive and operational BI</em>
+              </a>
+              <a class="timeline-step" href="#16-implementation-roadmap">
+                <span>06</span>
+                <strong>Roadmap</strong>
+                <em>Build order and acceptance criteria</em>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Portfolio Evidence Stack</div>
+        <div class="bar-chart">
+          
+              <a class="bar-row" href="#9-sql-build-plan">
+                <span>SQL Architecture</span>
+                <strong>96%</strong>
+                <i style="width:96%"></i>
+              </a>
+              <a class="bar-row" href="#2-source-reference-register">
+                <span>Healthcare Domain</span>
+                <strong>94%</strong>
+                <i style="width:94%"></i>
+              </a>
+              <a class="bar-row" href="#12-power-bi-dashboard-specification">
+                <span>BI Storytelling</span>
+                <strong>90%</strong>
+                <i style="width:90%"></i>
+              </a>
+              <a class="bar-row" href="#11-ml-design">
+                <span>ML Readiness</span>
+                <strong>82%</strong>
+                <i style="width:82%"></i>
+              </a>
+              <a class="bar-row" href="#16-implementation-roadmap">
+                <span>Portfolio Evidence</span>
+                <strong>88%</strong>
+                <i style="width:88%"></i>
+              </a>
+        </div>
+      </article>
+
+      <article class="visual-card">
+        <div class="visual-label">Navigation Buttons</div>
+        <div class="button-stack">
+          <a href="#table-of-contents">Open Table of Contents</a>
+          <a href="#2-source-reference-register">Open Reference Links</a>
+          <a href="#5-end-to-end-pipeline">Open Architecture</a>
+          <a href="#12-power-bi-dashboard-specification">Open Dashboard Spec</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="toc-page" id="table-of-contents">
+    <div class="section-kicker">Navigation</div>
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a class="toc-item" href="#1-executive-project-charter"><span class="toc-number">01</span><span>1. Executive Project Charter</span></a>
+<a class="toc-item" href="#2-source-reference-register"><span class="toc-number">02</span><span>2. Source Reference Register</span></a>
+<a class="toc-item" href="#3-final-dataset-strategy"><span class="toc-number">03</span><span>3. Final Dataset Strategy</span></a>
+<a class="toc-item" href="#4-business-workflow-simulated"><span class="toc-number">04</span><span>4. Business Workflow Simulated</span></a>
+<a class="toc-item" href="#5-end-to-end-pipeline"><span class="toc-number">05</span><span>5. End-to-End Pipeline</span></a>
+<a class="toc-item" href="#6-repository-structure"><span class="toc-number">06</span><span>6. Repository Structure</span></a>
+<a class="toc-item" href="#7-data-architecture"><span class="toc-number">07</span><span>7. Data Architecture</span></a>
+<a class="toc-item" href="#8-claim-level-denial-simulation-methodology"><span class="toc-number">08</span><span>8. Claim-Level Denial Simulation Methodology</span></a>
+<a class="toc-item" href="#9-sql-build-plan"><span class="toc-number">09</span><span>9. SQL Build Plan</span></a>
+<a class="toc-item" href="#10-python-analytics-plan"><span class="toc-number">10</span><span>10. Python Analytics Plan</span></a>
+<a class="toc-item" href="#11-ml-design"><span class="toc-number">11</span><span>11. ML Design</span></a>
+<a class="toc-item" href="#12-power-bi-dashboard-specification"><span class="toc-number">12</span><span>12. Power BI Dashboard Specification</span></a>
+<a class="toc-item" href="#13-kpi-dictionary"><span class="toc-number">13</span><span>13. KPI Dictionary</span></a>
+<a class="toc-item" href="#14-data-quality-and-governance"><span class="toc-number">14</span><span>14. Data Quality and Governance</span></a>
+<a class="toc-item" href="#15-business-insights-to-generate"><span class="toc-number">15</span><span>15. Business Insights To Generate</span></a>
+<a class="toc-item" href="#16-implementation-roadmap"><span class="toc-number">16</span><span>16. Implementation Roadmap</span></a>
+<a class="toc-item" href="#17-readme-outline"><span class="toc-number">17</span><span>17. README Outline</span></a>
+<a class="toc-item" href="#18-interview-talking-points"><span class="toc-number">18</span><span>18. Interview Talking Points</span></a>
+<a class="toc-item" href="#19-final-acceptance-checklist"><span class="toc-number">19</span><span>19. Final Acceptance Checklist</span></a>
+    </div>
+  </section>
+
+  <main class="content">
+    <h1>Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform</h1>
+<p>Single source of truth for building an enterprise-grade claims operations, denial analytics, appeal performance, and revenue cycle intelligence portfolio project.</p>
+<p>This project is designed to look like work done by payer claims operations teams, provider revenue cycle teams, billing analytics teams, managed care teams, and healthcare finance teams. It should not look like a simple &quot;claim status dashboard.&quot; It must show real insurance and healthcare operations thinking: claim intake, adjudication, denial reasons, appeal overturns, payer variation, service-line impact, reimbursement leakage, and operational work queues.</p>
+<p>Target roles:</p>
+<ul>
+<li>Healthcare Data Analyst</li>
+<li>Insurance Analyst</li>
+<li>Claims Analyst</li>
+<li>Healthcare Business Analyst</li>
+<li>Healthcare BI Analyst</li>
+<li>Revenue Cycle Analyst</li>
+<li>Denials Analyst</li>
+<li>Payer Operations Analyst</li>
+</ul>
+<p>Project title:</p>
+<p><strong>Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform</strong></p>
+<p>Core business question:</p>
+<p><strong>Where are claims being denied, appealed, delayed, underpaid, or lost, and what operational actions can reduce avoidable revenue leakage and administrative burden?</strong></p>
+<hr>
+
+<details class="section-module" open data-section-id="1-executive-project-charter">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="1-executive-project-charter">1. Executive Project Charter</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#table-of-contents">Previous</a>
+      <a href="#2-source-reference-register">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="1-1-business-problem">1.1 Business problem</h3>
+<p>Claims denials and payment friction are major operational problems for both providers and payers. Providers lose revenue and spend staff time on rework. Payers face member dissatisfaction, appeal volume, regulatory scrutiny, and administrative cost. Public claim-level denial data is limited, but public CMS marketplace, transparency, price transparency, and synthetic claims datasets can be combined to build a realistic enterprise simulation.</p>
+<p>This project creates a governed analytics platform for:</p>
+<ul>
+<li>Denial benchmark analysis</li>
+<li>Appeal and overturn tracking</li>
+<li>Payer and plan denial comparison</li>
+<li>Claim-level denial simulation using transparent business rules</li>
+<li>Revenue leakage estimation</li>
+<li>Underpayment and negotiated-rate variance analysis</li>
+<li>Operational work queues for denials, appeals, and payment recovery</li>
+<li>Power BI executive and operational dashboards</li>
+</ul>
+<h3 id="1-2-business-goals">1.2 Business goals</h3>
+<p>The platform should answer:</p>
+<ul>
+<li>Which issuers, plans, states, and network categories have the highest denial rates?</li>
+<li>Which denial reasons are driving avoidable administrative burden?</li>
+<li>Which denials should be appealed first?</li>
+<li>Which denied claims have the highest expected recovery value?</li>
+<li>Which service lines have the largest reimbursement leakage?</li>
+<li>Which payers or plans show unusual denial or appeal-upheld patterns?</li>
+<li>Which hospital services have large negotiated-rate variation?</li>
+<li>How much revenue could be recovered by reducing preventable denials?</li>
+</ul>
+<h3 id="1-3-primary-enterprise-users">1.3 Primary enterprise users</h3>
+<ul>
+<li>Revenue Cycle Director: denial prevention, appeal prioritization, recovery</li>
+<li>Claims Operations Leader: claim status, backlog, rework, denial reasons</li>
+<li>Managed Care Contracting: payer performance and reimbursement variation</li>
+<li>Finance: revenue at risk, expected recovery, underpayment exposure</li>
+<li>Compliance: denial benchmarks and appeal outcomes</li>
+<li>BI Team: governed claims operations dashboards</li>
+<li>Payer Strategy Analyst: issuer/plan denial variation and member friction</li>
+</ul>
+<h3 id="1-4-what-makes-this-project-professional">1.4 What makes this project professional</h3>
+<p>The project must include:</p>
+<ul>
+<li>Public denial benchmark data with source links</li>
+<li>Claim-level simulated denial layer documented transparently</li>
+<li>Denial reason taxonomy based on realistic revenue cycle categories</li>
+<li>Appeal workflow model with status transitions</li>
+<li>Revenue leakage and expected recovery calculations</li>
+<li>SQL marts for denial rates, appeal rates, overturn rates, aging, and recovery</li>
+<li>Price transparency or contracted-rate variance module</li>
+<li>Python analytics for denial drivers and appeal prioritization</li>
+<li>ML model for denial risk or appeal success probability</li>
+<li>Power BI dashboards for executives and operational teams</li>
+<li>Clear limitations explaining public data constraints</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="2-source-reference-register">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="2-source-reference-register">2. Source Reference Register</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#1-executive-project-charter">Previous</a>
+      <a href="#3-final-dataset-strategy">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#14-data-quality-and-governance">Validate In DQ</a><a class="related-chip" href="#16-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<p>Use these links in the README and documentation.</p>
+<h3 id="2-1-public-denial-appeal-and-marketplace-data">2.1 Public denial, appeal, and marketplace data</h3>
+<ol>
+<li><p><strong>CMS Health Insurance Exchange Public Use Files</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/marketplace/resources/data/public-use-files">https://www.cms.gov/marketplace/resources/data/public-use-files</a></li>
+<li>Use: Marketplace plan and issuer public use files.</li>
+<li>Key file: Transparency in Coverage PUF.</li>
+<li>CMS describes TC-PUF as issuer and plan-level claims, appeals, and active URL data.</li>
+</ul>
+</li>
+<li><p><strong>CMS Transparency in Coverage PUF PY2026</strong></p>
+<ul>
+<li>Link: <a href="https://catalog.data.gov/dataset/transparency-in-coverage-puf-py2026">https://catalog.data.gov/dataset/transparency-in-coverage-puf-py2026</a></li>
+<li>Use: Claims received, claims denied, appeals, appeal outcomes by issuer/plan where available.</li>
+<li>Limitation: Aggregate issuer/plan data, not individual claim-level records.</li>
+</ul>
+</li>
+<li><p><strong>CMS Transparency in Coverage PUF Data Dictionary</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/files/document/transparency-coverage-puf-datadictionary-py26.pdf">https://www.cms.gov/files/document/transparency-coverage-puf-datadictionary-py26.pdf</a></li>
+<li>Use: Field definitions for claims received, denied, appeals, in-network/out-of-network, and denial reason fields.</li>
+</ul>
+</li>
+<li><p><strong>CMS Health Insurance State-Based Exchange Public Use Files</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/marketplace/resources/data/state-based-public-use-files">https://www.cms.gov/marketplace/resources/data/state-based-public-use-files</a></li>
+<li>Use: State-based Exchange plan and issuer data where relevant.</li>
+</ul>
+</li>
+<li><p><strong>HealthCare.gov Plan Data</strong></p>
+<ul>
+<li>Link: <a href="https://www.healthcare.gov/plan-data/">https://www.healthcare.gov/plan-data/</a></li>
+<li>Use: Qualified health plan and stand-alone dental plan data.</li>
+</ul>
+</li>
+<li><p><strong>CMS Medical Loss Ratio Data and System Resources</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/marketplace/resources/data/medical-loss-ratio-data-systems-resources">https://www.cms.gov/marketplace/resources/data/medical-loss-ratio-data-systems-resources</a></li>
+<li>Use: Issuer financial context: premiums, claims, quality improvement expenses, rebates.</li>
+</ul>
+</li>
+<li><p><strong>CMS Rate Review Data</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/marketplace/resources/data/rate-review-data">https://www.cms.gov/marketplace/resources/data/rate-review-data</a></li>
+<li>Use: Plan rate increase context and insurance market financial pressure.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-2-claim-level-simulation-and-claims-structure">2.2 Claim-level simulation and claims structure</h3>
+<ol start="8">
+<li><p><strong>CMS Medicare Claims Synthetic Public Use Files</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files">https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files</a></li>
+<li>Use: Synthetic Medicare-style claims structure for claim-level service, provider, member, diagnosis, and payment data.</li>
+</ul>
+</li>
+<li><p><strong>CMS Synthetic Medicare Enrollment, Fee-for-Service Claims, and Prescription Drug Event PUF</strong></p>
+<ul>
+<li>Link: <a href="https://data.cms.gov/collection/synthetic-medicare-enrollment-fee-for-service-claims-and-prescription-drug-event">https://data.cms.gov/collection/synthetic-medicare-enrollment-fee-for-service-claims-and-prescription-drug-event</a></li>
+<li>User guide: <a href="https://data.cms.gov/sites/default/files/2023-05/d51e1218-68c3-4c7c-9598-0b81f22fe903/User%20Guide%20-%20CMS%20Synthetic%20RIF%20Files%20May%202023_AM508_v2.pdf">https://data.cms.gov/sites/default/files/2023-05/d51e1218-68c3-4c7c-9598-0b81f22fe903/User%20Guide%20-%20CMS%20Synthetic%20RIF%20Files%20May%202023_AM508_v2.pdf</a></li>
+<li>Use: Modern synthetic claims files in CMS RIF-style format.</li>
+</ul>
+</li>
+<li><p><strong>Basic Stand Alone Medicare Claims PUFs</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/basic-stand-alone-medicare-claims-public-use-files">https://www.cms.gov/data-research/statistics-trends-and-reports/basic-stand-alone-medicare-claims-public-use-files</a></li>
+<li>Use: Public de-identified claim-specific files for selected Medicare analyses.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-3-price-transparency-and-reimbursement-context">2.3 Price transparency and reimbursement context</h3>
+<ol start="11">
+<li><p><strong>CMS Hospital Price Transparency</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/priorities/key-initiatives/hospital-price-transparency">https://www.cms.gov/priorities/key-initiatives/hospital-price-transparency</a></li>
+<li>Use: Standard charge and machine-readable file context.</li>
+<li>CMS states hospitals must provide pricing information as a comprehensive machine-readable file and a consumer-friendly display of shoppable services.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Price Transparency Hospitals Page</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/hospital-price-transparency/hospitals">https://www.cms.gov/hospital-price-transparency/hospitals</a></li>
+<li>Use: Requirement that hospitals post standard charges, including gross charges, discounted cash prices, payer-specific negotiated charges, and de-identified minimum/maximum negotiated charges.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Price Transparency GitHub</strong></p>
+<ul>
+<li>Link: <a href="https://github.com/CMSgov/hospital-price-transparency">https://github.com/CMSgov/hospital-price-transparency</a></li>
+<li>Use: Data dictionaries, CSV templates, JSON schema, and validation tools for machine-readable files.</li>
+</ul>
+</li>
+<li><p><strong>CMS Hospital Price Transparency Resources</strong></p>
+<ul>
+<li>Link: <a href="https://www.cms.gov/hospital-price-transparency/resources">https://www.cms.gov/hospital-price-transparency/resources</a></li>
+<li>Use: Implementation guides and current requirement resources.</li>
+</ul>
+</li>
+</ol>
+<h3 id="2-4-provider-and-plan-reference-data">2.4 Provider and plan reference data</h3>
+<ol start="15">
+<li><p><strong>CMS NPPES NPI Files</strong></p>
+<ul>
+<li>Link: <a href="https://download.cms.gov/nppes/NPI_Files.html">https://download.cms.gov/nppes/NPI_Files.html</a></li>
+<li>Use: Provider identity and taxonomy.</li>
+</ul>
+</li>
+<li><p><strong>CMS Provider Data Catalog</strong></p>
+<ul>
+<li>Link: <a href="https://developer.cms.gov/provider-data/">https://developer.cms.gov/provider-data/</a></li>
+<li>Use: Optional hospital/provider details.</li>
+</ul>
+</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="3-final-dataset-strategy">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="3-final-dataset-strategy">3. Final Dataset Strategy</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#2-source-reference-register">Previous</a>
+      <a href="#4-business-workflow-simulated">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Map To Architecture</a><a class="related-chip" href="#14-data-quality-and-governance">Validate In DQ</a><a class="related-chip" href="#16-implementation-roadmap">Use In Roadmap</a>
+    </div>
+    
+<h3 id="3-1-why-this-project-needs-a-simulated-claim-level-layer">3.1 Why this project needs a simulated claim-level layer</h3>
+<p>Public CMS Transparency in Coverage PUFs provide aggregate issuer/plan-level denial and appeal data. They do not provide individual claim-level adjudication events. A professional project should not pretend aggregate denial files contain claim-level operational detail.</p>
+<p>Therefore this project uses a two-layer strategy:</p>
+<ol>
+<li><p><strong>Real public benchmark layer</strong></p>
+<ul>
+<li>CMS Transparency in Coverage PUF</li>
+<li>Exchange plan and issuer PUFs</li>
+<li>Medical Loss Ratio data</li>
+<li>Rate Review data</li>
+</ul>
+</li>
+<li><p><strong>Transparent claim-level simulation layer</strong></p>
+<ul>
+<li>CMS synthetic claims or synthetic RIF claims</li>
+<li>Deterministic denial rules</li>
+<li>Denial probabilities calibrated to public aggregate benchmark ranges</li>
+<li>Clearly documented simulated denial reason taxonomy</li>
+</ul>
+</li>
+</ol>
+<p>This makes the project honest and enterprise-realistic.</p>
+<h3 id="3-2-required-datasets">3.2 Required datasets</h3>
+<p>Minimum:</p>
+<ul>
+<li>CMS Transparency in Coverage PUF</li>
+<li>CMS Exchange/Marketplace PUFs</li>
+<li>CMS synthetic claims data</li>
+<li>CMS Hospital Price Transparency schema/reference resources</li>
+<li>NPPES provider file</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li>MLR PUF for issuer financial context</li>
+<li>Rate Review data for premium/rate context</li>
+<li>Hospital machine-readable files for a small selected market</li>
+<li>Provider Data Catalog for facility identity and quality context</li>
+</ul>
+<h3 id="3-3-dataset-use-matrix">3.3 Dataset use matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Business need</th>
+<th>Dataset</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Denial benchmarks</td>
+<td>Transparency in Coverage PUF</td>
+<td>Issuer/plan denial, appeals, appeal outcomes</td>
+</tr>
+<tr>
+<td>Plan attributes</td>
+<td>Exchange PUFs</td>
+<td>Plan, issuer, market, metal level, geography</td>
+</tr>
+<tr>
+<td>Financial context</td>
+<td>MLR PUF</td>
+<td>Issuer premium/claims/rebate context</td>
+</tr>
+<tr>
+<td>Rate context</td>
+<td>Rate Review</td>
+<td>Proposed/approved premium changes</td>
+</tr>
+<tr>
+<td>Claim-level simulation</td>
+<td>CMS SynPUF or Synthetic RIF</td>
+<td>Claim facts, provider, diagnosis, payment</td>
+</tr>
+<tr>
+<td>Provider identity</td>
+<td>NPPES</td>
+<td>NPI, provider taxonomy, geography</td>
+</tr>
+<tr>
+<td>Contract/rate variation</td>
+<td>Hospital price transparency MRFs</td>
+<td>Negotiated rates, gross charges, cash prices</td>
+</tr>
+</tbody></table>
+<h3 id="3-4-datasets-to-avoid-as-primary-source">3.4 Datasets to avoid as primary source</h3>
+<p>Avoid:</p>
+<ul>
+<li>Generic auto insurance claims fraud files</li>
+<li>Toy claim status CSVs</li>
+<li>Manually invented 100-row denial datasets</li>
+<li>Flat dashboards with &quot;approved/rejected/pending&quot; only</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="4-business-workflow-simulated">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="4-business-workflow-simulated">4. Business Workflow Simulated</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#3-final-dataset-strategy">Previous</a>
+      <a href="#5-end-to-end-pipeline">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="4-1-claim-lifecycle">4.1 Claim lifecycle</h3>
+<p>The platform models this claim lifecycle:</p>
+<ol>
+<li>Claim received</li>
+<li>Claim validated</li>
+<li>Claim adjudicated</li>
+<li>Claim paid, denied, partially denied, or pended</li>
+<li>Denied claim assigned denial reason</li>
+<li>Appeal created if appropriate</li>
+<li>Appeal reviewed</li>
+<li>Appeal overturned, upheld, or partially overturned</li>
+<li>Recovery or write-off recorded</li>
+<li>Denial prevention opportunity reported</li>
+</ol>
+<h3 id="4-2-denial-reason-taxonomy">4.2 Denial reason taxonomy</h3>
+<p>Use these denial categories:</p>
+<ul>
+<li>Eligibility or coverage terminated</li>
+<li>Prior authorization missing</li>
+<li>Medical necessity</li>
+<li>Coding error</li>
+<li>Missing documentation</li>
+<li>Duplicate claim</li>
+<li>Timely filing</li>
+<li>Coordination of benefits</li>
+<li>Non-covered service</li>
+<li>Out-of-network service</li>
+<li>Benefit maximum exceeded</li>
+<li>Invalid provider identifier</li>
+<li>Bundling or modifier issue</li>
+<li>Experimental/investigational</li>
+<li>Referral missing</li>
+</ul>
+<h3 id="4-3-appeal-outcome-taxonomy">4.3 Appeal outcome taxonomy</h3>
+<p>Appeal outcomes:</p>
+<ul>
+<li>Not appealed</li>
+<li>Appealed pending</li>
+<li>Appeal upheld</li>
+<li>Appeal overturned</li>
+<li>Appeal partially overturned</li>
+<li>Appeal dismissed</li>
+<li>Resubmitted instead of appealed</li>
+</ul>
+<h3 id="4-4-revenue-actions">4.4 Revenue actions</h3>
+<p>Operational actions:</p>
+<ul>
+<li>Appeal immediately</li>
+<li>Correct and resubmit</li>
+<li>Request documentation</li>
+<li>Verify eligibility</li>
+<li>Check authorization</li>
+<li>Contracting review</li>
+<li>Write off</li>
+<li>Monitor payer pattern</li>
+<li>Prevent future denial through front-end edit</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="5-end-to-end-pipeline">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="5-end-to-end-pipeline">5. End-to-End Pipeline</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#4-business-workflow-simulated">Previous</a>
+      <a href="#6-repository-structure">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#9-sql-build-plan">SQL Build</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<section class="diagram-shell">
+<div class="diagram-label">Architecture Diagram</div>
+<pre class="mermaid">flowchart LR
+    A[&quot;Public CMS Benchmark Files&quot;] --&gt; B[&quot;Bronze Benchmark Tables&quot;]
+    C[&quot;Synthetic Claim Files&quot;] --&gt; D[&quot;Bronze Claim Tables&quot;]
+    E[&quot;Price Transparency Files&quot;] --&gt; F[&quot;Bronze Rate Tables&quot;]
+    B --&gt; G[&quot;Silver Plan and Issuer Tables&quot;]
+    D --&gt; H[&quot;Silver Claim and Provider Tables&quot;]
+    F --&gt; I[&quot;Silver Contract Rate Tables&quot;]
+    G --&gt; J[&quot;Gold Denial Star Schema&quot;]
+    H --&gt; J
+    I --&gt; J
+    J --&gt; K[&quot;Denial and Appeal Marts&quot;]
+    J --&gt; L[&quot;Revenue Leakage Marts&quot;]
+    K --&gt; M[&quot;Feature Store&quot;]
+    L --&gt; M
+    M --&gt; N[&quot;Denial Risk and Appeal Priority Models&quot;]
+    K --&gt; O[&quot;Power BI Semantic Model&quot;]
+    L --&gt; O
+    N --&gt; O
+    O --&gt; P[&quot;Executive and Operations Dashboards&quot;]</pre>
+</section>
+
+
+<h3 id="5-1-layer-definitions">5.1 Layer definitions</h3>
+<p>Raw:</p>
+<ul>
+<li>Downloaded CMS PUFs, synthetic claims, NPPES, selected hospital price transparency files.</li>
+</ul>
+<p>Bronze:</p>
+<ul>
+<li>Source-shaped tables with metadata.</li>
+</ul>
+<p>Silver:</p>
+<ul>
+<li>Standardized claim, issuer, plan, provider, denial, appeal, and rate tables.</li>
+</ul>
+<p>Gold:</p>
+<ul>
+<li>Star schema for claim operations and revenue cycle analytics.</li>
+</ul>
+<p>Marts:</p>
+<ul>
+<li>Denial rate</li>
+<li>Appeal performance</li>
+<li>Recovery opportunity</li>
+<li>Revenue leakage</li>
+<li>Payer scorecard</li>
+<li>Service-line denial</li>
+<li>Aging and backlog</li>
+</ul>
+<p>ML:</p>
+<ul>
+<li>Denial risk scoring</li>
+<li>Appeal success prediction</li>
+<li>Recovery prioritization</li>
+</ul>
+<p>Power BI:</p>
+<ul>
+<li>Executive dashboard and operational work queues.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="6-repository-structure">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="6-repository-structure">6. Repository Structure</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#5-end-to-end-pipeline">Previous</a>
+      <a href="#7-data-architecture">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<pre><code class="language-text">claims-denials-revenue-cycle-intelligence/
+  README.md
+  requirements.txt
+  .gitignore
+
+  docs/
+    Claims_Denials_Revenue_Cycle_Analytics_Blueprint.md
+    business_problem.md
+    data_sources.md
+    simulation_methodology.md
+    architecture.md
+    data_dictionary.md
+    kpi_dictionary.md
+    denial_reason_taxonomy.md
+    appeal_workflow.md
+    price_transparency_methodology.md
+    dashboard_spec.md
+    model_cards.md
+    executive_summary.md
+    portfolio_case_study.md
+    interview_talking_points.md
+
+  data/
+    raw/
+      transparency_coverage_puf/
+      exchange_pufs/
+      mlr_puf/
+      rate_review/
+      cms_synthetic_claims/
+      nppes/
+      hospital_price_transparency_sample/
+    interim/
+    processed/
+
+  sql/
+    00_admin/
+    01_bronze_ddl/
+    02_silver_transforms/
+    03_gold_star_schema/
+    04_simulation/
+    05_marts/
+    06_quality_tests/
+    07_analytics_queries/
+
+  src/
+    etl/
+    simulation/
+    features/
+    models/
+    evaluation/
+    reporting/
+
+  notebooks/
+    01_benchmark_data_profile.ipynb
+    02_claim_simulation_validation.ipynb
+    03_denial_eda.ipynb
+    04_appeal_recovery_analysis.ipynb
+    05_payer_scorecard_analysis.ipynb
+    06_denial_risk_model.ipynb
+    07_price_transparency_analysis.ipynb
+
+  powerbi/
+    denials_revenue_cycle_platform.pbip/
+    exports/
+
+  reports/
+    figures/
+    executive_summary.pdf
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="7-data-architecture">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="7-data-architecture">7. Data Architecture</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#6-repository-structure">Previous</a>
+      <a href="#8-claim-level-denial-simulation-methodology">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Source Register</a><a class="related-chip" href="#9-sql-build-plan">SQL Build</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Model</a>
+    </div>
+    
+<h3 id="7-1-schemas">7.1 Schemas</h3>
+<p>Use:</p>
+<ul>
+<li><code>raw</code></li>
+<li><code>bronze</code></li>
+<li><code>silver</code></li>
+<li><code>gold</code></li>
+<li><code>sim</code></li>
+<li><code>mart</code></li>
+<li><code>ml</code></li>
+<li><code>dq</code></li>
+</ul>
+<h3 id="7-2-dimensions">7.2 Dimensions</h3>
+<h4>dim_issuer</h4>
+<p>Grain: one row per issuer.</p>
+<p>Columns:</p>
+<ul>
+<li><code>issuer_key</code></li>
+<li><code>issuer_id</code></li>
+<li><code>issuer_name</code></li>
+<li><code>state_code</code></li>
+<li><code>market_type</code></li>
+<li><code>source_year</code></li>
+</ul>
+<h4>dim_plan</h4>
+<p>Grain: one row per plan per plan year.</p>
+<p>Columns:</p>
+<ul>
+<li><code>plan_key</code></li>
+<li><code>plan_id</code></li>
+<li><code>issuer_key</code></li>
+<li><code>plan_year</code></li>
+<li><code>plan_name</code></li>
+<li><code>metal_level</code></li>
+<li><code>market_type</code></li>
+<li><code>network_type</code></li>
+<li><code>state_code</code></li>
+<li><code>service_area_id</code></li>
+<li><code>qhp_flag</code></li>
+</ul>
+<h4>dim_member_simulated</h4>
+<p>Grain: one row per synthetic member.</p>
+<p>Columns:</p>
+<ul>
+<li><code>member_key</code></li>
+<li><code>member_id</code></li>
+<li><code>age_band</code></li>
+<li><code>sex</code></li>
+<li><code>state_code</code></li>
+<li><code>risk_segment</code></li>
+<li><code>coverage_status</code></li>
+<li><code>plan_key</code></li>
+</ul>
+<h4>dim_provider</h4>
+<p>Grain: one row per provider/NPI or facility.</p>
+<p>Columns:</p>
+<ul>
+<li><code>provider_key</code></li>
+<li><code>npi</code></li>
+<li><code>provider_name</code></li>
+<li><code>provider_type</code></li>
+<li><code>specialty_group</code></li>
+<li><code>state_code</code></li>
+<li><code>taxonomy_code</code></li>
+<li><code>network_status</code></li>
+</ul>
+<h4>dim_service</h4>
+<p>Grain: one row per procedure, HCPCS, DRG, or service group.</p>
+<p>Columns:</p>
+<ul>
+<li><code>service_key</code></li>
+<li><code>service_code</code></li>
+<li><code>service_description</code></li>
+<li><code>service_type</code></li>
+<li><code>service_line</code></li>
+<li><code>revenue_center</code></li>
+<li><code>requires_prior_auth_flag</code></li>
+<li><code>high_documentation_risk_flag</code></li>
+<li><code>medical_necessity_review_flag</code></li>
+</ul>
+<p>Service lines:</p>
+<ul>
+<li>Inpatient</li>
+<li>Outpatient surgery</li>
+<li>Emergency department</li>
+<li>Imaging</li>
+<li>Lab</li>
+<li>Durable medical equipment</li>
+<li>Professional E/M</li>
+<li>Behavioral health</li>
+<li>Pharmacy</li>
+<li>Therapy</li>
+</ul>
+<h4>dim_denial_reason</h4>
+<p>Grain: one row per denial reason code.</p>
+<p>Columns:</p>
+<ul>
+<li><code>denial_reason_key</code></li>
+<li><code>denial_reason_code</code></li>
+<li><code>denial_reason_category</code></li>
+<li><code>denial_reason_description</code></li>
+<li><code>preventable_flag</code></li>
+<li><code>front_end_edit_flag</code></li>
+<li><code>appealable_flag</code></li>
+<li><code>typical_owner</code></li>
+</ul>
+<p>Typical owners:</p>
+<ul>
+<li>Registration</li>
+<li>Eligibility</li>
+<li>Authorization</li>
+<li>Coding</li>
+<li>Clinical documentation</li>
+<li>Billing</li>
+<li>Contracting</li>
+<li>Payer policy</li>
+</ul>
+<h4>dim_date</h4>
+<p>Standard calendar dimension.</p>
+<h3 id="7-3-facts">7.3 Facts</h3>
+<h4>fact_claim</h4>
+<p>Grain: one row per synthetic claim.</p>
+<p>Columns:</p>
+<ul>
+<li><code>claim_key</code></li>
+<li><code>claim_id</code></li>
+<li><code>member_key</code></li>
+<li><code>plan_key</code></li>
+<li><code>issuer_key</code></li>
+<li><code>provider_key</code></li>
+<li><code>service_key</code></li>
+<li><code>claim_received_date_key</code></li>
+<li><code>service_from_date_key</code></li>
+<li><code>service_thru_date_key</code></li>
+<li><code>adjudication_date_key</code></li>
+<li><code>claim_type</code></li>
+<li><code>claim_status</code></li>
+<li><code>submitted_amount</code></li>
+<li><code>allowed_amount</code></li>
+<li><code>expected_payment_amount</code></li>
+<li><code>paid_amount</code></li>
+<li><code>member_responsibility_amount</code></li>
+<li><code>network_status</code></li>
+<li><code>prior_auth_required_flag</code></li>
+<li><code>prior_auth_present_flag</code></li>
+<li><code>documentation_required_flag</code></li>
+<li><code>documentation_present_flag</code></li>
+<li><code>timely_filing_flag</code></li>
+<li><code>duplicate_claim_flag</code></li>
+<li><code>simulated_flag</code></li>
+</ul>
+<h4>fact_denial</h4>
+<p>Grain: one row per denied claim or denied claim line.</p>
+<p>Columns:</p>
+<ul>
+<li><code>denial_key</code></li>
+<li><code>claim_key</code></li>
+<li><code>denial_reason_key</code></li>
+<li><code>denial_date_key</code></li>
+<li><code>denied_amount</code></li>
+<li><code>preventable_flag</code></li>
+<li><code>appealable_flag</code></li>
+<li><code>denial_owner</code></li>
+<li><code>root_cause</code></li>
+<li><code>days_to_denial</code></li>
+<li><code>denial_status</code></li>
+</ul>
+<h4>fact_appeal</h4>
+<p>Grain: one row per appeal event.</p>
+<p>Columns:</p>
+<ul>
+<li><code>appeal_key</code></li>
+<li><code>denial_key</code></li>
+<li><code>appeal_created_date_key</code></li>
+<li><code>appeal_submitted_date_key</code></li>
+<li><code>appeal_decision_date_key</code></li>
+<li><code>appeal_level</code></li>
+<li><code>appeal_status</code></li>
+<li><code>appeal_outcome</code></li>
+<li><code>appealed_amount</code></li>
+<li><code>recovered_amount</code></li>
+<li><code>days_to_appeal</code></li>
+<li><code>days_to_decision</code></li>
+<li><code>appeal_success_flag</code></li>
+</ul>
+<h4>fact_denial_benchmark</h4>
+<p>Grain: issuer, plan, year, network category, denial category.</p>
+<p>Columns:</p>
+<ul>
+<li><code>issuer_key</code></li>
+<li><code>plan_key</code></li>
+<li><code>plan_year</code></li>
+<li><code>network_status</code></li>
+<li><code>claims_received</code></li>
+<li><code>claims_denied</code></li>
+<li><code>appeals_filed</code></li>
+<li><code>appeals_upheld</code></li>
+<li><code>appeals_overturned</code></li>
+<li><code>denial_rate</code></li>
+<li><code>appeal_rate</code></li>
+<li><code>appeal_upheld_rate</code></li>
+<li><code>appeal_overturn_rate</code></li>
+</ul>
+<h4>fact_contract_rate</h4>
+<p>Grain: hospital, payer, plan, service, rate version.</p>
+<p>Columns:</p>
+<ul>
+<li><code>contract_rate_key</code></li>
+<li><code>provider_key</code></li>
+<li><code>issuer_key</code></li>
+<li><code>plan_key</code></li>
+<li><code>service_key</code></li>
+<li><code>rate_effective_date</code></li>
+<li><code>gross_charge</code></li>
+<li><code>discounted_cash_price</code></li>
+<li><code>payer_negotiated_rate</code></li>
+<li><code>deidentified_min_rate</code></li>
+<li><code>deidentified_max_rate</code></li>
+<li><code>rate_source_file</code></li>
+<li><code>rate_confidence_score</code></li>
+</ul>
+<h4>fact_revenue_leakage</h4>
+<p>Grain: claim or denial.</p>
+<p>Columns:</p>
+<ul>
+<li><code>claim_key</code></li>
+<li><code>denial_key</code></li>
+<li><code>submitted_amount</code></li>
+<li><code>expected_payment_amount</code></li>
+<li><code>paid_amount</code></li>
+<li><code>denied_amount</code></li>
+<li><code>underpaid_amount</code></li>
+<li><code>recoverable_amount</code></li>
+<li><code>writeoff_amount</code></li>
+<li><code>expected_recovery_probability</code></li>
+<li><code>expected_recovery_value</code></li>
+<li><code>priority_score</code></li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="8-claim-level-denial-simulation-methodology">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="8-claim-level-denial-simulation-methodology">8. Claim-Level Denial Simulation Methodology</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#7-data-architecture">Previous</a>
+      <a href="#9-sql-build-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="8-1-why-simulation-is-allowed">8.1 Why simulation is allowed</h3>
+<p>The simulation is used only to create operational claim-level workflow practice data. Public benchmark files remain the source for aggregate denial rates. The README must state:</p>
+<p>&quot;Claim-level denial events in this project are simulated from CMS synthetic claims using transparent business rules and calibrated against public aggregate denial benchmarks. They are not real patient or payer adjudication records.&quot;</p>
+<h3 id="8-2-simulation-inputs">8.2 Simulation inputs</h3>
+<p>Inputs:</p>
+<ul>
+<li>Claim type</li>
+<li>Service line</li>
+<li>Network status</li>
+<li>Prior authorization required flag</li>
+<li>Prior authorization present flag</li>
+<li>Documentation required flag</li>
+<li>Documentation present flag</li>
+<li>Duplicate claim flag</li>
+<li>Timely filing flag</li>
+<li>Member coverage status</li>
+<li>Provider network status</li>
+<li>Submitted amount</li>
+<li>Allowed amount</li>
+<li>Payer/plan benchmark denial rate</li>
+</ul>
+<h3 id="8-3-denial-rule-hierarchy">8.3 Denial rule hierarchy</h3>
+<p>Apply deterministic rules first:</p>
+<ol>
+<li>If coverage inactive: deny for eligibility.</li>
+<li>If duplicate claim flag: deny duplicate.</li>
+<li>If timely filing flag is false: deny timely filing.</li>
+<li>If prior authorization required and missing: deny prior authorization.</li>
+<li>If documentation required and missing: deny missing documentation.</li>
+<li>If network status is out of network and plan does not cover OON: deny out of network.</li>
+<li>If service line is high medical necessity risk and diagnosis/procedure mismatch exists: deny medical necessity.</li>
+<li>Otherwise assign paid or denied based on calibrated plan denial probability.</li>
+</ol>
+<h3 id="8-4-denial-probability-calibration">8.4 Denial probability calibration</h3>
+<p>For each plan or issuer:</p>
+<pre><code class="language-text">benchmark_denial_rate =
+    claims_denied / claims_received
+</code></pre>
+<p>Simulation target:</p>
+<pre><code class="language-text">simulated_denial_rate should be within +/- 2 percentage points of benchmark_denial_rate
+</code></pre>
+<p>If plan-level benchmark missing:</p>
+<ul>
+<li>Use issuer-level benchmark.</li>
+<li>If issuer missing, use state-level benchmark.</li>
+<li>If state missing, use national benchmark.</li>
+</ul>
+<h3 id="8-5-appeal-simulation">8.5 Appeal simulation</h3>
+<p>Appeal probability:</p>
+<ul>
+<li>Higher for high-dollar denials.</li>
+<li>Higher for appealable categories.</li>
+<li>Lower for eligibility and timely filing.</li>
+<li>Higher for medical necessity and prior authorization if documentation can be supplied.</li>
+</ul>
+<p>Appeal success probability:</p>
+<ul>
+<li>High for missing documentation after supplied documentation.</li>
+<li>Moderate for prior authorization disputes.</li>
+<li>Moderate for medical necessity.</li>
+<li>Low for eligibility and non-covered benefit.</li>
+<li>Low for timely filing unless exception exists.</li>
+</ul>
+<p>Output:</p>
+<ul>
+<li>Appeal event rows</li>
+<li>Appeal outcome</li>
+<li>Recovered amount</li>
+<li>Days to appeal</li>
+<li>Days to decision</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="9-sql-build-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="9-sql-build-plan">9. SQL Build Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#8-claim-level-denial-simulation-methodology">Previous</a>
+      <a href="#10-python-analytics-plan">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#7-data-architecture">Data Architecture</a><a class="related-chip" href="#13-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Power BI</a>
+    </div>
+    
+<h3 id="9-1-sql-files-to-create">9.1 SQL files to create</h3>
+<pre><code class="language-text">sql/
+  00_admin/
+    create_schemas.sql
+  01_bronze_ddl/
+    bronze_transparency_coverage.sql
+    bronze_exchange_plan_puf.sql
+    bronze_mlr.sql
+    bronze_rate_review.sql
+    bronze_synthetic_claims.sql
+    bronze_nppes.sql
+    bronze_price_transparency.sql
+  02_silver_transforms/
+    silver_issuer.sql
+    silver_plan.sql
+    silver_claim.sql
+    silver_provider.sql
+    silver_service.sql
+    silver_denial_benchmark.sql
+    silver_contract_rate.sql
+  03_gold_star_schema/
+    dim_issuer.sql
+    dim_plan.sql
+    dim_provider.sql
+    dim_service.sql
+    dim_denial_reason.sql
+    fact_claim.sql
+    fact_denial.sql
+    fact_appeal.sql
+    fact_denial_benchmark.sql
+    fact_contract_rate.sql
+    fact_revenue_leakage.sql
+  04_simulation/
+    simulate_denial_rules.sql
+    simulate_appeal_events.sql
+    calibrate_denial_rates.sql
+  05_marts/
+    mart_denial_rate.sql
+    mart_appeal_performance.sql
+    mart_revenue_leakage.sql
+    mart_payer_scorecard.sql
+    mart_service_line_denials.sql
+    mart_denial_work_queue.sql
+    mart_underpayment_opportunity.sql
+</code></pre>
+<h3 id="9-2-denial-benchmark-mart">9.2 Denial benchmark mart</h3>
+<p>Output: <code>mart.mart_denial_rate</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>plan_year</code></li>
+<li><code>issuer_id</code></li>
+<li><code>issuer_name</code></li>
+<li><code>plan_id</code></li>
+<li><code>state_code</code></li>
+<li><code>network_status</code></li>
+<li><code>claims_received</code></li>
+<li><code>claims_denied</code></li>
+<li><code>denial_rate</code></li>
+<li><code>appeals_filed</code></li>
+<li><code>appeal_rate</code></li>
+<li><code>appeals_upheld</code></li>
+<li><code>appeal_upheld_rate</code></li>
+<li><code>appeal_overturn_rate</code></li>
+<li><code>denial_rate_percentile</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">WITH base AS (
+    SELECT
+        b.plan_year,
+        i.issuer_id,
+        i.issuer_name,
+        p.plan_id,
+        p.state_code,
+        b.network_status,
+        SUM(b.claims_received) AS claims_received,
+        SUM(b.claims_denied) AS claims_denied,
+        SUM(b.appeals_filed) AS appeals_filed,
+        SUM(b.appeals_upheld) AS appeals_upheld,
+        SUM(b.appeals_overturned) AS appeals_overturned
+    FROM gold.fact_denial_benchmark b
+    JOIN gold.dim_issuer i
+        ON b.issuer_key = i.issuer_key
+    JOIN gold.dim_plan p
+        ON b.plan_key = p.plan_key
+    GROUP BY
+        b.plan_year,
+        i.issuer_id,
+        i.issuer_name,
+        p.plan_id,
+        p.state_code,
+        b.network_status
+)
+SELECT
+    *,
+    claims_denied * 1.0 / NULLIF(claims_received, 0) AS denial_rate,
+    appeals_filed * 1.0 / NULLIF(claims_denied, 0) AS appeal_rate,
+    appeals_upheld * 1.0 / NULLIF(appeals_filed, 0) AS appeal_upheld_rate,
+    appeals_overturned * 1.0 / NULLIF(appeals_filed, 0) AS appeal_overturn_rate,
+    PERCENT_RANK() OVER (
+        PARTITION BY plan_year, state_code
+        ORDER BY claims_denied * 1.0 / NULLIF(claims_received, 0)
+    ) AS denial_rate_percentile
+FROM base;
+</code></pre>
+<h3 id="9-3-claim-level-denial-mart">9.3 Claim-level denial mart</h3>
+<p>Output: <code>mart.mart_service_line_denials</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>service_line</code></li>
+<li><code>issuer_name</code></li>
+<li><code>plan_name</code></li>
+<li><code>claim_count</code></li>
+<li><code>denied_claim_count</code></li>
+<li><code>denial_rate</code></li>
+<li><code>submitted_amount</code></li>
+<li><code>denied_amount</code></li>
+<li><code>recoverable_amount</code></li>
+<li><code>top_denial_reason</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">WITH claim_denials AS (
+    SELECT
+        s.service_line,
+        i.issuer_name,
+        p.plan_name,
+        c.claim_key,
+        c.submitted_amount,
+        d.denial_key,
+        d.denied_amount,
+        rl.recoverable_amount,
+        dr.denial_reason_category
+    FROM gold.fact_claim c
+    JOIN gold.dim_service s
+        ON c.service_key = s.service_key
+    JOIN gold.dim_issuer i
+        ON c.issuer_key = i.issuer_key
+    JOIN gold.dim_plan p
+        ON c.plan_key = p.plan_key
+    LEFT JOIN gold.fact_denial d
+        ON c.claim_key = d.claim_key
+    LEFT JOIN gold.dim_denial_reason dr
+        ON d.denial_reason_key = dr.denial_reason_key
+    LEFT JOIN gold.fact_revenue_leakage rl
+        ON c.claim_key = rl.claim_key
+)
+SELECT
+    service_line,
+    issuer_name,
+    plan_name,
+    COUNT(DISTINCT claim_key) AS claim_count,
+    COUNT(DISTINCT denial_key) AS denied_claim_count,
+    COUNT(DISTINCT denial_key) * 1.0 / NULLIF(COUNT(DISTINCT claim_key), 0) AS denial_rate,
+    SUM(submitted_amount) AS submitted_amount,
+    SUM(COALESCE(denied_amount, 0)) AS denied_amount,
+    SUM(COALESCE(recoverable_amount, 0)) AS recoverable_amount,
+    MAX(denial_reason_category) AS top_denial_reason
+FROM claim_denials
+GROUP BY service_line, issuer_name, plan_name;
+</code></pre>
+<p>For production-grade top reason, replace <code>MAX</code> with a ranked CTE by denial count.</p>
+<h3 id="9-4-appeal-performance-mart">9.4 Appeal performance mart</h3>
+<p>Output: <code>mart.mart_appeal_performance</code></p>
+<p>Required fields:</p>
+<ul>
+<li><code>denial_reason_category</code></li>
+<li><code>issuer_name</code></li>
+<li><code>service_line</code></li>
+<li><code>appeals_filed</code></li>
+<li><code>appeals_overturned</code></li>
+<li><code>appeals_upheld</code></li>
+<li><code>appeal_success_rate</code></li>
+<li><code>average_days_to_decision</code></li>
+<li><code>appealed_amount</code></li>
+<li><code>recovered_amount</code></li>
+<li><code>recovery_rate</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">SELECT
+    dr.denial_reason_category,
+    i.issuer_name,
+    s.service_line,
+    COUNT(a.appeal_key) AS appeals_filed,
+    SUM(CASE WHEN a.appeal_outcome = &#39;Appeal overturned&#39; THEN 1 ELSE 0 END) AS appeals_overturned,
+    SUM(CASE WHEN a.appeal_outcome = &#39;Appeal upheld&#39; THEN 1 ELSE 0 END) AS appeals_upheld,
+    SUM(CASE WHEN a.appeal_success_flag = 1 THEN 1 ELSE 0 END) * 1.0
+        / NULLIF(COUNT(a.appeal_key), 0) AS appeal_success_rate,
+    AVG(a.days_to_decision) AS average_days_to_decision,
+    SUM(a.appealed_amount) AS appealed_amount,
+    SUM(a.recovered_amount) AS recovered_amount,
+    SUM(a.recovered_amount) * 1.0 / NULLIF(SUM(a.appealed_amount), 0) AS recovery_rate
+FROM gold.fact_appeal a
+JOIN gold.fact_denial d
+    ON a.denial_key = d.denial_key
+JOIN gold.fact_claim c
+    ON d.claim_key = c.claim_key
+JOIN gold.dim_denial_reason dr
+    ON d.denial_reason_key = dr.denial_reason_key
+JOIN gold.dim_issuer i
+    ON c.issuer_key = i.issuer_key
+JOIN gold.dim_service s
+    ON c.service_key = s.service_key
+GROUP BY
+    dr.denial_reason_category,
+    i.issuer_name,
+    s.service_line;
+</code></pre>
+<h3 id="9-5-denial-work-queue-mart">9.5 Denial work queue mart</h3>
+<p>Output: <code>mart.mart_denial_work_queue</code></p>
+<p>Purpose:</p>
+<ul>
+<li>Rank denials for operational review.</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>claim_id</code></li>
+<li><code>issuer_name</code></li>
+<li><code>plan_name</code></li>
+<li><code>provider_name</code></li>
+<li><code>service_line</code></li>
+<li><code>denial_reason_category</code></li>
+<li><code>denied_amount</code></li>
+<li><code>recoverable_amount</code></li>
+<li><code>expected_recovery_probability</code></li>
+<li><code>expected_recovery_value</code></li>
+<li><code>days_since_denial</code></li>
+<li><code>priority_score</code></li>
+<li><code>recommended_action</code></li>
+</ul>
+<p>SQL:</p>
+<pre><code class="language-sql">SELECT
+    c.claim_id,
+    i.issuer_name,
+    p.plan_name,
+    pr.provider_name,
+    s.service_line,
+    dr.denial_reason_category,
+    d.denied_amount,
+    rl.recoverable_amount,
+    rl.expected_recovery_probability,
+    rl.expected_recovery_value,
+    DATEDIFF(day, dd.full_date, CURRENT_DATE) AS days_since_denial,
+    (
+        0.45 * COALESCE(rl.expected_recovery_value, 0)
+        + 0.25 * COALESCE(rl.expected_recovery_probability, 0) * 1000
+        + 0.15 * CASE WHEN dr.preventable_flag = 1 THEN 100 ELSE 0 END
+        + 0.15 * CASE WHEN dr.appealable_flag = 1 THEN 100 ELSE 0 END
+    ) AS priority_score,
+    CASE
+        WHEN dr.denial_reason_category = &#39;Missing documentation&#39; THEN &#39;Submit documentation packet&#39;
+        WHEN dr.denial_reason_category = &#39;Prior authorization missing&#39; THEN &#39;Validate authorization and appeal if supported&#39;
+        WHEN dr.denial_reason_category = &#39;Coding error&#39; THEN &#39;Correct and resubmit&#39;
+        WHEN dr.denial_reason_category = &#39;Medical necessity&#39; THEN &#39;Clinical appeal review&#39;
+        WHEN dr.denial_reason_category = &#39;Eligibility or coverage terminated&#39; THEN &#39;Eligibility verification&#39;
+        WHEN dr.denial_reason_category = &#39;Underpayment&#39; THEN &#39;Contracting payment review&#39;
+        ELSE &#39;Analyst review&#39;
+    END AS recommended_action
+FROM gold.fact_denial d
+JOIN gold.fact_claim c
+    ON d.claim_key = c.claim_key
+JOIN gold.dim_issuer i
+    ON c.issuer_key = i.issuer_key
+JOIN gold.dim_plan p
+    ON c.plan_key = p.plan_key
+JOIN gold.dim_provider pr
+    ON c.provider_key = pr.provider_key
+JOIN gold.dim_service s
+    ON c.service_key = s.service_key
+JOIN gold.dim_denial_reason dr
+    ON d.denial_reason_key = dr.denial_reason_key
+JOIN gold.dim_date dd
+    ON d.denial_date_key = dd.date_key
+LEFT JOIN gold.fact_revenue_leakage rl
+    ON d.denial_key = rl.denial_key
+WHERE d.denial_status IN (&#39;Open&#39;, &#39;Appealable&#39;, &#39;Pending review&#39;);
+</code></pre>
+<h3 id="9-6-underpayment-opportunity-mart">9.6 Underpayment opportunity mart</h3>
+<p>Output: <code>mart.mart_underpayment_opportunity</code></p>
+<p>Logic:</p>
+<ul>
+<li>Compare expected payment to paid amount.</li>
+<li>If using hospital price transparency negotiated rates, compare claim paid amount to payer negotiated rate when service/provider/plan match.</li>
+</ul>
+<p>Required fields:</p>
+<ul>
+<li><code>claim_id</code></li>
+<li><code>provider_name</code></li>
+<li><code>issuer_name</code></li>
+<li><code>plan_name</code></li>
+<li><code>service_line</code></li>
+<li><code>expected_payment_amount</code></li>
+<li><code>paid_amount</code></li>
+<li><code>contract_rate_amount</code></li>
+<li><code>underpaid_amount</code></li>
+<li><code>underpayment_flag</code></li>
+<li><code>contract_review_flag</code></li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="10-python-analytics-plan">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="10-python-analytics-plan">10. Python Analytics Plan</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#9-sql-build-plan">Previous</a>
+      <a href="#11-ml-design">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#14-data-quality-and-governance">Model Governance</a>
+    </div>
+    
+<h3 id="10-1-eda-notebooks">10.1 EDA notebooks</h3>
+<h4><code>01_benchmark_data_profile.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Claims received by issuer/plan/state</li>
+<li>Claims denied by issuer/plan/state</li>
+<li>Denial rate distribution</li>
+<li>Appeal rate distribution</li>
+<li>Appeal upheld/overturn rate distribution</li>
+<li>Missingness by PUF field</li>
+</ul>
+<h4><code>02_claim_simulation_validation.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Simulated denial rate vs benchmark denial rate</li>
+<li>Denial reason distribution</li>
+<li>Claim-level denied amount distribution</li>
+<li>Calibration error by issuer/plan</li>
+<li>Simulation assumptions report</li>
+</ul>
+<h4><code>03_denial_eda.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Denial rate by service line</li>
+<li>Denial reason Pareto</li>
+<li>Denied amount by payer</li>
+<li>Preventable vs non-preventable denials</li>
+<li>Network status denial comparison</li>
+</ul>
+<h4><code>04_appeal_recovery_analysis.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Appeal success by denial reason</li>
+<li>Recovery by service line</li>
+<li>Days to decision distribution</li>
+<li>Expected recovery value curve</li>
+<li>Appeal prioritization analysis</li>
+</ul>
+<h4><code>05_payer_scorecard_analysis.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Payer denial scorecard</li>
+<li>Payer appeal overturn comparison</li>
+<li>Payer underpayment patterns</li>
+<li>Payer administrative burden index</li>
+</ul>
+<h4><code>06_denial_risk_model.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Denial risk model</li>
+<li>Appeal success model</li>
+<li>SHAP drivers</li>
+<li>Threshold selection</li>
+<li>Work queue export</li>
+</ul>
+<h4><code>07_price_transparency_analysis.ipynb</code></h4>
+<p>Outputs:</p>
+<ul>
+<li>Negotiated rate variation by service</li>
+<li>Gross charge vs negotiated rate</li>
+<li>Payer-specific rate comparison</li>
+<li>Rate confidence score</li>
+<li>Underpayment opportunity examples</li>
+</ul>
+<h3 id="10-2-feature-engineering">10.2 Feature engineering</h3>
+<p>Claim features:</p>
+<ul>
+<li>Claim type</li>
+<li>Service line</li>
+<li>Submitted amount</li>
+<li>Allowed amount</li>
+<li>Provider specialty</li>
+<li>Payer/issuer</li>
+<li>Plan metal level</li>
+<li>Network status</li>
+<li>Prior authorization required</li>
+<li>Prior authorization present</li>
+<li>Documentation required</li>
+<li>Documentation present</li>
+<li>Timely filing flag</li>
+<li>Duplicate claim flag</li>
+<li>Diagnosis category</li>
+<li>Procedure category</li>
+<li>Member risk segment</li>
+</ul>
+<p>Denial features:</p>
+<ul>
+<li>Denial reason category</li>
+<li>Denied amount</li>
+<li>Preventable flag</li>
+<li>Appealable flag</li>
+<li>Days to denial</li>
+<li>Payer historical denial rate</li>
+<li>Service-line denial rate</li>
+<li>Provider denial rate</li>
+</ul>
+<p>Appeal features:</p>
+<ul>
+<li>Appeal level</li>
+<li>Denial category</li>
+<li>Appealed amount</li>
+<li>Documentation supplied flag</li>
+<li>Clinical review flag</li>
+<li>Payer historical overturn rate</li>
+<li>Days from denial to appeal</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="11-ml-design">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="11-ml-design">11. ML Design</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#10-python-analytics-plan">Previous</a>
+      <a href="#12-power-bi-dashboard-specification">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#5-end-to-end-pipeline">Feature Sources</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Scores</a><a class="related-chip" href="#14-data-quality-and-governance">Model Governance</a>
+    </div>
+    
+<h3 id="11-1-model-1-claim-denial-risk-prediction">11.1 Model 1: Claim denial risk prediction</h3>
+<p>Business owner:</p>
+<ul>
+<li>Claims operations and revenue cycle.</li>
+</ul>
+<p>Prediction unit:</p>
+<ul>
+<li>Claim.</li>
+</ul>
+<p>Target:</p>
+<ul>
+<li><code>denied_flag</code>.</li>
+</ul>
+<p>Models:</p>
+<ul>
+<li>Logistic Regression</li>
+<li>Random Forest</li>
+<li>XGBoost</li>
+</ul>
+<p>Metrics:</p>
+<ul>
+<li>ROC-AUC</li>
+<li>PR-AUC</li>
+<li>Recall at top decile</li>
+<li>Precision at K</li>
+<li>Confusion matrix</li>
+<li>SHAP</li>
+</ul>
+<p>Business use:</p>
+<ul>
+<li>Flag high-risk claims before submission for front-end edits.</li>
+</ul>
+<p>Recommended action:</p>
+<ul>
+<li>Check authorization</li>
+<li>Attach documentation</li>
+<li>Coding review</li>
+<li>Eligibility verification</li>
+<li>Medical necessity review</li>
+</ul>
+<h3 id="11-2-model-2-appeal-success-prediction">11.2 Model 2: Appeal success prediction</h3>
+<p>Prediction unit:</p>
+<ul>
+<li>Denial.</li>
+</ul>
+<p>Target:</p>
+<ul>
+<li><code>appeal_success_flag</code>.</li>
+</ul>
+<p>Features:</p>
+<ul>
+<li>Denial reason</li>
+<li>Denied amount</li>
+<li>Service line</li>
+<li>Payer</li>
+<li>Documentation flag</li>
+<li>Days to appeal</li>
+<li>Historical payer overturn rate</li>
+<li>Preventable flag</li>
+<li>Appealable flag</li>
+</ul>
+<p>Metrics:</p>
+<ul>
+<li>ROC-AUC</li>
+<li>PR-AUC</li>
+<li>Precision@K</li>
+<li>Expected recovery captured in top decile</li>
+</ul>
+<p>Business use:</p>
+<ul>
+<li>Prioritize appeals with high expected recovery value.</li>
+</ul>
+<p>Formula:</p>
+<pre><code class="language-text">expected_recovery_value =
+    denied_amount * appeal_success_probability * expected_recovery_percentage
+</code></pre>
+<h3 id="11-3-model-3-payer-friction-scoring">11.3 Model 3: Payer friction scoring</h3>
+<p>Purpose:</p>
+<ul>
+<li>Score payers/plans by administrative burden.</li>
+</ul>
+<p>Scoring formula:</p>
+<pre><code class="language-text">payer_friction_score =
+    0.35 * denial_rate_percentile
+  + 0.20 * appeal_upheld_rate_percentile
+  + 0.20 * average_days_to_decision_percentile
+  + 0.15 * underpayment_rate_percentile
+  + 0.10 * documentation_denial_share_percentile
+</code></pre>
+<p>Output tiers:</p>
+<ul>
+<li>Low friction</li>
+<li>Moderate friction</li>
+<li>High friction</li>
+<li>Contracting review required</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="12-power-bi-dashboard-specification">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="12-power-bi-dashboard-specification">12. Power BI Dashboard Specification</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#11-ml-design">Previous</a>
+      <a href="#13-kpi-dictionary">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#13-kpi-dictionary">KPI Dictionary</a><a class="related-chip" href="#9-sql-build-plan">SQL Marts</a><a class="related-chip" href="#1-executive-project-charter">Executive Story</a>
+    </div>
+    
+<h3 id="12-1-pages">12.1 Pages</h3>
+<h4>Page 1: Executive Denials Overview</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Claims received</li>
+<li>Claims denied</li>
+<li>Denial rate</li>
+<li>Denied amount</li>
+<li>Recoverable amount</li>
+<li>Appeal success rate</li>
+<li>Expected recovery value</li>
+<li>Payer friction score</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Monthly denial trend</li>
+<li>Denial reason Pareto</li>
+<li>Denied amount by payer</li>
+<li>Recovery opportunity waterfall</li>
+<li>Denial rate by service line</li>
+<li>Payer friction matrix</li>
+</ul>
+<h4>Page 2: Payer and Plan Scorecard</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Selected payer denial rate</li>
+<li>Appeal overturn rate</li>
+<li>Denied amount</li>
+<li>Underpayment amount</li>
+<li>Administrative burden index</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Payer ranking table</li>
+<li>Denial rate by plan</li>
+<li>Appeal outcome by payer</li>
+<li>In-network vs out-of-network denial comparison</li>
+<li>Payer friction score trend</li>
+</ul>
+<h4>Page 3: Service Line Denials</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Highest-denial service line</li>
+<li>Preventable denial rate</li>
+<li>Medical necessity denial rate</li>
+<li>Authorization denial amount</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Service line denial heatmap</li>
+<li>Denial reason by service line</li>
+<li>Denied amount by procedure/service</li>
+<li>Preventable denial opportunity</li>
+</ul>
+<h4>Page 4: Appeal and Recovery Operations</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Appeals filed</li>
+<li>Appeals pending</li>
+<li>Appeal success rate</li>
+<li>Recovered amount</li>
+<li>Average days to decision</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Appeal funnel</li>
+<li>Appeal outcome by denial reason</li>
+<li>Recovery by payer</li>
+<li>Aging of pending appeals</li>
+<li>Top recovery opportunities</li>
+</ul>
+<h4>Page 5: Denial Work Queue</h4>
+<p>Table columns:</p>
+<ul>
+<li>Claim ID</li>
+<li>Payer</li>
+<li>Plan</li>
+<li>Service line</li>
+<li>Denial reason</li>
+<li>Denied amount</li>
+<li>Expected recovery value</li>
+<li>Days since denial</li>
+<li>Priority score</li>
+<li>Recommended action</li>
+</ul>
+<p>Filters:</p>
+<ul>
+<li>Payer</li>
+<li>Service line</li>
+<li>Denial reason</li>
+<li>Priority tier</li>
+<li>Appealability</li>
+</ul>
+<h4>Page 6: Price Transparency and Underpayment</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Matched contract rate claims</li>
+<li>Underpayment amount</li>
+<li>Rate variance</li>
+<li>High-variance services</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Negotiated rate by payer</li>
+<li>Gross charge vs negotiated rate</li>
+<li>Paid amount vs expected rate</li>
+<li>Underpayment opportunity table</li>
+</ul>
+<h4>Page 7: Denial Risk Model</h4>
+<p>KPI cards:</p>
+<ul>
+<li>Scored claims</li>
+<li>High-risk claims</li>
+<li>Model ROC-AUC</li>
+<li>Top decile lift</li>
+</ul>
+<p>Visuals:</p>
+<ul>
+<li>Risk score distribution</li>
+<li>SHAP feature drivers</li>
+<li>Threshold simulator</li>
+<li>High-risk pre-bill work queue</li>
+</ul>
+<h4>Page 8: Data Quality and Simulation Governance</h4>
+<p>Visuals:</p>
+<ul>
+<li>Benchmark row counts</li>
+<li>Simulation calibration error</li>
+<li>Missing payer/plan fields</li>
+<li>Claim-level simulation rate vs benchmark</li>
+<li>Last refresh</li>
+<li>Limitation notes</li>
+</ul>
+<h3 id="12-2-core-dax-measures">12.2 Core DAX measures</h3>
+<pre><code class="language-DAX">Claims Received =
+DISTINCTCOUNT(fact_claim[claim_key])
+
+Denied Claims =
+DISTINCTCOUNT(fact_denial[denial_key])
+
+Denial Rate =
+DIVIDE([Denied Claims], [Claims Received])
+
+Denied Amount =
+SUM(fact_denial[denied_amount])
+
+Appeals Filed =
+DISTINCTCOUNT(fact_appeal[appeal_key])
+
+Appeal Rate =
+DIVIDE([Appeals Filed], [Denied Claims])
+
+Appeal Success Rate =
+DIVIDE(
+    CALCULATE(COUNTROWS(fact_appeal), fact_appeal[appeal_success_flag] = 1),
+    [Appeals Filed]
+)
+
+Recovered Amount =
+SUM(fact_appeal[recovered_amount])
+
+Recoverable Amount =
+SUM(fact_revenue_leakage[recoverable_amount])
+
+Expected Recovery Value =
+SUM(fact_revenue_leakage[expected_recovery_value])
+
+Underpaid Amount =
+SUM(fact_revenue_leakage[underpaid_amount])
+
+Preventable Denial Rate =
+DIVIDE(
+    CALCULATE(DISTINCTCOUNT(fact_denial[denial_key]), dim_denial_reason[preventable_flag] = TRUE()),
+    [Denied Claims]
+)
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="13-kpi-dictionary">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="13-kpi-dictionary">13. KPI Dictionary</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#12-power-bi-dashboard-specification">Previous</a>
+      <a href="#14-data-quality-and-governance">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#9-sql-build-plan">SQL Marts</a><a class="related-chip" href="#12-power-bi-dashboard-specification">Dashboard Spec</a><a class="related-chip" href="#14-data-quality-and-governance">Quality Rules</a>
+    </div>
+    
+<table>
+<thead>
+<tr>
+<th>KPI</th>
+<th>Formula</th>
+<th>Grain</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Claims received</td>
+<td>Count of submitted claims</td>
+<td>Claim</td>
+<td>Claims ops</td>
+</tr>
+<tr>
+<td>Claims denied</td>
+<td>Count of denied claims</td>
+<td>Claim</td>
+<td>Claims ops</td>
+</tr>
+<tr>
+<td>Denial rate</td>
+<td>Denied claims / claims received</td>
+<td>Payer/plan/service</td>
+<td>Revenue cycle</td>
+</tr>
+<tr>
+<td>Denied amount</td>
+<td>Sum denied amount</td>
+<td>Denial</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Preventable denial rate</td>
+<td>Preventable denials / total denials</td>
+<td>Denial</td>
+<td>Revenue cycle</td>
+</tr>
+<tr>
+<td>Appeal rate</td>
+<td>Appeals filed / denied claims</td>
+<td>Denial</td>
+<td>Appeals team</td>
+</tr>
+<tr>
+<td>Appeal success rate</td>
+<td>Successful appeals / appeals filed</td>
+<td>Appeal</td>
+<td>Appeals team</td>
+</tr>
+<tr>
+<td>Appeal upheld rate</td>
+<td>Upheld appeals / appeals filed</td>
+<td>Appeal</td>
+<td>Appeals team</td>
+</tr>
+<tr>
+<td>Recovery rate</td>
+<td>Recovered amount / appealed amount</td>
+<td>Appeal</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Expected recovery value</td>
+<td>Denied amount * appeal success probability * recovery percent</td>
+<td>Denial</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td>Underpaid amount</td>
+<td>Expected payment - paid amount</td>
+<td>Claim</td>
+<td>Contracting</td>
+</tr>
+<tr>
+<td>Payer friction score</td>
+<td>Weighted denial, appeal, aging, underpayment score</td>
+<td>Payer/plan</td>
+<td>Managed care</td>
+</tr>
+<tr>
+<td>Days to denial</td>
+<td>Denial date - claim received date</td>
+<td>Claim</td>
+<td>Claims ops</td>
+</tr>
+<tr>
+<td>Days to appeal</td>
+<td>Appeal submitted date - denial date</td>
+<td>Appeal</td>
+<td>Appeals team</td>
+</tr>
+<tr>
+<td>Days to decision</td>
+<td>Appeal decision date - appeal submitted date</td>
+<td>Appeal</td>
+<td>Appeals team</td>
+</tr>
+<tr>
+<td>Work queue priority score</td>
+<td>Weighted expected recovery, appealability, preventability, aging</td>
+<td>Denial</td>
+<td>Operations</td>
+</tr>
+</tbody></table>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="14-data-quality-and-governance">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="14-data-quality-and-governance">14. Data Quality and Governance</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#13-kpi-dictionary">Previous</a>
+      <a href="#15-business-insights-to-generate">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="14-1-required-tests">14.1 Required tests</h3>
+<p>Benchmark data:</p>
+<ul>
+<li>Claims received &gt;= claims denied.</li>
+<li>Denial rate between 0 and 1.</li>
+<li>Appeals filed &lt;= claims denied unless source documentation explains otherwise.</li>
+<li>Appeal rates between 0 and 1.</li>
+<li>Plan year is valid.</li>
+</ul>
+<p>Claim simulation:</p>
+<ul>
+<li>Every simulated claim has a plan and issuer.</li>
+<li>Every denied claim has one denial reason.</li>
+<li>Every appeal maps to a denial.</li>
+<li>Paid amount plus denied amount does not exceed submitted amount unless adjustment logic documented.</li>
+<li>Simulated denial rate is within target calibration tolerance.</li>
+</ul>
+<p>Price transparency:</p>
+<ul>
+<li>Rates are numeric.</li>
+<li>Service codes are populated where available.</li>
+<li>Payer names standardized.</li>
+<li>Rate confidence score assigned.</li>
+<li>File source retained for auditability.</li>
+</ul>
+<p>Work queues:</p>
+<ul>
+<li>Priority score is not null.</li>
+<li>Recommended action is not null.</li>
+<li>Closed denials excluded from open queue.</li>
+</ul>
+<h3 id="14-2-governance-notes">14.2 Governance notes</h3>
+<p>Required documentation:</p>
+<ul>
+<li>Simulation methodology</li>
+<li>Denial reason taxonomy</li>
+<li>Calibration approach</li>
+<li>Price transparency matching confidence</li>
+<li>Public data limitations</li>
+<li>No PHI statement</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="15-business-insights-to-generate">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="15-business-insights-to-generate">15. Business Insights To Generate</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#14-data-quality-and-governance">Previous</a>
+      <a href="#16-implementation-roadmap">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<p>Minimum final insights:</p>
+<ol>
+<li>Issuers/plans with highest denial rates.</li>
+<li>States or markets with highest denial burden.</li>
+<li>Denial reason categories driving most denied amount.</li>
+<li>Preventable denial categories with biggest operational opportunity.</li>
+<li>Appeal categories with highest recovery rate.</li>
+<li>Denials where expected recovery value is highest.</li>
+<li>Payers with high denial rates and high appeal upheld rates.</li>
+<li>Service lines most exposed to medical necessity or prior authorization denials.</li>
+<li>Underpayment opportunities from paid vs expected reimbursement.</li>
+<li>Operational recommendations for front-end edits, coding review, and appeal prioritization.</li>
+</ol>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="16-implementation-roadmap">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="16-implementation-roadmap">16. Implementation Roadmap</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#15-business-insights-to-generate">Previous</a>
+      <a href="#17-readme-outline">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="phase-1-data-acquisition">Phase 1: Data acquisition</h3>
+<p>Tasks:</p>
+<ul>
+<li>Download CMS Transparency in Coverage PUF.</li>
+<li>Download Exchange plan/issuer PUFs.</li>
+<li>Download MLR PUF if using financial context.</li>
+<li>Download Rate Review data if using rate context.</li>
+<li>Download CMS synthetic claims.</li>
+<li>Download NPPES provider file.</li>
+<li>Select 3 to 5 hospital price transparency files for a focused market if using negotiated-rate analysis.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>docs/data_sources.md</code></li>
+</ul>
+<h3 id="phase-2-benchmark-warehouse">Phase 2: Benchmark warehouse</h3>
+<p>Tasks:</p>
+<ul>
+<li>Load TC-PUF.</li>
+<li>Build issuer and plan dimensions.</li>
+<li>Calculate benchmark denial, appeal, upheld, and overturn rates.</li>
+<li>Build payer benchmark mart.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>mart.mart_denial_rate</code></li>
+</ul>
+<h3 id="phase-3-claim-simulation">Phase 3: Claim simulation</h3>
+<p>Tasks:</p>
+<ul>
+<li>Load synthetic claim data.</li>
+<li>Create simulated member-plan assignment.</li>
+<li>Create service-line mapping.</li>
+<li>Create denial reason dimension.</li>
+<li>Apply denial rule hierarchy.</li>
+<li>Calibrate denial rates to benchmark.</li>
+<li>Simulate appeal events.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>gold.fact_claim</code></li>
+<li><code>gold.fact_denial</code></li>
+<li><code>gold.fact_appeal</code></li>
+<li><code>docs/simulation_methodology.md</code></li>
+</ul>
+<h3 id="phase-4-revenue-leakage-marts">Phase 4: Revenue leakage marts</h3>
+<p>Tasks:</p>
+<ul>
+<li>Calculate denied amount.</li>
+<li>Calculate recoverable amount.</li>
+<li>Calculate expected recovery value.</li>
+<li>Build denial work queue.</li>
+<li>Build appeal performance mart.</li>
+<li>Build service-line denial mart.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>mart.mart_revenue_leakage</code></li>
+<li><code>mart.mart_denial_work_queue</code></li>
+<li><code>mart.mart_appeal_performance</code></li>
+</ul>
+<h3 id="phase-5-price-transparency-and-underpayment">Phase 5: Price transparency and underpayment</h3>
+<p>Tasks:</p>
+<ul>
+<li>Parse selected hospital MRFs.</li>
+<li>Normalize payer, plan, service, negotiated rate.</li>
+<li>Match claim service/provider/plan to contract rate where possible.</li>
+<li>Calculate paid vs expected variance.</li>
+<li>Assign rate confidence score.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li><code>mart.mart_underpayment_opportunity</code></li>
+</ul>
+<h3 id="phase-6-python-and-ml">Phase 6: Python and ML</h3>
+<p>Tasks:</p>
+<ul>
+<li>Run denial EDA.</li>
+<li>Build claim features.</li>
+<li>Train denial risk model.</li>
+<li>Train appeal success model.</li>
+<li>Build payer friction score.</li>
+<li>Export model scores.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Model notebooks and model cards.</li>
+</ul>
+<h3 id="phase-7-power-bi">Phase 7: Power BI</h3>
+<p>Tasks:</p>
+<ul>
+<li>Build executive overview.</li>
+<li>Build payer scorecard.</li>
+<li>Build service-line denial page.</li>
+<li>Build appeal/recovery page.</li>
+<li>Build denial work queue.</li>
+<li>Build price transparency page.</li>
+<li>Build model monitoring page.</li>
+<li>Build data quality/governance page.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Power BI report and screenshots.</li>
+</ul>
+<h3 id="phase-8-portfolio-packaging">Phase 8: Portfolio packaging</h3>
+<p>Tasks:</p>
+<ul>
+<li>Write README.</li>
+<li>Write case study.</li>
+<li>Write executive summary.</li>
+<li>Write KPI dictionary.</li>
+<li>Write interview talking points.</li>
+</ul>
+<p>Deliverable:</p>
+<ul>
+<li>Portfolio-ready project.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="17-readme-outline">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="17-readme-outline">17. README Outline</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#16-implementation-roadmap">Previous</a>
+      <a href="#18-interview-talking-points">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<pre><code class="language-text"># Claims Denials, Appeals &amp; Revenue Cycle Intelligence Platform
+
+## Executive Summary
+## Business Problem
+## Data Sources
+## Important Simulation Disclaimer
+## Architecture
+## Denial Reason Taxonomy
+## Data Model
+## SQL Marts
+## Python Analytics
+## Machine Learning
+## Power BI Dashboard
+## Key Insights
+## Limitations
+## How To Run
+## Interview Talking Points
+</code></pre>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="18-interview-talking-points">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="18-interview-talking-points">18. Interview Talking Points</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#17-readme-outline">Previous</a>
+      <a href="#19-final-acceptance-checklist">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<h3 id="60-second-pitch">60-second pitch</h3>
+<p>&quot;I built a claims denials and revenue cycle intelligence platform using CMS public denial benchmark files, Exchange plan data, synthetic claim records, provider reference data, and optional hospital price transparency files. Because public denial data is aggregate, I created a transparent simulated claim-level denial workflow calibrated to public benchmark rates. The platform tracks denial rates, appeal outcomes, recovery opportunity, payer friction, service-line denial patterns, underpayment variance, and operational work queues.&quot;</p>
+<h3 id="sql-talking-points">SQL talking points</h3>
+<ul>
+<li>Built issuer, plan, provider, service, denial reason, claim, denial, appeal, and revenue leakage tables.</li>
+<li>Created denial rate, appeal performance, payer scorecard, service-line denial, and work queue marts.</li>
+<li>Used rule hierarchy and calibration tables for denial simulation.</li>
+<li>Used window functions and percentiles for payer friction scoring.</li>
+</ul>
+<h3 id="business-talking-points">Business talking points</h3>
+<ul>
+<li>Public denial data is mostly aggregate, so claim-level workflows must be simulated honestly.</li>
+<li>Denial analytics should separate preventable and non-preventable denials.</li>
+<li>Appeal prioritization should consider expected recovery value, not just denied amount.</li>
+<li>Payer scorecards should include denial rate, appeal outcomes, aging, and underpayment.</li>
+<li>Price transparency data is powerful but messy, requiring confidence scores and source retention.</li>
+</ul>
+<h3 id="ml-talking-points">ML talking points</h3>
+<ul>
+<li>Built a claim denial risk model for pre-bill edits.</li>
+<li>Built an appeal success model to prioritize high-value denials.</li>
+<li>Used SHAP to explain denial drivers.</li>
+<li>Used threshold analysis based on operational staff capacity.</li>
+</ul>
+<h3 id="resume-bullets">Resume bullets</h3>
+<ul>
+<li>Built a claims denials and revenue cycle analytics platform integrating CMS Transparency in Coverage PUFs, Exchange plan data, synthetic claims, provider data, and price transparency references.</li>
+<li>Designed a transparent claim-level denial and appeal simulation calibrated to public issuer/plan denial benchmarks.</li>
+<li>Developed SQL marts for denial rates, appeal outcomes, payer scorecards, service-line denials, revenue leakage, underpayment opportunity, and operational work queues.</li>
+<li>Built ML pipelines for denial risk prediction and appeal success prioritization using business-threshold evaluation and expected recovery value.</li>
+<li>Created Power BI dashboards for executive denial performance, payer friction, appeal recovery, service-line root causes, underpayment, and denial work queues.</li>
+</ul>
+<hr>
+
+  </div>
+</details>
+<details class="section-module" open data-section-id="19-final-acceptance-checklist">
+  <summary>
+    <span class="collapse-indicator">Toggle</span>
+    <h2 id="19-final-acceptance-checklist">19. Final Acceptance Checklist</h2>
+  </summary>
+  <div class="section-body">
+    <nav class="section-nav" aria-label="Section navigation">
+      <a href="#top">Cover</a>
+      <a href="#table-of-contents">Contents</a>
+      <a href="#18-interview-talking-points">Previous</a>
+      <a href="#table-of-contents">Next</a>
+    </nav>
+    <div class="smart-links">
+      <span>Related</span>
+      <a class="related-chip" href="#2-source-reference-register">Sources</a><a class="related-chip" href="#5-end-to-end-pipeline">Architecture</a><a class="related-chip" href="#16-implementation-roadmap">Roadmap</a>
+    </div>
+    
+<ul>
+<li>Source links documented.</li>
+<li>TC-PUF benchmark tables loaded.</li>
+<li>Issuer and plan dimensions built.</li>
+<li>Synthetic claim data loaded.</li>
+<li>Denial reason taxonomy built.</li>
+<li>Claim-level denial simulation complete.</li>
+<li>Simulation calibration report complete.</li>
+<li>Appeal simulation complete.</li>
+<li>Denial rate mart complete.</li>
+<li>Appeal performance mart complete.</li>
+<li>Revenue leakage mart complete.</li>
+<li>Denial work queue complete.</li>
+<li>Payer scorecard complete.</li>
+<li>Underpayment module complete if using price transparency.</li>
+<li>Denial risk model complete.</li>
+<li>Appeal success model complete.</li>
+<li>Power BI dashboard complete.</li>
+<li>KPI dictionary complete.</li>
+<li>Simulation disclaimer present in README.</li>
+<li>Case study complete.</li>
+</ul>
+<p>Final positioning:</p>
+<p><strong>An enterprise claims operations and revenue cycle analytics platform that combines public CMS denial benchmarks, synthetic claim-level adjudication, appeal prioritization, reimbursement leakage analysis, and Power BI operational work queues to reduce avoidable denials and improve recovery performance.</strong></p>
+
+  </div>
+</details>
+  </main>
+
+  <script>
+    window.__HAS_MERMAID__ = Boolean(document.querySelector('.mermaid'));
+    document.querySelectorAll('[data-action="expand"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = true));
+    });
+    document.querySelectorAll('[data-action="collapse"]').forEach((button) => {
+      button.addEventListener('click', () => document.querySelectorAll('.section-module').forEach((item) => item.open = false));
+    });
+    function openHashTarget() {
+      if (!window.location.hash) return;
+      const target = document.querySelector(window.location.hash);
+      if (!target) return;
+      const module = target.closest('.section-module');
+      if (module) module.open = true;
+      setTimeout(() => target.scrollIntoView({ block: 'start' }), 30);
+    }
+    window.addEventListener('hashchange', openHashTarget);
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => setTimeout(openHashTarget, 20));
+    });
+    openHashTarget();
+    if (window.__HAS_MERMAID__) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+      script.onload = async () => {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'loose',
+          theme: 'base',
+          themeVariables: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+            primaryColor: '#EAF5F7',
+            primaryTextColor: '#172033',
+            primaryBorderColor: '#7C3AED',
+            lineColor: '#64748B',
+            secondaryColor: '#EEF2FF',
+            tertiaryColor: '#F8FAFC',
+          },
+        });
+        await window.mermaid.run({ querySelector: '.mermaid' });
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+</body>
+</html>

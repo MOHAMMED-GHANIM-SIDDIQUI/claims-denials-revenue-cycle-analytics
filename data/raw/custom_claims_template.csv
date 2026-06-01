@@ -1,0 +1,12 @@
+claim_id,member_id,payer,plan_name,state_code,provider_name,provider_type,service_line,network_status,claim_status,denial_reason,submitted_amount,allowed_amount,expected_payment_amount,paid_amount,claim_received_date,adjudication_date,appeal_outcome,recovered_amount
+CUST-000001,M-1001,Apex Health,Apex Silver PPO,CA,Metro Hospital,Hospital,Inpatient,In-network,Denied,Coding error,18500,9800,8428,0,2025-01-04,2025-01-18,Appeal overturned,7200
+CUST-000002,M-1002,Apex Health,Apex Silver PPO,CA,Metro Hospital,Hospital,Outpatient surgery,In-network,Partially denied,Missing documentation,7600,4300,3698,1800,2025-01-05,2025-01-20,Appeal partially overturned,900
+CUST-000003,M-1003,BrightPath Insurance,BrightPath Gold HMO,TX,Valley Imaging,Imaging Center,Imaging,In-network,Paid,,1420,850,731,731,2025-01-06,2025-01-12,,
+CUST-000004,M-1004,BrightPath Insurance,BrightPath Gold HMO,TX,Valley Imaging,Imaging Center,Imaging,In-network,Denied,Prior authorization missing,2200,1350,1161,0,2025-01-08,2025-01-22,Appeal upheld,0
+CUST-000005,M-1005,CareBridge Plans,CareBridge Bronze EPO,FL,North Professional Group,Professional Group,Professional E/M,In-network,Paid,,310,220,189,189,2025-02-01,2025-02-07,,
+CUST-000006,M-1006,CareBridge Plans,CareBridge Bronze EPO,FL,North Professional Group,Professional Group,Therapy,In-network,Denied,Medical necessity,960,620,533,0,2025-02-03,2025-02-18,Appeal overturned,420
+CUST-000007,M-1007,Evergreen Mutual,Evergreen Standard POS,NY,Harbor Lab,Lab,Lab,In-network,Paid,,180,100,86,70,2025-02-08,2025-02-12,,
+CUST-000008,M-1008,Evergreen Mutual,Evergreen Standard POS,NY,Harbor Lab,Lab,Lab,In-network,Denied,Duplicate claim,190,95,82,0,2025-02-09,2025-02-13,Not appealed,0
+CUST-000009,M-1009,Summit Choice,Summit Platinum PPO,IL,Summit Hospital,Hospital,Emergency department,Out-of-network,Denied,Out-of-network service,3100,1700,1462,0,2025-03-01,2025-03-16,Appeal upheld,0
+CUST-000010,M-1010,Summit Choice,Summit Platinum PPO,IL,Summit Hospital,Hospital,Inpatient,In-network,Paid,,24000,14000,12040,11800,2025-03-04,2025-03-19,,
+
